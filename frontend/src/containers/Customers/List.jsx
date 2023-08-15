@@ -1,8 +1,7 @@
-
-function List() {
+function CustomerList() {
   return (
-    <div>List</div>
+    <div>CustomerList</div>
   )
 }
 
-export default List
+export default CustomerList

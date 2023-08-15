@@ -1,30 +1,10 @@
-import {
-  LOGIN_REQUEST,
-  LOGIN_SUCCESS,
-  LOGIN_FAILURE,
-  REGISTER_REQUEST,
-  REGISTER_SUCCESS,
-  REGISTER_FAILURE,
-  CONFIRM_REQUEST,
-  CONFIRM_SUCCESS,
-  CONFIRM_FAILURE,
-  FORGOT_PASSWORD_REQUEST,
-  FORGOT_PASSWORD_SUCCESS,
-  FORGOT_PASSWORD_FAILURE,
-  FORGOT_CONFIRM_PASSWORD_REQUEST,
-  FORGOT_CONFIRM_PASSWORD_SUCCESS,
-  FORGOT_CONFIRM_PASSWORD_FAILURE,
-  SET_TOKEN,
-  SET_TOKEN_FAILURE,
-  RESET_MESSAGE,
-} from "@/containers/Identity/types";
-import { identityStatuses } from "@/constants/identity";
+import identityTypes from "@/containers/Identity/types";
 
 const initialState = {
   isAuthenticated: false,
   token: null,
   user: {},
-  status: "",
+  status: null,
   error: null,
   loading: false,
   isVerified: false,
@@ -32,126 +12,134 @@ const initialState = {
 
 const identityReducer = (state = initialState, action) => {
   switch (action.type) {
-    case SET_TOKEN:
+    case identityTypes.SET_TOKEN:
       return {
         ...state,
         token: action.payload.token,
         user: action.payload.user,
         isAuthenticated: true,
+        status: identityTypes.SET_TOKEN
       };
-    case SET_TOKEN_FAILURE:
+    case identityTypes.SET_TOKEN_FAILURE:
       return {
         ...state,
         token: null,
         isAuthenticated: false,
+        status: identityTypes.SET_TOKEN_FAILURE
       };
-    case LOGIN_REQUEST:
+    case identityTypes.LOGIN_REQUEST:
       return {
         ...state,
         loading: true,
+        status: identityTypes.LOGIN_REQUEST
       };
-    case LOGIN_SUCCESS:
+    case identityTypes.LOGIN_SUCCESS:
       return {
         ...state,
         token: action.payload.accessToken,
-        status: identityStatuses.LoginSuccess,
         error: null,
         loading: false,
         isAuthenticated: true,
+        status: identityTypes.LOGIN_SUCCESS
       };
-    case LOGIN_FAILURE:
+    case identityTypes.LOGIN_FAILURE:
       return {
         ...state,
         error: action.payload,
-        status: identityStatuses.LoginFailure,
         loading: false,
         isAuthenticated: false,
+        status: identityTypes.LOGIN_FAILURE
       };
-    case REGISTER_REQUEST:
+    case identityTypes.REGISTER_REQUEST:
       return {
         ...state,
         loading: true,
+        status: identityTypes.REGISTER_REQUEST
       };
-    case REGISTER_SUCCESS:
+    case identityTypes.REGISTER_SUCCESS:
       return {
         ...state,
-        status: identityStatuses.RegisterSuccess,
         error: null,
         loading: false,
+        status: identityTypes.REGISTER_SUCCESS
       };
-    case REGISTER_FAILURE:
+    case identityTypes.REGISTER_FAILURE:
       return {
         ...state,
-        status: identityStatuses.RegisterFailure,
         error: action.payload,
         loading: false,
         isAuthenticated: false,
+        status: identityTypes.REGISTER_FAILURE
       };
-    case CONFIRM_REQUEST:
+    case identityTypes.CONFIRM_REQUEST:
       return {
         ...state,
         loading: true,
+        status: identityTypes.CONFIRM_REQUEST
       };
-    case CONFIRM_SUCCESS:
+    case identityTypes.CONFIRM_SUCCESS:
       return {
         ...state,
-        status: identityStatuses.ConfirmSuccess,
         error: null,
         loading: false,
         isVerified: true,
+        status: identityTypes.CONFIRM_SUCCESS
       };
-    case CONFIRM_FAILURE:
+    case identityTypes.CONFIRM_FAILURE:
       return {
         ...state,
-        status: identityStatuses.ConfirmFailure,
         error: action.payload,
         loading: false,
         isAuthenticated: false,
+        status: identityTypes.CONFIRM_FAILURE
       };
-    case FORGOT_PASSWORD_REQUEST:
+    case identityTypes.FORGOT_PASSWORD_REQUEST:
       return {
         ...state,
         loading: true,
+        status: identityTypes.FORGOT_PASSWORD_REQUEST
       };
-    case FORGOT_PASSWORD_SUCCESS:
+    case identityTypes.FORGOT_PASSWORD_SUCCESS:
       return {
         ...state,
-        status: identityStatuses.ForgotPasswordSuccess,
         error: null,
         loading: false,
+        status: identityTypes.FORGOT_PASSWORD_SUCCESS
       };
-    case FORGOT_PASSWORD_FAILURE:
+    case identityTypes.FORGOT_PASSWORD_FAILURE:
       return {
         ...state,
-        status: identityStatuses.ForgotPasswordFailure,
         error: action.payload,
         loading: false,
         isAuthenticated: false,
+        status: identityTypes.FORGOT_PASSWORD_FAILURE
       };
-    case FORGOT_CONFIRM_PASSWORD_REQUEST:
+    case identityTypes.FORGOT_CONFIRM_PASSWORD_REQUEST:
       return {
         ...state,
         loading: true,
+        status: identityTypes.FORGOT_CONFIRM_PASSWORD_REQUEST
       };
-    case FORGOT_CONFIRM_PASSWORD_SUCCESS:
+    case identityTypes.FORGOT_CONFIRM_PASSWORD_SUCCESS:
       return {
         ...state,
-        status: identityStatuses.ForgotConfirmPasswordSuccess,
         error: null,
         loading: false,
+        status: identityTypes.FORGOT_CONFIRM_PASSWORD_SUCCESS
       };
-    case FORGOT_CONFIRM_PASSWORD_FAILURE:
+    case identityTypes.FORGOT_CONFIRM_PASSWORD_FAILURE:
       return {
         ...state,
-        status: identityStatuses.ForgotConfirmPasswordFailure,
         error: action.payload,
         loading: false,
         isAuthenticated: false,
+        status: identityTypes.FORGOT_CONFIRM_PASSWORD_FAILURE
       };
-    case RESET_MESSAGE:
+    case identityTypes.RESET_MESSAGE:
       return {
         ...state,
         message: null,
+        status: null
       };
     default:
       return state;

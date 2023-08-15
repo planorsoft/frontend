@@ -1,30 +1,13 @@
 import axios from "@/utils/axios";
-import {
-  LOGIN_REQUEST,
-  LOGIN_SUCCESS,
-  LOGIN_FAILURE,
-  REGISTER_REQUEST,
-  REGISTER_SUCCESS,
-  REGISTER_FAILURE,
-  CONFIRM_REQUEST,
-  CONFIRM_SUCCESS,
-  CONFIRM_FAILURE,
-  FORGOT_PASSWORD_REQUEST,
-  FORGOT_PASSWORD_SUCCESS,
-  FORGOT_PASSWORD_FAILURE,
-  FORGOT_CONFIRM_PASSWORD_REQUEST,
-  FORGOT_CONFIRM_PASSWORD_SUCCESS,
-  FORGOT_CONFIRM_PASSWORD_FAILURE,
-  SET_TOKEN,
-  SET_TOKEN_FAILURE,
-  RESET_MESSAGE,
-} from "./types";
+import identityTypes from "@/containers/Identity/types";
 import { setAuthToken } from "@/utils/axios";
 import jwtDecoder from "@/utils/jwtDecoder";
+import store from "@/store";
 
 // ------------------------------------ AUTH ------------------------------------
 
 export const setToken = (token = null) => {
+  // If token is gived by parameter
   if (token !== null) {
     setAuthToken(token);
     localStorage.setItem("token", token);
@@ -33,26 +16,40 @@ export const setToken = (token = null) => {
       user: jwtDecoder(token),
     };
     return {
-      type: SET_TOKEN,
+      type: identityTypes.SET_TOKEN,
       payload: data,
     };
   }
 
-  token = localStorage.getItem("token");
-
-  if (token !== null) {
-    setAuthToken(token);
+  // Lookup localStorage
+  const tokenFromLocalStorage = localStorage.getItem("token");
+  if (tokenFromLocalStorage !== null) {
+    setAuthToken(tokenFromLocalStorage);
     const data = {
-      token,
-      user: jwtDecoder(token),
+      tokenFromLocalStorage,
+      user: jwtDecoder(tokenFromLocalStorage),
     };
     return {
-      type: SET_TOKEN,
+      type: identityTypes.SET_TOKEN,
+      payload: data,
+    };
+  }
+
+  // Lookup store
+  const tokenFromStore = store.getState().identity.token;
+  if (tokenFromStore !== null) {
+    setAuthToken(tokenFromStore);
+    const data = {
+      tokenFromStore,
+      user: jwtDecoder(tokenFromStore),
+    };
+    return {
+      type: identityTypes.SET_TOKEN,
       payload: data,
     };
   } else {
     return {
-      type: SET_TOKEN_FAILURE,
+      type: identityTypes.SET_TOKEN_FAILURE,
     };
   }
 };
@@ -61,27 +58,27 @@ export const resetToken = () => {
   localStorage.removeItem("token");
   setAuthToken();
   return {
-    type: SET_TOKEN_FAILURE,
+    type: identityTypes.SET_TOKEN_FAILURE,
   };
 };
 
 // ------------------------------------ LOGIN ------------------------------------
 
-export const loginRequest = () => ({
-  type: LOGIN_REQUEST,
+const loginRequest = () => ({
+  type: identityTypes.LOGIN_REQUEST,
 });
 
-export const loginSuccess = (data) => ({
-  type: LOGIN_SUCCESS,
+const loginSuccess = (data) => ({
+  type: identityTypes.LOGIN_SUCCESS,
   payload: data,
 });
 
-export const loginFailure = (error) => ({
-  type: LOGIN_FAILURE,
+const loginFailure = (error) => ({
+  type: identityTypes.LOGIN_FAILURE,
   payload: error,
 });
 
-export const login = (email, password, tenant, navigate) => async (dispatch) => {
+export const login = (email, password, tenant) => async (dispatch) => {
   dispatch(loginRequest());
   try {
     const { data } = await axios.post("/identity/login", {
@@ -89,9 +86,7 @@ export const login = (email, password, tenant, navigate) => async (dispatch) => 
       password,
       tenant,
     });
-    navigate("/");
     dispatch(loginSuccess(data));
-    dispatch(setToken(data.accessToken));
   } catch (error) {
     dispatch(loginFailure(error.response.data.detail));
   }
@@ -99,17 +94,17 @@ export const login = (email, password, tenant, navigate) => async (dispatch) => 
 
 // ------------------------------------ REGISTER ------------------------------------
 
-export const registerRequest = () => ({
-  type: REGISTER_REQUEST,
+const registerRequest = () => ({
+  type: identityTypes.REGISTER_REQUEST,
 });
 
-export const registerSuccess = (data) => ({
-  type: REGISTER_SUCCESS,
+const registerSuccess = (data) => ({
+  type: identityTypes.REGISTER_SUCCESS,
   payload: data,
 });
 
-export const registerFailure = (error) => ({
-  type: REGISTER_FAILURE,
+const registerFailure = (error) => ({
+  type: identityTypes.REGISTER_FAILURE,
   payload: error,
 });
 
@@ -125,17 +120,17 @@ export const register = (model) => async (dispatch) => {
 
 // ------------------------------------ CONFIRM ------------------------------------
 
-export const confirmRequest = () => ({
-  type: CONFIRM_REQUEST,
+const confirmRequest = () => ({
+  type: identityTypes.CONFIRM_REQUEST,
 });
 
-export const confirmSuccess = (data) => ({
-  type: CONFIRM_SUCCESS,
+const confirmSuccess = (data) => ({
+  type: identityTypes.CONFIRM_SUCCESS,
   payload: data,
 });
 
-export const confirmFailure = (error) => ({
-  type: CONFIRM_FAILURE,
+const confirmFailure = (error) => ({
+  type: identityTypes.CONFIRM_FAILURE,
   payload: error,
 });
 
@@ -151,73 +146,64 @@ export const confirm = (email, code) => async (dispatch) => {
 
 // ------------------------------------ FORGOT PASSWORD ------------------------------------
 
-export const forgotPasswordRequest = () => ({
-  type: FORGOT_PASSWORD_REQUEST,
+const forgotPasswordRequest = () => ({
+  type: identityTypes.FORGOT_PASSWORD_REQUEST,
 });
 
-export const forgotPasswordSuccess = (data) => ({
-  type: FORGOT_PASSWORD_SUCCESS,
+const forgotPasswordSuccess = (data) => ({
+  type: identityTypes.FORGOT_PASSWORD_SUCCESS,
   payload: data,
 });
 
-export const forgotPasswordFailure = (error) => ({
-  type: FORGOT_PASSWORD_FAILURE,
+const forgotPasswordFailure = (error) => ({
+  type: identityTypes.FORGOT_PASSWORD_FAILURE,
   payload: error,
 });
 
-export const forgotPassword = (email, tenant, toast) => async (dispatch) => {
+export const forgotPassword = (email, tenant) => async (dispatch) => {
   dispatch(forgotPasswordRequest());
   try {
     const { data } = await axios.post("/identity/forgot", { email, tenant });
     dispatch(forgotPasswordSuccess(data));
-    toast({
-      title: "Şifre sıfırlama linki mail adresine gönderildi.",
-      position: "bottom-right",
-      status: "success",
-      duration: 9000,
-      isClosable: true,
-    });
   } catch (error) {
     dispatch(forgotPasswordFailure(error.response.data.detail));
   }
 };
 
-
 // ------------------------------------ FORGOT CONFIRM PASSWORD ------------------------------------
 
-export const forgotConfirmPasswordRequest = () => ({
-  type: FORGOT_CONFIRM_PASSWORD_REQUEST,
+const forgotConfirmPasswordRequest = () => ({
+  type: identityTypes.FORGOT_CONFIRM_PASSWORD_REQUEST,
 });
 
-export const forgotConfirmPasswordSuccess = (data) => ({
-  type: FORGOT_CONFIRM_PASSWORD_SUCCESS,
+const forgotConfirmPasswordSuccess = (data) => ({
+  type: identityTypes.FORGOT_CONFIRM_PASSWORD_SUCCESS,
   payload: data,
 });
 
-export const forgotConfirmPasswordFailure = (error) => ({
-  type: FORGOT_CONFIRM_PASSWORD_FAILURE,
+const forgotConfirmPasswordFailure = (error) => ({
+  type: identityTypes.FORGOT_CONFIRM_PASSWORD_FAILURE,
   payload: error,
 });
 
-export const forgotConfirmPassword = (email, token, password, tenant, toast) => async (dispatch) => {
-  dispatch(forgotConfirmPasswordRequest());
-  try {
-    const { data } = await axios.post("/identity/forgot-confirm", { email, token, password, tenant });
-    dispatch(forgotConfirmPasswordSuccess(data));
-    toast({
-      title: "Şifreniz başarıyla sıfırlandı, giriş yapabilirsiniz.",
-      position: "bottom-right",
-      status: "success",
-      duration: 9000,
-      isClosable: true,
-    });
-  } catch (error) {
-    dispatch(forgotConfirmPasswordFailure(error.response.data.detail));
-  }
-};
+export const forgotConfirmPassword =
+  (email, token, password, tenant) => async (dispatch) => {
+    dispatch(forgotConfirmPasswordRequest());
+    try {
+      const { data } = await axios.post("/identity/forgot-confirm", {
+        email,
+        token,
+        password,
+        tenant,
+      });
+      dispatch(forgotConfirmPasswordSuccess(data));
+    } catch (error) {
+      dispatch(forgotConfirmPasswordFailure(error.response.data.detail));
+    }
+  };
 
 // ------------------------------------ RESET MESSAGE ------------------------------------
 
 export const resetMessage = () => ({
-  type: RESET_MESSAGE,
+  type: identityTypes.RESET_MESSAGE,
 });

@@ -13,6 +13,7 @@ import {
   useColorModeValue,
   useBreakpointValue,
   useDisclosure,
+  useColorMode,
 } from "@chakra-ui/react";
 import {
   HamburgerIcon,
@@ -20,12 +21,14 @@ import {
   ChevronDownIcon,
   ChevronRightIcon,
 } from "@chakra-ui/icons";
+import { FiMoon, FiSun } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
 import PropTypes from "prop-types";
 
 export default function WithSubnavigation() {
   const navigate = useNavigate();
   const { isOpen, onToggle } = useDisclosure();
+  const { colorMode, toggleColorMode } = useColorMode();
 
   return (
     <Box>
@@ -74,6 +77,13 @@ export default function WithSubnavigation() {
           direction={"row"}
           spacing={6}
         >
+          <IconButton
+            onClick={toggleColorMode}
+            variant="outline"
+            aria-label="open menu"
+            mr="3"
+            icon={colorMode === "light" ? <FiMoon /> : <FiSun />}
+          />
           <Button
             as={"a"}
             fontSize={"sm"}
@@ -204,9 +214,9 @@ const DesktopSubNav = ({ label, href, subLabel }) => {
 };
 
 DesktopSubNav.propTypes = {
-    label: PropTypes.string.isRequired,
-    href: PropTypes.string.isRequired,
-    subLabel: PropTypes.string.isRequired,
+  label: PropTypes.string.isRequired,
+  href: PropTypes.string.isRequired,
+  subLabel: PropTypes.string.isRequired,
 };
 
 const MobileNav = () => {
@@ -277,11 +287,9 @@ const MobileNavItem = ({ label, children, href }) => {
 };
 
 MobileNavItem.propTypes = {
-    label: PropTypes.string.isRequired,
-    children: PropTypes.element.isRequired,
-    href: PropTypes.string.isRequired,
+  label: PropTypes.string.isRequired,
+  children: PropTypes.element.isRequired,
+  href: PropTypes.string.isRequired,
 };
 
-const NAV_ITEMS = [
-  
-];
+const NAV_ITEMS = [];
