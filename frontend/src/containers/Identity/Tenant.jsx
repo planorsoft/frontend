@@ -7,6 +7,8 @@ import {
   FormLabel,
   Heading,
   Input,
+  InputGroup,
+  InputRightAddon,
   Stack,
   useColorModeValue,
 } from "@chakra-ui/react";
@@ -46,14 +48,14 @@ function Tenant() {
             <FormControl id="tenant" isRequired>
               <FormLabel>Şirket</FormLabel>
               <Flex>
-                <Input
-                  type="text"
-                  value={Tenant}
-                  onChange={onChangeTenantHandler}
-                />
-                <Box ml={2} mt={1} fontWeight={"bold"}>
-                  .planor.com.tr
-                </Box>
+                <InputGroup>
+                  <Input
+                    type="text"
+                    value={Tenant}
+                    onChange={onChangeTenantHandler}
+                  />
+                  <InputRightAddon>.planor.com.tr</InputRightAddon>
+                </InputGroup>
               </Flex>
             </FormControl>
             <Stack spacing={5} mt={"2"}>

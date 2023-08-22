@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { login, setToken } from "@/containers/Identity/actions";
+import { login, setToken, resetToken } from "@/containers/Identity/actions";
 import { getTenant } from "@/utils/tenant";
 import {
   Flex,
@@ -19,6 +19,7 @@ import {
 } from "@chakra-ui/react";
 import { Link as ReactRouterLink, useNavigate } from "react-router-dom";
 import identityTypes from "@/containers/Identity/types";
+import jwtValid from "@/utils/jwtValid";
 
 function Login() {
   const [Email, setEmail] = useState("");
@@ -43,9 +44,11 @@ function Login() {
   };
 
   useEffect(() => {
-    let token = localStorage.getItem("token");
-    if (token) {
+    const isJwtValid = jwtValid();
+    if (isJwtValid) {
       navigate("/dashboard");
+    } else {
+      dispatch(resetToken());
     }
   }, []);
 
@@ -62,8 +65,8 @@ function Login() {
       navigate("/dashboard");
       toast({
         title: "Giriş başarılı",
-        description: "Yönlendiriliyorsunuz...",
         status: "success",
+        position: "bottom-right",
         duration: 3000,
         isClosable: true,
       });

@@ -1,5 +1,9 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { useEffect } from "react";
+import { healthCheckWithToast } from "@/utils/healthCheck";
+import { useToast } from "@chakra-ui/react";
+import { BrowserRouter, Routes, Route, useNavigate } from "react-router-dom";
 import ProtectedRoute from "@/components/ProtectedRoute";
+import { useUnauthorizedResponseHandler } from "@/utils/axiosInterceptors";
 
 import Login from "@/containers/Identity/Login";
 import Register from "@/containers/Identity/Register";
@@ -13,27 +17,49 @@ import ProjectList from "@/containers/Projects/List";
 import Dashboard from "@/containers/Dashboard";
 import NotFound from "@/containers/HttpStatuses/NotFound";
 import Home from "@/containers/Landing/Home";
+import Sidebar from "@/components/Sidebar"
+
+function UseMiddleware() {
+  const navigate = useNavigate();
+  const toast = useToast();
+
+  useUnauthorizedResponseHandler(navigate, toast);
+  return null;
+}
 
 function App() {
+  const toast = useToast();
+
+  useEffect(() => {
+    healthCheckWithToast(toast);
+  }, []);
+
   return (
     <BrowserRouter>
+      <UseMiddleware />
       <Routes>
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/confirm" element={<Confirm />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
-        <Route path="/forgot-confirm-password" element={<ForgotConfirmPassword />} />
+        <Route
+          path="/forgot-confirm-password"
+          element={<ForgotConfirmPassword />}
+        />
         <Route path="/tenant" element={<Tenant />} />
         <Route path="/" element={<Home />} />
         <Route path="*" element={<NotFound />} />
         <Route path="/dashboard" element={<ProtectedRoute />}>
-          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/dashboard" element={<Sidebar element={<Dashboard />} />} />
         </Route>
         <Route path="/customers" element={<ProtectedRoute />}>
-          <Route path="/customers" element={<CustomerList />} />
+          <Route path="/customers" element={<Sidebar element={<CustomerList isPotential={false} />} />} />
+        </Route>
+        <Route path="/customers/potential" element={<ProtectedRoute />}>
+          <Route path="/customers/potential" element={<Sidebar element={<CustomerList isPotential={true} />} />} />
         </Route>
         <Route path="/projects" element={<ProtectedRoute />}>
-          <Route path="/projects" element={<ProjectList />} />
+          <Route path="/projects" element={<Sidebar element={<ProjectList />} />} />
         </Route>
         <Route path="/logout" element={<ProtectedRoute />}>
           <Route path="/logout" element={<Logout />} />

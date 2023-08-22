@@ -79,7 +79,7 @@ function ForgotPassword() {
           />
         </FormControl>
         <Stack spacing={5}>
-          <ChakraLink color={"blue.600"} as={ReactRouterLink} to="/login">
+          <ChakraLink color={useColorModeValue("blue.400", "blue.200")} as={ReactRouterLink} to="/login">
             Giriş yap
           </ChakraLink>
           {identity.error && (

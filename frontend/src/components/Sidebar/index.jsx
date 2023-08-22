@@ -31,9 +31,10 @@ import {
 } from "react-icons/fi";
 import PropTypes from "prop-types";
 import { PiSignOutBold } from "react-icons/pi";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 
-const SidebarContent = ({ onClose, logo, items, ...rest }) => {
+
+const SidebarContent = ({ onClose, logo, items, ...rest }) => {  
   return (
     <Box
       bg={useColorModeValue("white", "gray.900")}
@@ -50,9 +51,9 @@ const SidebarContent = ({ onClose, logo, items, ...rest }) => {
         </Text>
         <CloseButton display={{ base: "flex", md: "none" }} onClick={onClose} />
       </Flex>
-      {items.map((link) => (
-        <NavItem key={link.name} icon={link.icon} path={link.path}>
-          {link.name}
+      {items.map((item) => (
+        <NavItem key={item.name} icon={item.icon} path={item.path}>
+          {item.name}
         </NavItem>
       ))}
     </Box>
@@ -72,13 +73,18 @@ SidebarContent.propTypes = {
 
 const NavItem = ({ icon, children, path, ...rest }) => {
   const navigate = useNavigate();
+  const location = useLocation();
+  const activeColor = useColorModeValue("cyan.200", "cyan.900");
+
   return (
     <Box
       as="a"
       href="#"
       style={{ textDecoration: "none" }}
       _focus={{ boxShadow: "none" }}
-      onClick={() => { navigate(path); }}
+      onClick={() => {
+        navigate(path);
+      }}
     >
       <Flex
         align="center"
@@ -92,6 +98,7 @@ const NavItem = ({ icon, children, path, ...rest }) => {
           bg: useColorModeValue("cyan.400", "cyan.700"),
           color: "white",
         }}
+        bg={location.pathname === path ? activeColor : "transparent"}
         {...rest}
       >
         {icon && (
@@ -216,12 +223,13 @@ MobileNav.propTypes = {
   logo: PropTypes.string.isRequired,
 };
 
-const SidebarWithHeader = () => {
+const SidebarWithHeader = ({ element }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const items = [
-    { name: "Anasayfa", icon: FiTrendingUp, path: "/" },
+    { name: "Anasayfa", icon: FiTrendingUp, path: "/dashboard" },
     { name: "Müşteriler", icon: FiUsers, path: "/customers" },
+    { name: "Potansiyeller", icon: FiUsers, path: "/customers/potential" },
     { name: "Projeler", icon: FiGrid, path: "/projects" },
     { name: "Ayarlar", icon: FiSettings, path: "/settings" },
   ];
@@ -251,10 +259,14 @@ const SidebarWithHeader = () => {
       {/* mobilenav */}
       <MobileNav logo={logo} onOpen={onOpen} />
       <Box ml={{ base: 0, md: 60 }} p="4">
-        {/* Content */}
+        {element}
       </Box>
     </Box>
   );
+};
+
+SidebarWithHeader.propTypes = {
+  element: PropTypes.element.isRequired,
 };
 
 export default SidebarWithHeader;
