@@ -5,6 +5,10 @@ import { BrowserRouter, Routes, Route, useNavigate } from "react-router-dom";
 import ProtectedRoute from "@/components/ProtectedRoute";
 import { useUnauthorizedResponseHandler } from "@/utils/axiosInterceptors";
 
+import Sidebar from "@/components/Sidebar"
+
+import Home from "@/containers/Landing/Home";
+import NotFound from "@/containers/HttpStatuses/NotFound";
 import Login from "@/containers/Identity/Login";
 import Register from "@/containers/Identity/Register";
 import Logout from "@/containers/Identity/Logout";
@@ -15,9 +19,11 @@ import Tenant from "@/containers/Identity/Tenant";
 import CustomerList from "@/containers/Customers/List";
 import ProjectList from "@/containers/Projects/List";
 import Dashboard from "@/containers/Dashboard";
-import NotFound from "@/containers/HttpStatuses/NotFound";
-import Home from "@/containers/Landing/Home";
-import Sidebar from "@/components/Sidebar"
+import Settings from "@/containers/Settings";
+import Application from "@/containers/Settings/Application/List";
+import Currency from "@/containers/Settings/Currency/List";
+
+
 
 function UseMiddleware() {
   const navigate = useNavigate();
@@ -60,6 +66,11 @@ function App() {
         </Route>
         <Route path="/projects" element={<ProtectedRoute />}>
           <Route path="/projects" element={<Sidebar element={<ProjectList />} />} />
+        </Route>
+        <Route path="/settings" element={<ProtectedRoute />}>
+          <Route path="/settings" element={<Sidebar element={<Settings />} />} />
+          <Route path="/settings/currency" element={<Sidebar element={<Settings selected={Currency} />} />} />
+          <Route path="/settings/application" element={<Sidebar element={<Settings selected={Application} />} />} />
         </Route>
         <Route path="/logout" element={<ProtectedRoute />}>
           <Route path="/logout" element={<Logout />} />

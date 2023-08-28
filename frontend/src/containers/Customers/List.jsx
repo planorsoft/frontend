@@ -5,6 +5,7 @@ import DataTable from "@/components/DataTable";
 import Toolbar from "@/components/Toolbar";
 import CreateCustomer from "@/containers/Customers/Create";
 import UpdateCustomer from "@/containers/Customers/Update";
+import RemoveCustomer from "@/containers/Customers/Remove";
 import { useDisclosure } from "@chakra-ui/react";
 import PropTypes from "prop-types";
 
@@ -18,11 +19,17 @@ function CustomerList({ isPotential }) {
   const { customers, loading, totalCount, hasNext, hasPrevious } = useSelector((state) => state.customer);
   const create = useDisclosure();
   const update = useDisclosure();
+  const remove = useDisclosure();
   const [selectedCustomerId, setSelectedCustomerId] = useState(null);
 
-  const handleSelectCustomer = (id) => {
+  const handleUpdateCustomer = (id) => {
     setSelectedCustomerId(id);
     update.onOpen();
+  };
+
+  const handleRemoveCustomer = (id) => {
+    setSelectedCustomerId(id);
+    remove.onOpen();
   };
 
   useEffect(() => {
@@ -31,9 +38,10 @@ function CustomerList({ isPotential }) {
 
   return (
     <>
-      <Toolbar title="Müşteriler" onCreateOpen={create.onOpen} />
+      <Toolbar title={isPotential ? "Potansiyel müşteriler" : "Müşteriler"} onCreateOpen={create.onOpen} />
       <CreateCustomer isOpen={create.isOpen} onClose={create.onClose} />
       <UpdateCustomer selectedCustomerId={selectedCustomerId} isOpen={update.isOpen} onClose={update.onClose} />
+      <RemoveCustomer selectedCustomerId={selectedCustomerId} isOpen={remove.isOpen} onClose={remove.onClose} />
       <DataTable
         loading={loading}
         data={customers}
@@ -41,7 +49,9 @@ function CustomerList({ isPotential }) {
         hasNext={hasNext}
         hasPrevious={hasPrevious}
         totalCount={totalCount}
-        selectId={handleSelectCustomer}
+        updateItem={handleUpdateCustomer}
+        removeItem={handleRemoveCustomer}
+        paginated
         fetchData={(page) => {
           dispath(getCustomerList(page));
         }}

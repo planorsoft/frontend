@@ -1,5 +1,5 @@
 import {
-  Box,
+  FormControl,
   Button,
   Checkbox,
   Drawer,
@@ -15,17 +15,23 @@ import {
   Stack,
   Textarea,
   useToast,
+  FormErrorMessage,
 } from "@chakra-ui/react";
 import PropTypes from "prop-types";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { createCustomer } from "@/containers/Customers/actions";
+import { getCurrencyListIfEmpty } from "@/containers/Settings/Currency/actions";
 import customerTypes from "@/containers/Customers/types";
+import validate from "@/utils/validate";
+import validations from "@//containers/Customers/validations";
 
 function Create({ isOpen, onClose }) {
   const dispatch = useDispatch();
   const toast = useToast();
   const { error, status } = useSelector((state) => state.customer);
+  const { currencies, loading } = useSelector((state) => state.currency);
+  const [formErrors, setFormErrors] = useState({});
   const [name, setName] = useState("");
   const [isCompany, setIsCompany] = useState(true);
   const [address, setAddress] = useState("");
@@ -38,6 +44,7 @@ function Create({ isOpen, onClose }) {
   const [governmentId, setGovernmentId] = useState("");
   const [isPotantial, setIsPotantial] = useState(false);
   const [currency, setCurrency] = useState("");
+  const hasError = (field) => field in formErrors;
 
   const onSubmitHandler = (e) => {
     e.preventDefault();
@@ -57,8 +64,16 @@ function Create({ isOpen, onClose }) {
       currency,
     };
 
+    const validationResults = validate(validations, customer);
+    setFormErrors(validationResults);
+    if (Object.keys(validationResults).length > 0) return;
+
     dispatch(createCustomer(customer));
   };
+
+  useEffect(() => {
+    dispatch(getCurrencyListIfEmpty());
+  }, [dispatch]);
 
   useEffect(() => {
     if (status === customerTypes.CREATE_CUSTOMER_SUCCESS) {
@@ -91,16 +106,19 @@ function Create({ isOpen, onClose }) {
 
         <DrawerBody>
           <Stack spacing="24px">
-            <Box>
+            <FormControl isInvalid={hasError("name")}>
               <FormLabel htmlFor="name">İsim</FormLabel>
               <Input
                 id="name"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
               />
-            </Box>
+              {formErrors.name && (
+                <FormErrorMessage>{formErrors.name}</FormErrorMessage>
+              )}
+            </FormControl>
 
-            <Box>
+            <FormControl>
               <Checkbox
                 value={isCompany}
                 onChange={(e) => setIsCompany(e.target.checked)}
@@ -116,54 +134,69 @@ function Create({ isOpen, onClose }) {
               >
                 Potansiyel müşteri
               </Checkbox>
-            </Box>
+            </FormControl>
 
-            <Box>
+            <FormControl isInvalid={hasError("address")}>
               <FormLabel htmlFor="address">Adres</FormLabel>
               <Textarea
                 id="address"
                 value={address}
                 onChange={(e) => setAddress(e.target.value)}
               />
-            </Box>
+              {formErrors.address && (
+                <FormErrorMessage>{formErrors.name}</FormErrorMessage>
+              )}
+            </FormControl>
 
-            <Box>
+            <FormControl isInvalid={hasError("country")} >
               <FormLabel htmlFor="country">Ülke</FormLabel>
               <Input
                 id="country"
                 value={country}
                 onChange={(e) => setCountry(e.target.value)}
               />
-            </Box>
+              {formErrors.country && (
+                <FormErrorMessage>{formErrors.country}</FormErrorMessage>
+              )}
+            </FormControl>
 
-            <Box>
+            <FormControl isInvalid={hasError("city")}>
               <FormLabel htmlFor="city">İl</FormLabel>
               <Input
                 id="city"
                 value={city}
                 onChange={(e) => setCity(e.target.value)}
               />
-            </Box>
+              {formErrors.city && (
+                <FormErrorMessage>{formErrors.city}</FormErrorMessage>
+              )}
+            </FormControl>
 
-            <Box>
+            <FormControl isInvalid={hasError("district")}>
               <FormLabel htmlFor="district">İlçe</FormLabel>
               <Input
                 id="district"
                 value={district}
                 onChange={(e) => setDistrict(e.target.value)}
               />
-            </Box>
+              {formErrors.district && (
+                <FormErrorMessage>{formErrors.district}</FormErrorMessage>
+              )}
+            </FormControl>
 
-            <Box>
+            <FormControl isInvalid={hasError("postCode")}>
               <FormLabel htmlFor="postCode">Posta kodu</FormLabel>
               <Input
                 id="postCode"
                 value={postCode}
                 onChange={(e) => setPostCode(e.target.value)}
               />
-            </Box>
+              {formErrors.postCode && (
+                <FormErrorMessage>{formErrors.postCode}</FormErrorMessage>
+              )}
+            </FormControl>
 
-            <Box>
+            <FormControl isInvalid={hasError("phone")}>
               <FormLabel htmlFor="phone">Telefon numarası</FormLabel>
               <Input
                 id="phone"
@@ -171,18 +204,24 @@ function Create({ isOpen, onClose }) {
                 onChange={(e) => setPhone(e.target.value)}
                 placeholder="+90 507 657 87 65"
               />
-            </Box>
+              {formErrors.phone && (
+                <FormErrorMessage>{formErrors.phone}</FormErrorMessage>
+              )}
+            </FormControl>
 
-            <Box>
+            <FormControl isInvalid={hasError("website")}>
               <FormLabel htmlFor="website">Website</FormLabel>
               <Input
                 id="website"
                 value={website}
                 onChange={(e) => setWebsite(e.target.value)}
               />
-            </Box>
+              {formErrors.website && (
+                <FormErrorMessage>{formErrors.website}</FormErrorMessage>
+              )}
+            </FormControl>
 
-            <Box>
+            <FormControl isInvalid={hasError("governmentId")}>
               <FormLabel htmlFor="governmentId">
                 {isCompany ? "Vergi numarası" : "TC kimlik numarası"}
               </FormLabel>
@@ -191,19 +230,30 @@ function Create({ isOpen, onClose }) {
                 value={governmentId}
                 onChange={(e) => setGovernmentId(e.target.value)}
               />
-            </Box>
+              {formErrors.governmentId && (
+                <FormErrorMessage>{formErrors.governmentId}</FormErrorMessage>
+              )}
+            </FormControl>
 
-            <Box>
+            <FormControl>
               <FormLabel htmlFor="currency">Döviz kuru</FormLabel>
               <Select
                 id="currency"
                 value={currency}
                 onChange={(e) => setCurrency(e.target.value)}
               >
-                <option value="TRY">TRY</option>
-                <option value="USD">USD</option>
+                <option value="">Döviz seçiniz</option>
+                {loading ? (
+                  <option value="">Yükleniyor...</option>
+                ) : (
+                  currencies.map((currency) => (
+                    <option key={currency.id} value={currency.code}>
+                      {currency.code}
+                    </option>
+                  ))
+                )}
               </Select>
-            </Box>
+            </FormControl>
           </Stack>
         </DrawerBody>
 

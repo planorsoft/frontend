@@ -137,6 +137,9 @@ const customerReducer = (state = initialState, action) => {
         ...state,
         loading: false,
         error: null,
+        customers: state.customers.filter(
+          (customer) => customer.id !== action.payload
+        ),
         success: action.payload.success,
         status: customerTypes.DELETE_CUSTOMER_SUCCESS,
       };

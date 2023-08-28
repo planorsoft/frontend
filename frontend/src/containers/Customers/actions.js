@@ -35,19 +35,12 @@ export const getCustomer = (id) => async (dispatch) => {
 export const createCustomer = (customer) => async (dispatch) => {
   try {
     dispatch({ type: customerTypes.CREATE_CUSTOMER_REQUEST });
-    const { response } = await axios.post("/customers", customer);
-    if (response.status === 400) {
-      dispatch({
-        type: customerTypes.CREATE_CUSTOMER_FAILURE,
-        payload: response.data.detail,
-      });
-    } else {
-      dispatch({ type: customerTypes.CREATE_CUSTOMER_SUCCESS });
-    }
+    await axios.post("/customers", customer);
+    dispatch({ type: customerTypes.CREATE_CUSTOMER_SUCCESS });
   } catch (error) {
     dispatch({
       type: customerTypes.CREATE_CUSTOMER_FAILURE,
-      payload: error.response.data,
+      payload: error.response.data.detail,
     });
   }
 };
@@ -60,7 +53,7 @@ export const updateCustomer = (id, customer) => async (dispatch) => {
   } catch (error) {
     dispatch({
       type: customerTypes.UPDATE_CUSTOMER_FAILURE,
-      payload: error.response.data,
+      payload: error.response.data.detail,
     });
   }
 };
