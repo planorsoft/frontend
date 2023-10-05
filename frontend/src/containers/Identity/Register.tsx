@@ -1,7 +1,7 @@
 
 function Register() {
   return (
-    <div>Register</div>
+    <div>Kayıt</div>
   )
 }
 
