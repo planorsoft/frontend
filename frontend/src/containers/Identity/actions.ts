@@ -1,10 +1,10 @@
 import axios from "@/lib/axios";
 import { ConfirmData, ForgotConfirmPasswordData, ForgotPasswordData, LoginData, RegisterData, identityTypes } from "@/containers/Identity/types";
 import jwtDecoder from "@/lib/jwtDecoder";
-import store, { AppDispatch } from "@/store";
+import { AppDispatch } from "@/store";
 import { AxiosError } from "axios";
 
-export const setToken = (token = null) => {
+export const setToken = (token : string | null = null) => {
   // If token is gived by parameter
   if (token !== null) {
     localStorage.setItem("token", token);
@@ -31,22 +31,9 @@ export const setToken = (token = null) => {
     };
   }
 
-  // Lookup store
-  const tokenFromStore = store.getState().identity.token;
-  if (tokenFromStore !== null) {
-    const data = {
-      tokenFromStore,
-      user: jwtDecoder(tokenFromStore),
-    };
-    return {
-      type: identityTypes.SET_TOKEN,
-      payload: data,
-    };
-  } else {
-    return {
-      type: identityTypes.SET_TOKEN_FAILURE,
-    };
-  }
+  return {
+    type: identityTypes.SET_TOKEN_FAILURE,
+  };
 };
 
 export const resetToken = () => {
@@ -64,6 +51,7 @@ export const login = ({email, password, tenant} : LoginData) => async (dispatch 
       password,
       tenant,
     });
+    dispatch(setToken(data.accessToken))
     dispatch({ type: identityTypes.LOGIN_SUCCESS, payload: data });
   } catch (error) {
     if(!(error instanceof AxiosError)) { throw error; }
@@ -75,12 +63,13 @@ export const login = ({email, password, tenant} : LoginData) => async (dispatch 
   }
 };
 
-export const register = ({name, email, password, tenant, role} : RegisterData) => async (dispatch : AppDispatch) => {
+export const register = ({name, email, username, password, tenant, role} : RegisterData) => async (dispatch : AppDispatch) => {
     dispatch({ type: identityTypes.REGISTER_REQUEST, payload: null });
     try {
       const { data } = await axios.post("/identity/register", {
         name,
         email,
+        username,
         password,
         tenant,
         role,

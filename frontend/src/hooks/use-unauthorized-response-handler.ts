@@ -19,7 +19,7 @@ export function useUnauthorizedResponseHandler() {
         });
       } else if (error.response?.status === 401) {
         toast({
-          title: "Oturum süreniz doldu, lütfen yeniden giriş yapınız.",
+          title: "Lütfen yeniden giriş yapınız.",
           variant: "destructive",
         });
       } else if (error.response?.status === 403) {

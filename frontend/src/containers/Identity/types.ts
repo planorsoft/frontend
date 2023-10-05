@@ -48,11 +48,11 @@ export interface LoginData {
 
 export interface RegisterData {
   name: string;
+  username: string;
   tenant: string;
   role: string;
   email: string;
   password: string;
-  confirmPassword: string;
 }
 
 export interface ConfirmData {
