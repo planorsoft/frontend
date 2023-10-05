@@ -8,6 +8,7 @@ import Page from "@/components/page";
 import NotFound from "@/containers/HttpStatuses/NotFound";
 import Login from "@/containers/Identity/Login";
 import Register from "@/containers/Identity/Register";
+import ConfirmEmail from "@/containers/Identity/ConfirmEmail";
 import Logout from "@/containers/Identity/Logout";
 import Confirm from "@/containers/Identity/Confirm";
 import ForgotPassword from "@/containers/Identity/ForgotPassword";
@@ -30,6 +31,7 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/confirm" element={<Confirm />} />
+        <Route path="/confirm-email" element={<ConfirmEmail />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route
           path="/forgot-confirm-password"

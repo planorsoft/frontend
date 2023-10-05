@@ -8,6 +8,6 @@ export function getTenant() {
   return subdomain;
 }
 
-export function setTenant(tenant) {
+export function setTenant(tenant : string) {
   localStorage.setItem('tenant', tenant);
 }

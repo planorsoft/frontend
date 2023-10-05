@@ -45,7 +45,7 @@ export const identityReducer = (state = initialState, action: IdentityAction ) =
     case identityTypes.LOGIN_FAILURE:
       return {
         ...state,
-        error: action.payload?.error,
+        error: action.payload,
         loading: false,
         isAuthenticated: false,
         status: identityTypes.LOGIN_FAILURE
@@ -66,7 +66,7 @@ export const identityReducer = (state = initialState, action: IdentityAction ) =
     case identityTypes.REGISTER_FAILURE:
       return {
         ...state,
-        error: action.payload?.error,
+        error: action.payload,
         loading: false,
         isAuthenticated: false,
         status: identityTypes.REGISTER_FAILURE
@@ -88,7 +88,7 @@ export const identityReducer = (state = initialState, action: IdentityAction ) =
     case identityTypes.CONFIRM_FAILURE:
       return {
         ...state,
-        error: action.payload?.error,
+        error: action.payload,
         loading: false,
         isAuthenticated: false,
         status: identityTypes.CONFIRM_FAILURE
@@ -109,7 +109,7 @@ export const identityReducer = (state = initialState, action: IdentityAction ) =
     case identityTypes.FORGOT_PASSWORD_FAILURE:
       return {
         ...state,
-        error: action.payload?.error,
+        error: action.payload,
         loading: false,
         isAuthenticated: false,
         status: identityTypes.FORGOT_PASSWORD_FAILURE
@@ -130,7 +130,7 @@ export const identityReducer = (state = initialState, action: IdentityAction ) =
     case identityTypes.FORGOT_CONFIRM_PASSWORD_FAILURE:
       return {
         ...state,
-        error: action.payload?.error,
+        error: action.payload,
         loading: false,
         isAuthenticated: false,
         status: identityTypes.FORGOT_CONFIRM_PASSWORD_FAILURE
