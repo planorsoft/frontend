@@ -38,26 +38,26 @@ function App() {
           element={<ForgotConfirmPassword />}
         />
         <Route path="/tenant" element={<Tenant />} />
-        <Route path="/" element={<div>Home</div>} />
+        <Route path="/" element={<div>Dashboard</div>} />
         <Route path="*" element={<NotFound />} />
         <Route path="/dashboard" element={<ProtectedRoute />}>
-          <Route path="/dashboard" element={<Page>dashboard</Page>} />
+          <Route path="/dashboard" element={<Page>Dashboard</Page>} />
         </Route>
         <Route path="/customers" element={<ProtectedRoute />}>
-          <Route path="/customers" element={<Page>dashboard</Page>} />
-          <Route path="/customers/detail/:id" element={<Page>dashboard</Page>} />
+          <Route path="/customers" element={<Page>Customers</Page>} />
+          <Route path="/customers/detail/:id" element={<Page>Customer Detail</Page>} />
         </Route>
         <Route path="/customers/potential" element={<ProtectedRoute />}>
-          <Route path="/customers/potential" element={<Page>dashboard</Page>} />
-          <Route path="/customers/potential/detail/:id" element={<Page>dashboard</Page>} />
+          <Route path="/customers/potential" element={<Page>Lead</Page>} />
+          <Route path="/customers/potential/detail/:id" element={<Page>Lead Detail</Page>} />
         </Route>
         <Route path="/projects" element={<ProtectedRoute />}>
-          <Route path="/projects" element={<Page>dashboard</Page>} />
+          <Route path="/projects" element={<Page>Projects</Page>} />
         </Route>
         <Route path="/settings" element={<ProtectedRoute />}>
-          <Route path="/settings" element={<Page>dashboard</Page>} />
-          <Route path="/settings/currency" element={<Page>dashboard</Page>} />
-          <Route path="/settings/application" element={<Page>dashboard</Page>} />
+          <Route path="/settings" element={<Page>Settings</Page>} />
+          <Route path="/settings/currency" element={<Page>Settings/Currency</Page>} />
+          <Route path="/settings/application" element={<Page>Settings/App</Page>} />
         </Route>
         <Route path="/logout" element={<ProtectedRoute />}>
           <Route path="/logout" element={<Logout />} />
