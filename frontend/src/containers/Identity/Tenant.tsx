@@ -18,6 +18,8 @@ import { useAppSelector } from "@/store";
 import { setTenant } from "@/lib/tenant";
 import useQuery from "@/hooks/use-query";
 import { useEffect, useState } from "react";
+import axios from "@/lib/axios";
+import { AxiosError } from "axios";
 
 const formSchema = z.object({
   tenant: z.string().min(2, {
@@ -51,9 +53,34 @@ function Tenant() {
         break;
     }
   }, [])
+
+  const checkTenant = async (tenant: string) => {
+    try {
+      await axios.get(`/tenants?name=${tenant}`);
+      return true;
+    } catch (error) {
+      if(!(error instanceof AxiosError)) { throw error; }
+      
+      const status = error.response?.status;
+      if(status === 404) {
+        return false;
+      } else {
+        throw error;
+      }
+    }
+  }
   
 
-  const onSubmit = (values: z.infer<typeof formSchema>) => {
+  const onSubmit = async (values: z.infer<typeof formSchema>) => {
+    const isTenantExists = await checkTenant(values.tenant);
+    if(!isTenantExists) {
+      form.setError("tenant", {
+        type: "manual",
+        message: "Bu alan adı kullanılamaz.",
+      });
+      return;
+    }
+    
     setTenant(values.tenant);
     window.location.href = `http://${values.tenant}.localhost:3030/${redirect}`;
   };
