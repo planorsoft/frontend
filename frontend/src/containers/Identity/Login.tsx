@@ -59,7 +59,7 @@ function Login() {
   useEffect(() => {
     const tenant = getTenant();
     if (!tenant) {
-      navigate("/tenant?redirect=register");
+      navigate("/tenant?redirect=login");
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
