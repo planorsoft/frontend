@@ -8,7 +8,7 @@ import {
   getPaginationRowModel,
   PaginationState,
 } from "@tanstack/react-table";
-import { ArrowUpDown, Check, X } from "lucide-react";
+import { ArrowUpDown, Check, Pencil, X } from "lucide-react";
 import {
   Table,
   TableBody,
@@ -101,10 +101,11 @@ const columnDefs: ColumnDefs = {
 interface DataTableProps extends React.HTMLAttributes<HTMLDivElement> {
   url: string;
   entity: "customer" | "project";
-  filter: string | null;
+  select: (id: number) => void
+  filter?: string;
 }
 
-function DataTable<T>({ url, entity, filter }: DataTableProps) {
+function DataTable<T>({ url, entity, select, filter }: DataTableProps) {
   const columns: ColumnDef<T>[] = columnDefs[ entity as keyof ColumnDefs ] as ColumnDef<T>[];
 
   const odata = new OData<T>();
@@ -212,6 +213,9 @@ function DataTable<T>({ url, entity, filter }: DataTableProps) {
                     </TableHead>
                   );
                 })}
+                <TableHead>
+                  Aksiyon
+                </TableHead>
               </TableRow>
             ))}
           </TableHeader>
@@ -230,6 +234,11 @@ function DataTable<T>({ url, entity, filter }: DataTableProps) {
                       )}
                     </TableCell>
                   ))}
+                   <TableCell>
+                      <Button variant="outline" size="icon" onClick={() => { select(row.getValue("Id")) }}>
+                        <Pencil className="w-4 h-4" />
+                      </Button>
+                    </TableCell>
                 </TableRow>
               ))
             ) : (
