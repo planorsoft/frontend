@@ -43,7 +43,7 @@ function App() {
           element={<ForgotConfirmPassword />}
         />
         <Route path="/tenant" element={<Tenant />} />
-        <Route path="/" element={<div>Home</div>} />
+        <Route path="/" element={<div>Dashboard</div>} />
         <Route path="*" element={<NotFound />} />
         <Route path="/dashboard" element={<ProtectedRoute />}>
           <Route path="/dashboard" element={<Page><Dashboard /></Page>} />
@@ -61,9 +61,9 @@ function App() {
           <Route path="/projects/:id" element={<Page><ProjectDetail /></Page>} />
         </Route>
         <Route path="/settings" element={<ProtectedRoute />}>
-          <Route path="/settings" element={<Page>dashboard</Page>} />
-          <Route path="/settings/currency" element={<Page>dashboard</Page>} />
-          <Route path="/settings/application" element={<Page>dashboard</Page>} />
+          <Route path="/settings" element={<Page>Settings</Page>} />
+          <Route path="/settings/currency" element={<Page>Settings/Currency</Page>} />
+          <Route path="/settings/application" element={<Page>Settings/App</Page>} />
         </Route>
         <Route path="/logout" element={<ProtectedRoute />}>
           <Route path="/logout" element={<Logout />} />

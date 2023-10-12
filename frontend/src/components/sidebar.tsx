@@ -1,6 +1,6 @@
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import { Building, Building2, Target, KanbanSquare, Home } from 'lucide-react';
+import { KanbanSquare, LayoutDashboard, CalendarDays, Users, UserPlus, Folder, Landmark } from 'lucide-react';
 import { useLocation, useNavigate } from "react-router-dom";
 
 interface SidebarProps extends React.HTMLAttributes<HTMLDivElement> {}
@@ -12,22 +12,27 @@ export function Sidebar({ className }: SidebarProps) {
   const sidebar = [
     {
       name: "Ana sayfa",
-      icon: Home,
+      icon: LayoutDashboard,
       to: "/dashboard",
     },
     {
-      name: "Potansiyel müşteriler",
-      icon: Building,
-      to: "/customers/potential",
+      name: "Takvim",
+      icon: CalendarDays,
+      to: "/calendar",
     },
     {
-      name: "Gerçek müşteriler",
-      icon: Building2,
+      name: "Müşteriler",
+      icon: Users,
       to: "/customers",
     },
     {
+      name: "Potansiyel müşteriler",
+      icon: UserPlus,
+      to: "/customers/potential",
+    },
+    {
       name: "Projeler",
-      icon: Target,
+      icon: Folder,
       to: "/projects",
     },
     {
@@ -35,6 +40,11 @@ export function Sidebar({ className }: SidebarProps) {
       icon: KanbanSquare,
       to: "/duties",
     },
+    {
+      name: "Finans",
+      icon: Landmark,
+      to: "/finance",
+    }
   ];
 
   return (
