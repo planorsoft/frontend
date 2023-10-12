@@ -1,6 +1,6 @@
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import { KanbanSquare, LayoutDashboard, CalendarDays, Users, UserPlus, Folder, Landmark } from 'lucide-react';
+import { KanbanSquare, LayoutDashboard, CalendarDays, Users, UserPlus, Folder, Landmark, FileText, Settings } from 'lucide-react';
 import { useLocation, useNavigate } from "react-router-dom";
 
 interface SidebarProps extends React.HTMLAttributes<HTMLDivElement> {}
@@ -44,6 +44,16 @@ export function Sidebar({ className }: SidebarProps) {
       name: "Finans",
       icon: Landmark,
       to: "/finance",
+    },
+    {
+      name: "Raporlar",
+      icon: FileText,
+      to: "/reports",
+    },
+    {
+      name: "Ayarlar",
+      icon: Settings,
+      to: "/settings",
     }
   ];
 
