@@ -101,9 +101,10 @@ const columnDefs: ColumnDefs = {
 interface DataTableProps extends React.HTMLAttributes<HTMLDivElement> {
   url: string;
   entity: "customer" | "project";
+  filter: string | null;
 }
 
-function DataTable<T>({ url, entity }: DataTableProps) {
+function DataTable<T>({ url, entity, filter }: DataTableProps) {
   const columns: ColumnDef<T>[] = columnDefs[ entity as keyof ColumnDefs ] as ColumnDef<T>[];
 
   const odata = new OData<T>();
@@ -134,14 +135,17 @@ function DataTable<T>({ url, entity }: DataTableProps) {
       pagination,
       sorting
     },
-    debugTable: true,
   });
 
 
   async function fetchData({ sort, go }: { sort?: string, go: number }) {
     const select = odata.createSelectFromColumns(columns);
-    url = `${url}?$count=true&$select=${select}`;
+    url = `${url}?$count=true&$select=${select}&$top=${pageSize}`;
     
+    if (filter) {
+      url = `${url}&$filter=${filter}`;
+    }
+
     if (sort) {
         url = `${url}&$orderby=${sort}`;
     }
@@ -168,7 +172,7 @@ function DataTable<T>({ url, entity }: DataTableProps) {
   useEffect(() => {
     const sort = odata.createSortFromSortingState(sorting);
     fetchData({ sort, go: 0 });
-  }, [sorting]);
+  }, [sorting, filter]);
 
 
   const goNextPage = () => {

@@ -26,7 +26,7 @@ export interface CustomerUpsert {
     phoneNumber: string | null;
     website: string | null;
     governmentId: string | null;
-    currency: string | null;
+    currencyCode: string | null;
     isPotantial: boolean | null;
 }
 
