@@ -17,8 +17,6 @@ import Tenant from "@/containers/Identity/Tenant";
 import Dashboard from "@/containers/Home/Dashboard";
 import CustomerList from "@/containers/Customer/List";
 import ProjectList from "@/containers/Project/List";
-import ProjectDetail from "@/containers/Project/Detail";
-
 
 
 function UseMiddleware() {
@@ -55,7 +53,6 @@ function App() {
         </Route>
         <Route path="/projects" element={<ProtectedRoute />}>
           <Route path="/projects" element={<Page><ProjectList /></Page>} />
-          <Route path="/projects/:id" element={<Page><ProjectDetail /></Page>} />
         </Route>
         <Route path="/settings" element={<ProtectedRoute />}>
           <Route path="/settings" element={<Page>Settings</Page>} />
