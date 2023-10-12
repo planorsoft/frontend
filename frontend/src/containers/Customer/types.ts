@@ -1,36 +1,15 @@
 export interface Customer {
     id: number | null;
-    name: string | null;
-    isCompany: boolean | null;
-    address: string | null;
-    city: string | null;
-    district: string | null;
-    postCode: string | null;
-    country: string | null;
-    phoneNumber: string | null;
-    website: string | null;
-    governmentId: string | null;
-    currency: string | null;
-    isPotantial: boolean | null;
+    name: string;
+    isCompany: boolean;
+    address: string;
+    city: string;
+    district?: string;
+    postCode?: string;
+    country: string;
+    phoneNumber?: string;
+    website?: string;
+    governmentId: string;
+    currencyCode?: string;
+    isPotantial: boolean;
 }
-
-export interface CustomerUpsert {
-    id: number | null;
-    name: string | null;
-    isCompany: boolean | null;
-    address: string | null;
-    city: string | null;
-    district: string | null;
-    postCode: string | null;
-    country: string | null;
-    phoneNumber: string | null;
-    website: string | null;
-    governmentId: string | null;
-    currencyCode: string | null;
-    isPotantial: boolean | null;
-}
-
-export interface CustomerDelete {
-    id: string;
-}
-    

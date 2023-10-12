@@ -6,43 +6,28 @@ import {
   SheetTitle,
   SheetHeader,
   SheetDescription,
+  Sheet,
 } from "@/components/ui/sheet";
-import { createCustomer } from "./service";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { Switch } from "@/components/ui/switch";
-import { Loader } from "lucide-react";
-import { useState } from "react";
+import { createCustomer, getCustomer } from "./service";
+import { Form } from "@/components/ui/form";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
+import InputString from "@/components/ui/input-string";
+import InputBoolean from "@/components/ui/input-boolean";
+import { toast } from "@/components/ui/use-toast";
+import { AxiosError } from "axios";
+import Loader from "@/components/ui/loader";
+import formSchema from "./formSchema";
+import { LoaderIcon } from "lucide-react";
 
-const formSchema = z.object({
-  id: z.number(),
-  name: z
-    .string()
-    .min(2, {
-      message: "Lütfen geçerli bir isim giriniz.",
-    }),
-  isCompany: z.boolean(),
-  address: z.string(),
-  city: z.string(),
-  district: z.string(),
-  postCode: z.string(),
-  country: z.string(),
-  phoneNumber: z.string(),
-  website: z.string(),
-  governmentId: z.string(),
-  isPotantial: z.boolean(),
-  currencyCode: z.string(),
-});
+interface UpsertProps extends React.HTMLAttributes<HTMLDivElement> {
+  open: boolean,
+  setOpen: React.Dispatch<React.SetStateAction<boolean>>
+  forceUpadte: () => void,
+  customerId: number
+}
 
-const Upsert = () => {
+const Upsert = ({ open, setOpen, forceUpadte, customerId } : UpsertProps) => {
   const [loading, setLoading] = useState(false);
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -53,90 +38,160 @@ const Upsert = () => {
       isCompany: false,
       address: "",
       city: "",
-      district: "",
-      postCode: "",
+      district: undefined,
+      postCode: undefined,
       country: "",
-      phoneNumber: "",
-      website: "",
+      phoneNumber: undefined,
+      website: undefined,
       governmentId: "",
       isPotantial: false,
-      currencyCode: "",
+      currencyCode: undefined,
     },
   });
 
+  useEffect(() => {
+    getCustomerRequest();
+  },[customerId])
+
+  const getCustomerRequest = async () => {
+    if (customerId != 0) {
+      setLoading(true);
+      try {
+        const result = await getCustomer(customerId);
+        form.setValue("id", result?.id);
+        form.setValue("name", result?.name);
+        form.setValue("isCompany", result?.isCompany);
+        form.setValue("address", result?.address);
+        form.setValue("city", result?.city);
+        form.setValue("district", result?.district);
+        form.setValue("postCode", result?.postCode);
+        form.setValue("country", result?.country);
+        form.setValue("phoneNumber", result?.phoneNumber);
+        form.setValue("website", result?.website);
+        form.setValue("governmentId", result?.governmentId);
+        form.setValue("isPotantial", result?.isPotantial);
+        form.setValue("currencyCode", result?.currencyCode);
+      } catch (error) {
+        if (!(error instanceof AxiosError)) {
+          throw error;
+        }
+        toast({
+          title: "Hata oluştu",
+          description: error.response?.data.detail,
+          variant: "destructive",
+        });
+      }
+      setLoading(false);
+    } else {
+      form.reset();
+    }
+  }
+
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     setLoading(true);
-    await createCustomer(values);
+    try {
+      await createCustomer(values);
+      toast({
+        title: "Müşteri oluşturuldu",
+      });
+      setOpen(false);
+      forceUpadte();
+    } catch (error) {
+      if (!(error instanceof AxiosError)) {
+        throw error;
+      }
+      toast({
+        title: "Hata oluştu",
+        description: error.response?.data.detail,
+        variant: "destructive",
+      });
+    }
     setLoading(false);
   };
 
-
   return (
-    <SheetContent>
-      <SheetHeader>
-        <SheetTitle>Müşteri oluştur</SheetTitle>
-        <SheetDescription>
-          
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-            <FormField
-              control={form.control}
-              name="name"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Email</FormLabel>
-                  <FormControl>
-                    <Input placeholder="planor@gmail.com" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="isCompany"
-              render={({ field }) => (
-                <FormItem className="flex flex-row items-center justify-between rounded-lg border px-2 py-1">
-                  <FormLabel>Şirket:</FormLabel>
-                  <FormControl>
-                    <Switch 
-                      checked={field.value}
-                      onCheckedChange={field.onChange}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="address"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Email</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Fatih mah. Uzunlar cad. Kısa sok. no 16/2 Fatih İstanbul" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <Button
-              disabled={loading}
-              type="submit"
-              className="w-full"
-            >
-              {loading && (
-                <Loader className="mr-2 h-4 w-4 animate-spin" />
-              )}
-              Gönder
-            </Button>
-          </form>
-        </Form>
-
-        </SheetDescription>
-      </SheetHeader>
-    </SheetContent>
+    <Sheet open={open} onOpenChange={setOpen}>
+      <SheetContent className="overflow-y-scroll">
+        <SheetHeader>
+          <SheetTitle>Müşteri oluştur</SheetTitle>
+          <SheetDescription>
+            {loading ? <Loader /> : (
+              <Form {...form}>
+                <form
+                  onSubmit={form.handleSubmit(onSubmit)}
+                  className="space-y-4"
+                >
+                  <InputString
+                    control={form.control}
+                    placeholder="İsim*"
+                    fieldName="name"
+                  />
+                  <InputBoolean
+                    control={form.control}
+                    placeholder="Şirket"
+                    fieldName="isCompany"
+                  />
+                  <InputBoolean
+                    control={form.control}
+                    placeholder="Potansiyel müşteri"
+                    fieldName="isPotantial"
+                  />
+                  <InputString
+                    control={form.control}
+                    placeholder="Adres*"
+                    fieldName="address"
+                  />
+                  <InputString
+                    control={form.control}
+                    placeholder="Şehir*"
+                    fieldName="city"
+                  />
+                  <InputString
+                    control={form.control}
+                    placeholder="İlçe"
+                    fieldName="district"
+                  />
+                  <InputString
+                    control={form.control}
+                    placeholder="Posta kodu"
+                    fieldName="postCode"
+                  />
+                  <InputString
+                    control={form.control}
+                    placeholder="Ülke*"
+                    fieldName="country"
+                  />
+                  <InputString
+                    control={form.control}
+                    placeholder="Telefon numarası"
+                    fieldName="phoneNumber"
+                  />
+                  <InputString
+                    control={form.control}
+                    placeholder="Website"
+                    fieldName="website"
+                  />
+                  <InputString
+                    control={form.control}
+                    placeholder="TCKNO / Vergi No*"
+                    fieldName="governmentId"
+                  />
+                  <InputString
+                    control={form.control}
+                    placeholder="Kur"
+                    fieldName="currencyCode"
+                  />
+                  <Button disabled={loading} type="submit" className="w-full">
+                    {loading && <LoaderIcon className="mr-2 h-4 w-4 animate-spin" />}
+                    Gönder
+                  </Button>
+                </form>
+              </Form>
+            )}
+          </SheetDescription>
+        </SheetHeader>
+      </SheetContent>
+    </Sheet>
   );
 };
 
