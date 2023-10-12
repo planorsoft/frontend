@@ -1,6 +1,8 @@
 import { Link } from "react-router-dom";
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import Tenant from "../Tenant";
+import { getTenant } from "@/lib/tenant";
 
 
 interface IdentityContainerProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -20,7 +22,7 @@ function IdentityContainer({ children, type } : IdentityContainerProps) {
                 "absolute right-4 top-4 md:right-8 md:top-8"
             )}
             >
-            Hesap oluştur
+            Müşteri Ol
             </Link>
         )}
         { type === "register" && (
@@ -42,7 +44,7 @@ function IdentityContainer({ children, type } : IdentityContainerProps) {
               alt="Planor Logo"
               className="w-6 h-6 mr-2"
             />
-            Planor
+            { (type === "login" || type === "register") ? getTenant().charAt(0).toUpperCase() + getTenant().slice(1) : "Planor" }
           </div>
           <div className="relative z-20 mt-auto">
             <blockquote className="space-y-2">
