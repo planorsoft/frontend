@@ -16,7 +16,6 @@ import ForgotConfirmPassword from "@/containers/Identity/ForgotConfirmPassword";
 import Tenant from "@/containers/Identity/Tenant";
 import Dashboard from "@/containers/Home/Dashboard";
 import CustomerList from "@/containers/Customer/List";
-import CustomerDetail from "@/containers/Customer/Detail";
 import ProjectList from "@/containers/Project/List";
 import ProjectDetail from "@/containers/Project/Detail";
 
@@ -50,11 +49,9 @@ function App() {
         </Route>
         <Route path="/customers" element={<ProtectedRoute />}>
           <Route path="/customers" element={<Page><CustomerList type="real" /></Page>} />
-          <Route path="/customers/:id" element={<Page><CustomerDetail type="real" /></Page>} />
         </Route>
         <Route path="/customers/potential" element={<ProtectedRoute />}>
           <Route path="/customers/potential" element={<Page><CustomerList type="potential" /></Page>} />
-          <Route path="/customers/potential/:id" element={<Page><CustomerDetail type="potential" /></Page>} />
         </Route>
         <Route path="/projects" element={<ProtectedRoute />}>
           <Route path="/projects" element={<Page><ProjectList /></Page>} />

@@ -73,12 +73,23 @@ function Tenant() {
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     const isTenantExists = await checkTenant(values.tenant);
-    if(!isTenantExists) {
-      form.setError("tenant", {
-        type: "manual",
-        message: "Bu alan adı kullanılamaz.",
-      });
-      return;
+    
+    if (redirect === "login") {
+      if(!isTenantExists) {
+        form.setError("tenant", {
+          type: "manual",
+          message: "Bu alan adı kullanılamaz.",
+        });
+        return;
+      }
+    } else if (redirect === "register") {
+      if(isTenantExists) {
+        form.setError("tenant", {
+          type: "manual",
+          message: "Bu alan adı kullanılamaz.",
+        });
+        return;
+      }
     }
     
     setTenant(values.tenant);

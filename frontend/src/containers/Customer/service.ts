@@ -1,8 +1,34 @@
 import axios from "@/lib/axios";
 import { CustomerDelete, CustomerUpsert } from "./types";
 
-export const createCustomer = async (data: CustomerUpsert) => {
-    const response = await axios.post("/customers", data);
+export const createCustomer = async ({
+    id,
+    name,
+    isCompany,
+    address,
+    city,
+    district,
+    postCode,
+    country,
+    phoneNumber,
+    website,
+    governmentId,
+    currencyCode,
+}: CustomerUpsert) => {
+    const response = await axios.post("/customers", {
+        id,
+        name,
+        isCompany,
+        address,
+        city,
+        district,
+        postCode,
+        country,
+        phoneNumber,
+        website,
+        governmentId,
+        currencyCode,
+    });
     return response.data;
 }
 
