@@ -18,7 +18,7 @@ import Dashboard from "@/containers/Home/Dashboard";
 import CustomerList from "@/containers/Customer/List";
 import ProjectList from "@/containers/Project/List";
 import ProjectDetail from "@/containers/Project/Detail";
-
+import DutyKanban from "@/containers/Duty/Container";
 
 
 function UseMiddleware() {
@@ -56,6 +56,9 @@ function App() {
         <Route path="/projects" element={<ProtectedRoute />}>
           <Route path="/projects" element={<Page><ProjectList /></Page>} />
           <Route path="/projects/:id" element={<Page><ProjectDetail /></Page>} />
+        </Route>
+        <Route path="/duties" element={<ProtectedRoute />}>
+          <Route path="/duties" element={<Page><DutyKanban /></Page>} />
         </Route>
         <Route path="/settings" element={<ProtectedRoute />}>
           <Route path="/settings" element={<Page>Settings</Page>} />

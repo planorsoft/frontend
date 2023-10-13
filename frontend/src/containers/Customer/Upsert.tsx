@@ -114,81 +114,79 @@ const Upsert = ({ open, setOpen, forceUpadte, customerId } : UpsertProps) => {
       <SheetContent className="overflow-y-scroll">
         <SheetHeader>
           <SheetTitle>Müşteri oluştur</SheetTitle>
-          <SheetDescription>
-            {loading ? <Loader /> : (
-              <Form {...form}>
-                <form
-                  onSubmit={form.handleSubmit(onSubmit)}
-                  className="space-y-4"
-                >
-                  <InputString
-                    control={form.control}
-                    placeholder="İsim*"
-                    fieldName="name"
-                  />
-                  <InputBoolean
-                    control={form.control}
-                    placeholder="Şirket"
-                    fieldName="isCompany"
-                  />
-                  <InputBoolean
-                    control={form.control}
-                    placeholder="Potansiyel müşteri"
-                    fieldName="isPotantial"
-                  />
-                  <InputString
-                    control={form.control}
-                    placeholder="Adres*"
-                    fieldName="address"
-                  />
-                  <InputString
-                    control={form.control}
-                    placeholder="Şehir*"
-                    fieldName="city"
-                  />
-                  <InputString
-                    control={form.control}
-                    placeholder="İlçe"
-                    fieldName="district"
-                  />
-                  <InputString
-                    control={form.control}
-                    placeholder="Posta kodu"
-                    fieldName="postCode"
-                  />
-                  <InputString
-                    control={form.control}
-                    placeholder="Ülke*"
-                    fieldName="country"
-                  />
-                  <InputString
-                    control={form.control}
-                    placeholder="Telefon numarası"
-                    fieldName="phoneNumber"
-                  />
-                  <InputString
-                    control={form.control}
-                    placeholder="Website"
-                    fieldName="website"
-                  />
-                  <InputString
-                    control={form.control}
-                    placeholder="TCKNO / Vergi No*"
-                    fieldName="governmentId"
-                  />
-                  <InputString
-                    control={form.control}
-                    placeholder="Kur"
-                    fieldName="currencyCode"
-                  />
-                  <Button disabled={loading} type="submit" className="w-full">
-                    {loading && <LoaderIcon className="mr-2 h-4 w-4 animate-spin" />}
-                    Gönder
-                  </Button>
-                </form>
-              </Form>
-            )}
-          </SheetDescription>
+          {loading ? <Loader /> : (
+            <Form {...form}>
+              <form
+                onSubmit={form.handleSubmit(onSubmit)}
+                className="space-y-4"
+              >
+                <InputString
+                  control={form.control}
+                  placeholder="İsim*"
+                  fieldName="name"
+                />
+                <InputBoolean
+                  control={form.control}
+                  placeholder="Şirket"
+                  fieldName="isCompany"
+                />
+                <InputBoolean
+                  control={form.control}
+                  placeholder="Potansiyel müşteri"
+                  fieldName="isPotantial"
+                />
+                <InputString
+                  control={form.control}
+                  placeholder="Adres*"
+                  fieldName="address"
+                />
+                <InputString
+                  control={form.control}
+                  placeholder="Şehir*"
+                  fieldName="city"
+                />
+                <InputString
+                  control={form.control}
+                  placeholder="İlçe"
+                  fieldName="district"
+                />
+                <InputString
+                  control={form.control}
+                  placeholder="Posta kodu"
+                  fieldName="postCode"
+                />
+                <InputString
+                  control={form.control}
+                  placeholder="Ülke*"
+                  fieldName="country"
+                />
+                <InputString
+                  control={form.control}
+                  placeholder="Telefon numarası"
+                  fieldName="phoneNumber"
+                />
+                <InputString
+                  control={form.control}
+                  placeholder="Website"
+                  fieldName="website"
+                />
+                <InputString
+                  control={form.control}
+                  placeholder="TCKNO / Vergi No*"
+                  fieldName="governmentId"
+                />
+                <InputString
+                  control={form.control}
+                  placeholder="Kur"
+                  fieldName="currencyCode"
+                />
+                <Button disabled={loading} type="submit" className="w-full">
+                  {loading && <LoaderIcon className="mr-2 h-4 w-4 animate-spin" />}
+                  Gönder
+                </Button>
+              </form>
+            </Form>
+          )}
         </SheetHeader>
       </SheetContent>
     </Sheet>

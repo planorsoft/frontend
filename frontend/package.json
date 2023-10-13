@@ -47,6 +47,7 @@
     "jwt-decode": "^3.1.2",
     "lucide-react": "^0.279.0",
     "react": "^18.2.0",
+    "react-beautiful-dnd": "^13.1.1",
     "react-day-picker": "^8.8.2",
     "react-dom": "^18.2.0",
     "react-hook-form": "^7.46.2",
@@ -57,6 +58,7 @@
     "redux-logger": "^3.0.6",
     "redux-thunk": "^2.4.2",
     "reselect": "^4.1.8",
+    "styled-components": "^6.0.9",
     "tailwind-merge": "^1.14.0",
     "tailwindcss-animate": "^1.0.7",
     "zod": "^3.22.2"
@@ -64,6 +66,7 @@
   "devDependencies": {
     "@types/node": "^20.7.1",
     "@types/react": "^18.2.15",
+    "@types/react-beautiful-dnd": "^13.1.5",
     "@types/react-dom": "^18.2.7",
     "@types/react-redux": "^7.1.27",
     "@types/redux": "^3.6.0",
