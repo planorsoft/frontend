@@ -6,7 +6,12 @@ export const createProject = async (data: ProjectUpsert) => {
     return response.data;
 }
 
-export const updateProject = async (id: string, data: ProjectUpsert) => {
+export const getProject = async (id: number) => {
+    const response = await axios.get(`/projects/${id}`);
+    return response.data;
+}
+
+export const updateProject = async (id: number, data: ProjectUpsert) => {
     const response = await axios.put(`/projects/${id}`, data);
     return response.data;
 }

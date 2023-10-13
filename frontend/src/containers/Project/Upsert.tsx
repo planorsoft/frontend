@@ -5,142 +5,150 @@ import {
   SheetContent,
   SheetTitle,
   SheetHeader,
-  SheetDescription,
+  Sheet,
 } from "@/components/ui/sheet";
-import { createProject } from "./service";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { Switch } from "@/components/ui/switch";
-import { Loader } from "lucide-react";
-import { useState } from "react";
+import { createProject, getProject } from "./service";
+import { Form } from "@/components/ui/form";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import InputString from "@/components/ui/input-string";
+import InputBoolean from "@/components/ui/input-boolean";
+import { toast } from "@/components/ui/use-toast";
+import { AxiosError } from "axios";
+import Loader from "@/components/ui/loader";
+import { LoaderIcon } from "lucide-react";
+import InputNumber from "@/components/ui/input-number";
 
 const formSchema = z.object({
-  title: z.string().min(2, {
-    message: "Lütfen geçerli bir başlık giriniz.",
-  }),
+  id: z.number(),
+  title: z.string().nonempty({ message: "Lütfen geçerli bir başlık giriniz" }),
+  description: z.string(),
   isOutsource: z.boolean(),
   customerId: z.number(),
-  description: z.string(),
-  price: z.number(),
+  price: z.number()
 });
 
-const Upsert = () => {
+interface UpsertProps extends React.HTMLAttributes<HTMLDivElement> {
+  open: boolean,
+  setOpen: React.Dispatch<React.SetStateAction<boolean>>
+  forceUpadte: () => void,
+  projectId: number
+}
+
+const Upsert = ({ open, setOpen, forceUpadte, projectId } : UpsertProps) => {
   const [loading, setLoading] = useState(false);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
+      id: 0,
       title: "",
+      description: "",
       isOutsource: false,
       customerId: 0,
-      description: "",
-      price: 0,
+      price: 0
     },
   });
 
+  useEffect(() => {
+    getProjectRequest();
+  },[projectId])
+
+  const getProjectRequest = async () => {
+    if (projectId != 0) {
+      setLoading(true);
+      try {
+        const result = await getProject(projectId);
+        form.setValue("id", result?.id);
+        form.setValue("title", result?.title);
+        form.setValue("description", result?.description);
+        form.setValue("isOutsource", result?.isOutsource);
+        form.setValue("customerId", result?.customerId);
+        form.setValue("price", result?.price);
+      } catch (error) {
+        if (!(error instanceof AxiosError)) {
+          throw error;
+        }
+        toast({
+          title: "Hata oluştu",
+          description: error.response?.data.detail,
+          variant: "destructive",
+        });
+      }
+      setLoading(false);
+    } else {
+      form.reset();
+    }
+  }
+
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     setLoading(true);
-    await createProject(values);
+    try {
+      await createProject(values);
+      toast({
+        title: "Proje oluşturuldu",
+      });
+      setOpen(false);
+      forceUpadte();
+    } catch (error) {
+      if (!(error instanceof AxiosError)) {
+        throw error;
+      }
+      toast({
+        title: "Hata oluştu",
+        description: error.response?.data.detail,
+        variant: "destructive",
+      });
+    }
     setLoading(false);
   };
 
   return (
-    <SheetContent>
-      <SheetHeader>
-        <SheetTitle>Proje oluştur</SheetTitle>
-        <SheetDescription>
-          <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-              <FormField
-                control={form.control}
-                name="title"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Başlık</FormLabel>
-                    <FormControl>
-                      <Input placeholder="Proje Başlığı" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="isOutsource"
-                render={({ field }) => (
-                  <FormItem className="flex flex-row items-center justify-between rounded-lg border px-2 py-1">
-                    <FormLabel>Dış Kaynak Kullanılacak mı?</FormLabel>
-                    <FormControl>
-                      <Switch
-                        checked={field.value}
-                        onCheckedChange={field.onChange}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-             <FormItem>
-                <FormControl>
-                  <Select>
-                    <SelectTrigger>
-                      <SelectValue></SelectValue>
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectGroup>
-                          <SelectItem value="apple">Apple</SelectItem>
-                          <SelectItem value="orange">Orange</SelectItem>
-                          <SelectItem value="banana">Banana</SelectItem>
-                      </SelectGroup>
-                    </SelectContent>
-                  </Select>
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-              <FormField
-                control={form.control}
-                name="description"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormControl>
-                      <Input placeholder="Açıklama" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="price"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormControl>
-                      <Input type="number" placeholder="Fiyat" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <Button disabled={loading} type="submit" className="w-full">
-                {loading && (
-                  <Loader className="mr-2 h-4 w-4 animate-spin" />
-                )}
-                Oluştur
-              </Button>
-            </form>
-          </Form>
-        </SheetDescription>
-      </SheetHeader>
-    </SheetContent>
+    <Sheet open={open} onOpenChange={setOpen}>
+      <SheetContent className="overflow-y-scroll">
+        <SheetHeader>
+          <SheetTitle>Proje oluştur</SheetTitle>
+          {loading ? <Loader /> : (
+            <Form {...form}>
+              <form
+                onSubmit={form.handleSubmit(onSubmit)}
+                className="space-y-4"
+              >
+                <InputString
+                  control={form.control}
+                  placeholder="Başlık*"
+                  fieldName="title"
+                />
+                <InputString
+                  control={form.control}
+                  placeholder="Açıklama"
+                  fieldName="description"
+                />
+                <InputBoolean
+                  control={form.control}
+                  placeholder="Dış kaynak kullanıldı mı?"
+                  fieldName="isOutsource"
+                />
+                <InputString
+                  control={form.control}
+                  placeholder="Müşteri Id"
+                  fieldName="customerId"
+                />
+                <InputNumber
+                  control={form.control}
+                  placeholder="Fiyat"
+                  fieldName="price"
+                />
+                <Button disabled={loading} type="submit" className="w-full">
+                  {loading && <LoaderIcon className="mr-2 h-4 w-4 animate-spin" />}
+                  Gönder
+                </Button>
+              </form>
+            </Form>
+          )}
+        </SheetHeader>
+      </SheetContent>
+    </Sheet>
   );
 };
 
