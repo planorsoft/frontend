@@ -56,20 +56,22 @@ function App() {
         </Route>
         <Route path="/projects" element={<ProtectedRoute />}>
           <Route path="/projects" element={<Page><ProjectList /></Page>} />
+          <Route path="/projects/:id" element={<Page><ProjectList /></Page>} />
         </Route>
         <Route path="/finance" element={<ProtectedRoute />}>
-          <Route path="/finance" element={<Page>Finance</Page>} />
+          <Route path="/finance" element={<Page>Finans sayfası geliştirme aşamasındadır</Page>} />
         </Route>
         <Route path="/reports" element={<ProtectedRoute />}>
           <Route path="/reports" element={<Page><Reports /></Page>} />
         </Route>
         <Route path="/duties" element={<ProtectedRoute />}>
           <Route path="/duties" element={<Page><DutyKanban /></Page>} />
+          <Route path="/duties/:projectId" element={<Page><DutyKanban /></Page>} />
         </Route>
         <Route path="/settings" element={<ProtectedRoute />}>
-          <Route path="/settings" element={<Page>Settings</Page>} />
-          <Route path="/settings/currency" element={<Page>Settings/Currency</Page>} />
-          <Route path="/settings/application" element={<Page>Settings/App</Page>} />
+          <Route path="/settings" element={<Page>Ayarlar sayfası geliştirme aşamasındadır</Page>} />
+          <Route path="/settings/currency" element={<Page>Kur sayfası geliştirme aşamasındadır</Page>} />
+          <Route path="/settings/application" element={<Page>Uygulama sayfası geliştirme aşamasındadır</Page>} />
         </Route>
         <Route path="/logout" element={<ProtectedRoute />}>
           <Route path="/logout" element={<Logout />} />

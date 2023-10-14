@@ -15,61 +15,33 @@ import InputBoolean from "@/components/ui/input-boolean";
 import { toast } from "@/components/ui/use-toast";
 import Loader from "@/components/ui/loader";
 import { LoaderIcon, Trash2 } from "lucide-react";
-import { createDuty, getDuty, updateDuty } from "./actions";
+import { createDutyCategory, getDutyCategory, updateDutyCategory } from "./actions";
 import { useAppDispatch, useAppSelector } from "@/store";
-import { DutyCategoryState, DutyState } from "./types";
+import { DutyCategoryState } from "./types";
 import { InputSelect } from "@/components/ui/input-select";
 import { InputServerSelect } from "@/components/ui/input-server-select";
 import InputTextarea from "@/components/ui/input-textarea";
 import Remove from "@/components/Remove";
-import InputMarkdown from "@/components/ui/input-markdown";
 
 const formSchema = z.object({
   id: z.number().optional(),
   title: z.string().nonempty({
     message: "Lütfen geçerli bir başlık giriniz.",
-  }),
-  description: z.string().nonempty({
-    message: "Lütfen geçerli bir açıklama giriniz.",
-  }),
-  projectId: z
-    .string()
-    .min(1, {
-      message: "Lütfen geçerli bir proje giriniz.",
-    })
-    .nonempty({
-      message: "Lütfen geçerli bir proje giriniz.",
-    }),
-  categoryId: z
-    .string()
-    .min(1, {
-      message: "Lütfen geçerli bir kategori giriniz.",
-    })
-    .nonempty({
-      message: "Lütfen geçerli bir kategori giriniz.",
-    }),
-  // priorityId: z.number().int().optional(),
-  // sizeId: z.number().int().optional(),
-  hasTodos: z.boolean(),
+  })
 });
 
-interface UpsertDutyProps extends React.HTMLAttributes<HTMLDivElement> {
+interface UpsertDutyCategoryProps extends React.HTMLAttributes<HTMLDivElement> {
   open: boolean;
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  dutyId: number;
-  projectId?: string;
+  dutyCategoryId: number;
 }
 
-const UpsertDuty = ({ open, setOpen, dutyId, projectId }: UpsertDutyProps) => {
+const UpsertDutyCategory = ({ open, setOpen, dutyCategoryId }: UpsertDutyCategoryProps) => {
   const dispatch = useAppDispatch();
-  const dutyState = useAppSelector<DutyState>((state) => state.dutyState);
-  const loading = dutyState.loading;
-  const error = dutyState.error;
-  const duty = dutyState.duty;
-  const dutyCategoryState = useAppSelector<DutyCategoryState>(
-    (state) => state.dutyCategoryState
-  );
-  const dutyCategories = dutyCategoryState.dutyCategories;
+  const dutyCategoryState = useAppSelector<DutyCategoryState>((state) => state.dutyCategoryState);
+  const loading = dutyCategoryState.loading;
+  const error = dutyCategoryState.error;
+  const dutyCategory = dutyCategoryState.dutyCategory;
   const [remove, setRemove] = useState<boolean>();
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -78,10 +50,6 @@ const UpsertDuty = ({ open, setOpen, dutyId, projectId }: UpsertDutyProps) => {
     defaultValues: {
       id: 0,
       title: "",
-      description: "",
-      hasTodos: false,
-      projectId: projectId || "",
-      categoryId: "",
     },
   });
 
@@ -90,12 +58,12 @@ const UpsertDuty = ({ open, setOpen, dutyId, projectId }: UpsertDutyProps) => {
   }, []);
 
   useEffect(() => {
-    if (dutyId != 0) {
-      dispatch(getDuty(dutyId));
+    if (dutyCategoryId != 0) {
+      dispatch(getDutyCategory(dutyCategoryId));
     } else {
       form.reset();
     }
-  }, [dutyId]);
+  }, [dutyCategoryId]);
 
   useEffect(() => {
     if (error) {
@@ -108,30 +76,18 @@ const UpsertDuty = ({ open, setOpen, dutyId, projectId }: UpsertDutyProps) => {
   }, [error]);
 
   useEffect(() => {
-    if (duty) {
-      form.setValue("id", duty.id || 0);
-      form.setValue("title", duty.title || "");
-      form.setValue("description", duty.description || "");
-      form.setValue("hasTodos", duty.hasTodos || false);
-      form.setValue("categoryId", duty.categoryId?.toString() || "");
-      form.setValue("projectId", duty.projectId?.toString() || projectId || "");
+    if (dutyCategory) {
+      form.setValue("id", dutyCategory.id || 0);
+      form.setValue("title", dutyCategory.title || "");
     }
-  }, [duty]);
+  }, [dutyCategory]);
 
   const onSubmit = (values: z.infer<typeof formSchema>) => {
-    const request = {
-      id: values.id,
-      title: values.title,
-      description: values.description,
-      hasTodos: values.hasTodos,
-      categoryId: parseInt(values.categoryId),
-      projectId: parseInt(values.projectId),
-    };
-
+    console.log(values);
     if (values.id == 0) {
-      dispatch(createDuty(request));
+      dispatch(createDutyCategory(values));
     } else {
-      dispatch(updateDuty(values.id, request));
+      dispatch(updateDutyCategory(values.id, values));
     }
     setOpen(false);
   };
@@ -141,10 +97,10 @@ const UpsertDuty = ({ open, setOpen, dutyId, projectId }: UpsertDutyProps) => {
       <SheetContent className="overflow-y-scroll">
         <SheetHeader>
           <SheetTitle>
-            {dutyId === 0 ? (
-              <p>Görev oluştur</p>
+            {dutyCategoryId === 0 ? (
+              <p>Kategori oluştur</p>
             ) : (
-              <p>Görev düzenle</p>
+              <p>Kategori düzenle</p>
             )}
           </SheetTitle>
           {loading ? (
@@ -160,33 +116,8 @@ const UpsertDuty = ({ open, setOpen, dutyId, projectId }: UpsertDutyProps) => {
                   placeholder="Başlık*"
                   fieldName="title"
                 />
-                <InputMarkdown
-                  control={form.control}
-                  placeholder="Açıklama*"
-                  fieldName="description"
-                />
-                <InputSelect
-                  control={form.control}
-                  placeholder="Kategori"
-                  fieldName="categoryId"
-                  selectList={dutyCategories.map((x) => ({
-                    value: x.id.toString(),
-                    label: x.title,
-                  }))}
-                />
-                <InputServerSelect
-                  control={form.control}
-                  placeholder="Proje"
-                  fieldName="projectId"
-                  entity="project"
-                />
-                <InputBoolean
-                  control={form.control}
-                  placeholder="Yapılacaklar listesi kullanılsın mı?"
-                  fieldName="hasTodos"
-                />
 
-                {dutyId === 0 ? (
+                {dutyCategoryId === 0 ? (
                   <Button disabled={loading} type="submit" className="w-full">
                     {loading && (
                       <LoaderIcon className="mr-2 h-4 w-4 animate-spin" />
@@ -214,11 +145,11 @@ const UpsertDuty = ({ open, setOpen, dutyId, projectId }: UpsertDutyProps) => {
       <Remove
         open={remove}
         setOpen={setRemove}
-        entity="duty"
-        entityId={dutyId}
+        entity="dutyCategory"
+        entityId={dutyCategoryId}
       />
     </Sheet>
   );
 };
 
-export default UpsertDuty;
+export default UpsertDutyCategory;
