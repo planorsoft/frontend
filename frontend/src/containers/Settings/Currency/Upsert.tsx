@@ -14,30 +14,33 @@ import InputString from "@/components/ui/input-string";
 import { toast } from "@/components/ui/use-toast";
 import Loader from "@/components/ui/loader";
 import { LoaderIcon, Trash2 } from "lucide-react";
-import { createDutyCategory, getDutyCategory, updateDutyCategory } from "./actions";
+import { createCurrency, getCurrencies, updateCurrency } from "./actions";
 import { useAppDispatch, useAppSelector } from "@/store";
-import { DutyCategoryState } from "./types";
+import { CurrencyState } from "./types";
 import Remove from "@/components/remove";
+import { selectCurrencyById } from "./selector";
+import InputNumber from "@/components/ui/input-number";
 
 const formSchema = z.object({
   id: z.number().optional(),
-  title: z.string().nonempty({
-    message: "Lütfen geçerli bir başlık giriniz.",
-  })
+  code: z.string().min(2).max(10),
+  symbol: z.string().max(10).optional(),
+  rate: z.string().min(0),
 });
 
-interface UpsertDutyCategoryProps extends React.HTMLAttributes<HTMLDivElement> {
+interface UpsertCurrencyProps extends React.HTMLAttributes<HTMLDivElement> {
   open: boolean;
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  dutyCategoryId: number;
+  currencyId: number;
 }
 
-const UpsertDutyCategory = ({ open, setOpen, dutyCategoryId }: UpsertDutyCategoryProps) => {
+const UpsertCurrency = ({ open, setOpen, currencyId }: UpsertCurrencyProps) => {
   const dispatch = useAppDispatch();
-  const dutyCategoryState = useAppSelector<DutyCategoryState>((state) => state.dutyCategoryState);
-  const loading = dutyCategoryState.loading;
-  const error = dutyCategoryState.error;
-  const dutyCategory = dutyCategoryState.dutyCategory;
+  const currencyState = useAppSelector<CurrencyState>((state) => state.currencyState);
+  const loading = currencyState.loading;
+  const error = currencyState.error;
+  const currency = selectCurrencyById(currencyState, currencyId);
+
   const [remove, setRemove] = useState<boolean>();
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -45,21 +48,24 @@ const UpsertDutyCategory = ({ open, setOpen, dutyCategoryId }: UpsertDutyCategor
 
     defaultValues: {
       id: 0,
-      title: "",
+      code: "",
+      symbol: "",
+      rate: "",
     },
   });
 
   useEffect(() => {
-    console.log(form.getValues());
-  }, []);
-
-  useEffect(() => {
-    if (dutyCategoryId != 0) {
-      dispatch(getDutyCategory(dutyCategoryId));
-    } else {
+    if (currencyId == 0) {
       form.reset();
     }
-  }, [dutyCategoryId]);
+  }, [currencyId]);
+
+  useEffect(() => {
+    if (currencyState.currencies.length === 0) {
+      dispatch(getCurrencies());
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
     if (error) {
@@ -72,18 +78,26 @@ const UpsertDutyCategory = ({ open, setOpen, dutyCategoryId }: UpsertDutyCategor
   }, [error]);
 
   useEffect(() => {
-    if (dutyCategory) {
-      form.setValue("id", dutyCategory.id || 0);
-      form.setValue("title", dutyCategory.title || "");
+    if (currency) {
+      form.setValue("id", currency.id || 0);
+      form.setValue("code", currency.code || "");
+      form.setValue("symbol", currency.symbol || "");
+      form.setValue("rate", currency.rate?.toString() || "");
     }
-  }, [dutyCategory]);
+  }, [currency]);
 
   const onSubmit = (values: z.infer<typeof formSchema>) => {
-    console.log(values);
+    if (remove) return;
+    const request = {
+      id: values.id,
+      code: values.code,
+      symbol: values.symbol,
+      rate: parseFloat(values.rate),
+    }
     if (values.id == 0) {
-      dispatch(createDutyCategory(values));
+      dispatch(createCurrency(request));
     } else {
-      dispatch(updateDutyCategory(values.id, values));
+      dispatch(updateCurrency(currencyId, request));
     }
     setOpen(false);
   };
@@ -98,10 +112,10 @@ const UpsertDutyCategory = ({ open, setOpen, dutyCategoryId }: UpsertDutyCategor
       <SheetContent className="overflow-y-scroll">
         <SheetHeader>
           <SheetTitle>
-            {dutyCategoryId === 0 ? (
-              <p>Kategori oluştur</p>
+            {currencyId === 0 ? (
+              <p>Kur oluştur</p>
             ) : (
-              <p>Kategori düzenle</p>
+              <p>Kur düzenle</p>
             )}
           </SheetTitle>
           {loading ? (
@@ -114,11 +128,21 @@ const UpsertDutyCategory = ({ open, setOpen, dutyCategoryId }: UpsertDutyCategor
               >
                 <InputString
                   control={form.control}
-                  placeholder="Başlık*"
-                  fieldName="title"
+                  placeholder="Kod*"
+                  fieldName="code"
+                />
+                <InputString
+                  control={form.control}
+                  placeholder="Sembol"
+                  fieldName="symbol"
+                />
+                <InputNumber
+                  control={form.control}
+                  placeholder="Kur"
+                  fieldName="rate"
                 />
 
-                {dutyCategoryId === 0 ? (
+                {currencyId === 0 ? (
                   <Button disabled={loading} type="submit" className="w-full">
                     {loading && (
                       <LoaderIcon className="mr-2 h-4 w-4 animate-spin" />
@@ -146,12 +170,12 @@ const UpsertDutyCategory = ({ open, setOpen, dutyCategoryId }: UpsertDutyCategor
       <Remove
         open={remove}
         setOpen={setRemove}
-        entity="dutyCategory"
-        entityId={dutyCategoryId}
+        entity="currency"
+        entityId={currencyId}
         onDeleted={onDeleted}
       />
     </Sheet>
   );
 };
 
-export default UpsertDutyCategory;
+export default UpsertCurrency;

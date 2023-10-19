@@ -20,8 +20,7 @@ import { useAppDispatch, useAppSelector } from "@/store";
 import { DutyCategoryState, DutyState } from "./types";
 import { InputSelect } from "@/components/ui/input-select";
 import { InputServerSelect } from "@/components/ui/input-server-select";
-import InputTextarea from "@/components/ui/input-textarea";
-import Remove from "@/components/Remove";
+import Remove from "@/components/remove";
 import InputMarkdown from "@/components/ui/input-markdown";
 
 const formSchema = z.object({
@@ -119,6 +118,7 @@ const UpsertDuty = ({ open, setOpen, dutyId, projectId }: UpsertDutyProps) => {
   }, [duty]);
 
   const onSubmit = (values: z.infer<typeof formSchema>) => {
+    if (remove) return;
     const request = {
       id: values.id,
       title: values.title,
@@ -135,6 +135,11 @@ const UpsertDuty = ({ open, setOpen, dutyId, projectId }: UpsertDutyProps) => {
     }
     setOpen(false);
   };
+
+  const onDeleted = () => {
+    setRemove(false);
+    setOpen(false);
+  }
 
   return (
     <Sheet open={open} onOpenChange={setOpen}>
@@ -216,6 +221,7 @@ const UpsertDuty = ({ open, setOpen, dutyId, projectId }: UpsertDutyProps) => {
         setOpen={setRemove}
         entity="duty"
         entityId={dutyId}
+        onDeleted={onDeleted}
       />
     </Sheet>
   );

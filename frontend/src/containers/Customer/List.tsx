@@ -4,17 +4,17 @@ import { Customer } from "@/containers/Customer/types";
 import { Plus } from "lucide-react";
 import { useEffect, useState } from "react";
 import Upsert from "@/containers/Customer/Upsert";
-import useForceUpdate from "@/hooks/use-force-update";
+import useTitle from "@/hooks/use-title";
 
 interface ListProps extends React.HTMLAttributes<HTMLDivElement> {
   type: "real" | "potential";
 }
 
 const List = ({ type }: ListProps) => {
+  useTitle("Müşteriler");
   const [open, setOpen] = useState<boolean>(false);
   const [id, setId] = useState<number>(0);
   const filter = type === "real" ? "IsPotantial eq false" : "IsPotantial eq true";
-  const forceUpadte = useForceUpdate();
 
   useEffect(() => {}, [type]);
 
@@ -31,7 +31,9 @@ const List = ({ type }: ListProps) => {
   return (
     <div>
       <div className="flex justify-between my-2">
-        <h2 className="text-2xl font-semibold">Müşteriler</h2>
+        <h2 className="text-2xl font-semibold">
+          {type === "real" ? "Müşteriler" : "Potansiyel Müşteriler"}
+        </h2>
           <Button onClick={openUpsert}>
             <Plus size={16} /> Yeni Müşteri
           </Button>
@@ -45,7 +47,6 @@ const List = ({ type }: ListProps) => {
       <Upsert 
         open={open} 
         setOpen={setOpen} 
-        forceUpadte={forceUpadte} 
         customerId={id}
       />
     </div>

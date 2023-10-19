@@ -29,7 +29,7 @@ interface InputServerSelectProps extends React.HTMLAttributes<HTMLDivElement> {
   control: Control<any>;
   placeholder: string;
   fieldName: string;
-  entity: "project";
+  entity: "project" | "customer";
 }
 
 export function InputServerSelect({
@@ -63,10 +63,35 @@ export function InputServerSelect({
     }
   };
 
+  const getCustomers = async () => {
+    try {
+      setLoading(true);
+      const response = await axios.get("/odata/customers?$select=Id,Name");
+      const list = response.data.value.map((item) => ({
+        value: item.Id.toString(),
+        label: item.Name,
+      }));
+      setSelectList(list);
+      setLoading(false);
+    } catch (error) {
+      if (!(error instanceof AxiosError)) {
+        throw error;
+      }
+      toast({
+        title: "Hata oluştu",
+        description: error.message,
+        variant: "destructive",
+      });
+    }
+  };
+
   useEffect(() => {
     switch (entity) {
       case "project":
         getProjects();
+        break;
+      case "customer":
+        getCustomers();
         break;
       default:
         break;

@@ -10,8 +10,10 @@ import { useParams } from "react-router-dom";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { toast } from "@/components/ui/use-toast";
 import UpsertDutyCategory from "./UpsertDutyCategory";
+import useTitle from "@/hooks/use-title";
 
 const Container = () => {
+  useTitle("Görevler");
   const dispatch = useAppDispatch();
   const dutyState = useAppSelector<DutyState>((state) => state.dutyState);
   const dutyCategoryState = useAppSelector<DutyCategoryState>(

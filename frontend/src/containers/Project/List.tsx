@@ -4,13 +4,16 @@ import { Plus } from "lucide-react";
 import Upsert from "./Upsert";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
-import useForceUpdate from "@/hooks/use-force-update";
+import { useParams } from "react-router-dom";
+import useTitle from "@/hooks/use-title";
 
 
 const List = () => {
+  useTitle("Projeler");
+  const { customerId } = useParams();
   const [open, setOpen] = useState<boolean>(false);
   const [id, setId] = useState<number>(0);
-  const forceUpadte = useForceUpdate();
+  const filter = customerId && `CustomerId eq ${customerId}`;
 
   const select = (id : number) => {
     setId(id);
@@ -35,12 +38,13 @@ const List = () => {
         url="/odata/projects" 
         entity="project" 
         select={select}
+        filter={filter}
         />
       <Upsert 
         open={open} 
         setOpen={setOpen} 
-        forceUpadte={forceUpadte} 
         projectId={id}
+        customerId={customerId}
       />
     </div>
   );

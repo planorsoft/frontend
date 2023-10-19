@@ -34,7 +34,7 @@ export const createCustomer = async ({
     return response.data;
 }
 
-export const updateCustomer = async (id: string, data: Customer) => {
+export const updateCustomer = async (id: number, data: Customer) => {
     const response = await axios.put(`/customers/${id}`, data);
     return response.data;
 }
