@@ -64,11 +64,13 @@ export function Sidebar({ className }: SidebarProps) {
       icon: Landmark,
       to: "/finance",
     },
+    /*
     {
       name: "Raporlar",
       icon: FileText,
       to: "/reports",
     },
+    */
     {
       name: "Ayarlar",
       icon: Settings,

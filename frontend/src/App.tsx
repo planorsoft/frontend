@@ -13,7 +13,6 @@ import Logout from "@/containers/Identity/Logout";
 import Confirm from "@/containers/Identity/Confirm";
 import ForgotPassword from "@/containers/Identity/ForgotPassword";
 import ForgotConfirmPassword from "@/containers/Identity/ForgotConfirmPassword";
-import Tenant from "@/containers/Identity/Tenant";
 import Dashboard from "@/containers/Home/Dashboard";
 import CustomerList from "@/containers/Customer/List";
 import ProjectList from "@/containers/Project/List";
@@ -43,7 +42,6 @@ function App() {
           path="/forgot-confirm-password"
           element={<ForgotConfirmPassword />}
         />
-        <Route path="/tenant" element={<Tenant />} />
         <Route path="/" element={<div>Dashboard</div>} />
         <Route path="*" element={<NotFound />} />
         <Route path="/dashboard" element={<ProtectedRoute />}>

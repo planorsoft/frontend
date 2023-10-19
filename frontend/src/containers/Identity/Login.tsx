@@ -1,6 +1,5 @@
 import { useEffect } from "react";
 import { login } from "@/containers/Identity/actions";
-import { getTenant } from "@/lib/tenant";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "@/components/ui/use-toast";
 import { useAppDispatch, useAppSelector } from "@/store";
@@ -20,6 +19,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useForm } from "react-hook-form";
 import IdentityContainer from "./components/identity-container";
+import { getTenant, setTenant } from "@/lib/tenant";
 
 const formSchema = z.object({
   email: z
@@ -38,7 +38,6 @@ const formSchema = z.object({
 
 function Login() {
   const dispatch = useAppDispatch();
-  const navigate = useNavigate();
   const { toast } = useToast();
   const identity = useAppSelector<IdentityState>((state) => state.identity);
 
@@ -47,20 +46,17 @@ function Login() {
     defaultValues: {
       email: "",
       password: "",
-      tenant: "tenant",
+      tenant: "",
     },
   });
 
   const onSubmit = (values: z.infer<typeof formSchema>) => {
-    values.tenant = getTenant();
     dispatch(login(values));
   };
 
   useEffect(() => {
-    const tenant = getTenant();
-    if (!tenant) {
-      navigate("/tenant?redirect=login");
-    }
+    const tenantFromUrl = getTenant();
+    form.setValue("tenant", tenantFromUrl);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -69,12 +65,12 @@ function Login() {
       toast({
         title: "Hoşgeldin!",
       });
-      navigate("/dashboard");
-    } else if(identity.status === identityTypes.LOGIN_FAILURE) {
+      setTenant(form.getValues().tenant, "/dashboard");
+    } else if (identity.status === identityTypes.LOGIN_FAILURE) {
       toast({
         title: "Giriş yapılamadı",
         description: identity.error,
-        variant: "destructive"
+        variant: "destructive",
       });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -85,6 +81,26 @@ function Login() {
       <IdentityContainer type="login">
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+            {!getTenant() && (
+              <FormField
+                control={form.control}
+                name="tenant"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Alan adı</FormLabel>
+                    <FormControl>
+                      <div className="flex items-center gap-1 relative z-10">
+                        <Input placeholder="sirket-ismi" {...field} />
+                        <span className="absolute right-2">
+                          .planorsoft.com
+                        </span>
+                      </div>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            )}
             <FormField
               control={form.control}
               name="email"

@@ -1,15 +1,15 @@
 import { Link } from "react-router-dom";
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import Tenant from "../Tenant";
 import { getTenant } from "@/lib/tenant";
 
 
 interface IdentityContainerProps extends React.HTMLAttributes<HTMLDivElement> {
-    type: "login" | "register" | "tenant" | "confirm"; 
+    type: "login" | "register" | "confirm"; 
 }
 
 function IdentityContainer({ children, type } : IdentityContainerProps) {
+  const tenant = getTenant();
 
   return (
     <>
@@ -44,7 +44,7 @@ function IdentityContainer({ children, type } : IdentityContainerProps) {
               alt="Planor Logo"
               className="w-6 h-6 mr-2"
             />
-            { (type === "login" || type === "register") ? getTenant().charAt(0).toUpperCase() + getTenant().slice(1) : "Planor" }
+            { (type === "login" || type === "register") ? tenant.charAt(0).toUpperCase() + tenant.slice(1) : "Planor" }
           </div>
           <div className="relative z-20 mt-auto">
             <blockquote className="space-y-2">
@@ -59,14 +59,14 @@ function IdentityContainer({ children, type } : IdentityContainerProps) {
           <div className="mx-auto flex w-full flex-col justify-center space-y-6 sm:w-[350px]">
             <div className="flex flex-col space-y-2 text-center">
               <h1 className="text-2xl font-semibold tracking-tight">
-                { type === "login" && "Giriş yap" }
-                { type === "register" && "Kayıt ol" }
-                { type === "tenant" && "Alan adını seç" }
+                { (type === "login" && tenant) && "Giriş yap" }
+                { (type === "login" && !tenant) && "Giriş yap" }
+                { (type === "register" && tenant) && "Müşteri olarak kayıt ol" }
+                { (type === "register" && !tenant) && "Kayıt ol" }
                 { type === "confirm" && "Hesabını onayla" }
               </h1>
               <p className="text-sm text-muted-foreground">
-                { type === "login" || type === "register" && "Lütfen bilgilerinizi giriniz." }
-                { type === "tenant" && "Alan adınız türkçe karakter içermemelidir." }
+                { (type === "login" || type === "register") && "Lütfen bilgilerinizi giriniz." }
                 { type === "confirm" && "Mail adresine gönderdiğimiz kodu aşağıya girerek hesabını onaylayabilirsin." }
               </p>
             </div>

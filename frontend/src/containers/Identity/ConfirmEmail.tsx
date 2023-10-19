@@ -64,6 +64,13 @@ function Register() {
   };
 
   useEffect(() => {
+    toast({
+      title: "Lütfen mail adresinizi kontorl ediniz.",
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
     if (identity.status === identityTypes.CONFIRM_SUCCESS) {
       toast({
         title: "Hesabınız doğrulandı, lütfen giriş yapınız.",
