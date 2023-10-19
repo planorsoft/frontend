@@ -1,5 +1,5 @@
 import React from "react";
-import { FormControl, FormField, FormItem, FormMessage } from "./form";
+import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "./form";
 import { Input } from "./input";
 import { Control } from "react-hook-form";
 
@@ -10,19 +10,22 @@ interface InputNumberProps extends React.HTMLAttributes<HTMLDivElement> {
   fieldName: string;
 }
 
-const InputNumber = ({ control, placeholder, fieldName } : InputNumberProps) => {
+const InputNumber = ({ control, placeholder, fieldName }: InputNumberProps) => {
   return (
     <FormField
       control={control}
       name={fieldName}
-      render={({ field }) => (
-        <FormItem>
-          <FormControl>
-            <Input type="number" placeholder={placeholder} {...field} />
-          </FormControl>
-          <FormMessage />
-        </FormItem>
-      )}
+      render={({ field }) => {
+        return (
+          <FormItem>
+            <FormLabel>{placeholder}</FormLabel>
+            <FormControl>
+              <Input type="number" placeholder={placeholder} {...field} />
+            </FormControl>
+            <FormMessage />
+          </FormItem>
+        );
+      }}
     />
   );
 };

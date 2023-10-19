@@ -18,8 +18,9 @@ import Dashboard from "@/containers/Home/Dashboard";
 import CustomerList from "@/containers/Customer/List";
 import ProjectList from "@/containers/Project/List";
 import DutyKanban from "@/containers/Duty/Container";
-import Reports from "./containers/Reports/Reports";
-
+import Reports from "@/containers/Reports/Reports";
+import Application from "@/containers/Settings/Application/Container";
+import CurrencyList from "@/containers/Settings/Currency/List";
 
 
 function UseMiddleware() {
@@ -56,20 +57,23 @@ function App() {
         </Route>
         <Route path="/projects" element={<ProtectedRoute />}>
           <Route path="/projects" element={<Page><ProjectList /></Page>} />
+          <Route path="/projects/:customerId" element={<Page><ProjectList /></Page>} />
         </Route>
         <Route path="/finance" element={<ProtectedRoute />}>
-          <Route path="/finance" element={<Page>Finance</Page>} />
+          <Route path="/finance" element={<Page>Finans sayfası geliştirme aşamasındadır</Page>} />
         </Route>
         <Route path="/reports" element={<ProtectedRoute />}>
           <Route path="/reports" element={<Page><Reports /></Page>} />
         </Route>
         <Route path="/duties" element={<ProtectedRoute />}>
           <Route path="/duties" element={<Page><DutyKanban /></Page>} />
+          <Route path="/duties/:projectId" element={<Page><DutyKanban /></Page>} />
         </Route>
         <Route path="/settings" element={<ProtectedRoute />}>
-          <Route path="/settings" element={<Page>Settings</Page>} />
-          <Route path="/settings/currency" element={<Page>Settings/Currency</Page>} />
-          <Route path="/settings/application" element={<Page>Settings/App</Page>} />
+          <Route path="/settings" element={<Page>Ayarlar sayfası geliştirme aşamasındadır</Page>} />
+          <Route path="/settings/team" element={<Page>Ekipler sayfası geliştirme aşamasındadır</Page>} />
+          <Route path="/settings/currency" element={<Page><CurrencyList /></Page>} />
+          <Route path="/settings/application" element={<Page><Application /></Page>} />
         </Route>
         <Route path="/logout" element={<ProtectedRoute />}>
           <Route path="/logout" element={<Logout />} />

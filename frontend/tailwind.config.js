@@ -7,6 +7,11 @@ module.exports = {
     './app/**/*.{ts,tsx}',
     './src/**/*.{ts,tsx}',
 	],
+  variants: {
+    extend: {
+        display: ["group-hover"],
+    },
+  },
   theme: {
     container: {
       center: true,

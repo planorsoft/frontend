@@ -8,7 +8,7 @@ import {
   getPaginationRowModel,
   PaginationState,
 } from "@tanstack/react-table";
-import { ArrowUpDown, Check, Pencil, X } from "lucide-react";
+import { ArrowUpDown, Check, Folder, KanbanSquare, Pencil, X } from "lucide-react";
 import {
   Table,
   TableBody,
@@ -25,6 +25,7 @@ import { AxiosError } from "axios";
 import { toast } from "./ui/use-toast";
 import OData from "@/lib/odata";
 import { Project } from "@/containers/Project/types";
+import { useNavigate } from "react-router-dom";
 
 interface ColumnDefs {
   customer: ColumnDef<Customer>[];
@@ -106,6 +107,7 @@ interface DataTableProps extends React.HTMLAttributes<HTMLDivElement> {
 }
 
 function DataTable<T>({ url, entity, select, filter }: DataTableProps) {
+  const navigate = useNavigate();
   const columns: ColumnDef<T>[] = columnDefs[ entity as keyof ColumnDefs ] as ColumnDef<T>[];
 
   const odata = new OData<T>();
@@ -234,10 +236,20 @@ function DataTable<T>({ url, entity, select, filter }: DataTableProps) {
                       )}
                     </TableCell>
                   ))}
-                   <TableCell>
+                   <TableCell className="flex gap-1">
                       <Button variant="outline" size="icon" onClick={() => { select(row.getValue("Id")) }}>
                         <Pencil className="w-4 h-4" />
                       </Button>
+                      {entity === "project" && (
+                        <Button variant="outline" size="icon" onClick={() => { navigate(`/duties/${row.getValue("Id")}`)  }}>
+                          <KanbanSquare className="w-4 h-4" />
+                        </Button>
+                      )}
+                      {entity === "customer" && (
+                        <Button variant="outline" size="icon" onClick={() => { navigate(`/projects/${row.getValue("Id")}`)  }}>
+                          <Folder className="w-4 h-4" />
+                        </Button>
+                      )}
                     </TableCell>
                 </TableRow>
               ))

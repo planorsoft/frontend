@@ -8,69 +8,93 @@ import {
   Sheet,
 } from "@/components/ui/sheet";
 import { Form } from "@/components/ui/form";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import InputString from "@/components/ui/input-string";
 import InputBoolean from "@/components/ui/input-boolean";
 import { toast } from "@/components/ui/use-toast";
 import Loader from "@/components/ui/loader";
-import { LoaderIcon } from "lucide-react";
-import { getDuty } from "./actions";
+import { LoaderIcon, Trash2 } from "lucide-react";
+import { createDuty, getDuty, updateDuty } from "./actions";
 import { useAppDispatch, useAppSelector } from "@/store";
-import { DutyState } from "./types";
+import { DutyCategoryState, DutyState } from "./types";
+import { InputSelect } from "@/components/ui/input-select";
+import { InputServerSelect } from "@/components/ui/input-server-select";
+import Remove from "@/components/remove";
+import InputMarkdown from "@/components/ui/input-markdown";
 
 const formSchema = z.object({
-  id: z.number(),
-  title: z
+  id: z.number().optional(),
+  title: z.string().nonempty({
+    message: "Lütfen geçerli bir başlık giriniz.",
+  }),
+  description: z.string().nonempty({
+    message: "Lütfen geçerli bir açıklama giriniz.",
+  }),
+  projectId: z
     .string()
+    .min(1, {
+      message: "Lütfen geçerli bir proje giriniz.",
+    })
     .nonempty({
-      message: "Lütfen geçerli bir başlık giriniz.",
+      message: "Lütfen geçerli bir proje giriniz.",
     }),
-  description: z
+  categoryId: z
     .string()
+    .min(1, {
+      message: "Lütfen geçerli bir kategori giriniz.",
+    })
     .nonempty({
-      message: "Lütfen geçerli bir açıklama giriniz.",
+      message: "Lütfen geçerli bir kategori giriniz.",
     }),
-  projectId: z.number().int(),
-  categoryId: z.number().int(),
-  priorityId: z.number().int().optional(),
-  sizeId: z.number().int().optional(),
+  // priorityId: z.number().int().optional(),
+  // sizeId: z.number().int().optional(),
   hasTodos: z.boolean(),
-  completed: z.boolean(),
 });
 
 interface UpsertDutyProps extends React.HTMLAttributes<HTMLDivElement> {
-  open: boolean,
-  setOpen: React.Dispatch<React.SetStateAction<boolean>>
-  dutyId: number
+  open: boolean;
+  setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  dutyId: number;
+  projectId?: string;
 }
 
-const UpsertDuty = ({ open, setOpen, dutyId } : UpsertDutyProps) => {
+const UpsertDuty = ({ open, setOpen, dutyId, projectId }: UpsertDutyProps) => {
   const dispatch = useAppDispatch();
-  const dutyState = useAppSelector<DutyState>(state => state.dutyState);
+  const dutyState = useAppSelector<DutyState>((state) => state.dutyState);
   const loading = dutyState.loading;
   const error = dutyState.error;
   const duty = dutyState.duty;
+  const dutyCategoryState = useAppSelector<DutyCategoryState>(
+    (state) => state.dutyCategoryState
+  );
+  const dutyCategories = dutyCategoryState.dutyCategories;
+  const [remove, setRemove] = useState<boolean>();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
+
     defaultValues: {
       id: 0,
       title: "",
       description: "",
       hasTodos: false,
-      completed: false,
+      projectId: projectId || "",
+      categoryId: "",
     },
   });
 
   useEffect(() => {
+    console.log(form.getValues());
+  }, []);
+
+  useEffect(() => {
     if (dutyId != 0) {
-      dispatch(getDuty(dutyId));      
+      dispatch(getDuty(dutyId));
     } else {
       form.reset();
     }
-  },[dutyId])
-
+  }, [dutyId]);
 
   useEffect(() => {
     if (error) {
@@ -80,32 +104,57 @@ const UpsertDuty = ({ open, setOpen, dutyId } : UpsertDutyProps) => {
         variant: "destructive",
       });
     }
-}, [error]);
+  }, [error]);
 
   useEffect(() => {
     if (duty) {
-      form.setValue("id", duty.id);
-      form.setValue("title", duty.title);
-      form.setValue("description", duty.description);
-      form.setValue("hasTodos", duty.hasTodos);
-      form.setValue("completed", duty.completed);
-      form.setValue("categoryId", duty.categoryId);
-      form.setValue("projectId", duty.projectId);
-      form.setValue("sizeId", duty.sizeId);
-      form.setValue("priorityId", duty.priorityId);
-    } 
-  }, [duty])
+      form.setValue("id", duty.id || 0);
+      form.setValue("title", duty.title || "");
+      form.setValue("description", duty.description || "");
+      form.setValue("hasTodos", duty.hasTodos || false);
+      form.setValue("categoryId", duty.categoryId?.toString() || "");
+      form.setValue("projectId", duty.projectId?.toString() || projectId || "");
+    }
+  }, [duty]);
 
   const onSubmit = (values: z.infer<typeof formSchema>) => {
-    console.log(values);
+    if (remove) return;
+    const request = {
+      id: values.id,
+      title: values.title,
+      description: values.description,
+      hasTodos: values.hasTodos,
+      categoryId: parseInt(values.categoryId),
+      projectId: parseInt(values.projectId),
+    };
+
+    if (values.id == 0) {
+      dispatch(createDuty(request));
+    } else {
+      dispatch(updateDuty(values.id, request));
+    }
+    setOpen(false);
   };
+
+  const onDeleted = () => {
+    setRemove(false);
+    setOpen(false);
+  }
 
   return (
     <Sheet open={open} onOpenChange={setOpen}>
       <SheetContent className="overflow-y-scroll">
         <SheetHeader>
-          <SheetTitle>Görev oluştur</SheetTitle>
-          {loading ? <Loader /> : (
+          <SheetTitle>
+            {dutyId === 0 ? (
+              <p>Görev oluştur</p>
+            ) : (
+              <p>Görev düzenle</p>
+            )}
+          </SheetTitle>
+          {loading ? (
+            <Loader />
+          ) : (
             <Form {...form}>
               <form
                 onSubmit={form.handleSubmit(onSubmit)}
@@ -116,26 +165,64 @@ const UpsertDuty = ({ open, setOpen, dutyId } : UpsertDutyProps) => {
                   placeholder="Başlık*"
                   fieldName="title"
                 />
-                <InputString
+                <InputMarkdown
                   control={form.control}
                   placeholder="Açıklama*"
                   fieldName="description"
                 />
+                <InputSelect
+                  control={form.control}
+                  placeholder="Kategori"
+                  fieldName="categoryId"
+                  selectList={dutyCategories.map((x) => ({
+                    value: x.id.toString(),
+                    label: x.title,
+                  }))}
+                />
+                <InputServerSelect
+                  control={form.control}
+                  placeholder="Proje"
+                  fieldName="projectId"
+                  entity="project"
+                />
                 <InputBoolean
                   control={form.control}
-                  placeholder="Yapılacaklar listesi var mı?"
+                  placeholder="Yapılacaklar listesi kullanılsın mı?"
                   fieldName="hasTodos"
                 />
-    
-                <Button disabled={loading} type="submit" className="w-full">
-                  {loading && <LoaderIcon className="mr-2 h-4 w-4 animate-spin" />}
-                  Gönder
-                </Button>
+
+                {dutyId === 0 ? (
+                  <Button disabled={loading} type="submit" className="w-full">
+                    {loading && (
+                      <LoaderIcon className="mr-2 h-4 w-4 animate-spin" />
+                    )}
+                    Gönder
+                  </Button>
+                ) : (
+                  <div className="grid grid-cols-12 gap-2">
+                    <Button disabled={loading} type="submit" className="col-span-10">
+                      {loading && (
+                        <LoaderIcon className="mr-2 h-4 w-4 animate-spin" />
+                      )}
+                      Gönder
+                    </Button>
+                    <Button disabled={loading} onClick={() => { setRemove(true) }} variant="destructive" className="col-span-2">
+                      <Trash2 className="w-4 h-4" />
+                    </Button>
+                  </div>
+                )}
               </form>
             </Form>
           )}
         </SheetHeader>
       </SheetContent>
+      <Remove
+        open={remove}
+        setOpen={setRemove}
+        entity="duty"
+        entityId={dutyId}
+        onDeleted={onDeleted}
+      />
     </Sheet>
   );
 };

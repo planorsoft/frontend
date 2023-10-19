@@ -24,13 +24,13 @@ export default function Page({ children } : PageProps) {
       <div className="border-t">
         <div className="bg-background">
           <div className="grid grid-cols-12">
-            <div className="hidden lg:block col-span-2">
+            <div className="hidden md:block col-span-2">
               <Sidebar className={sidebarOpen ? 'block' : 'hidden'} />
             </div>
-            <div className="lg:hidden block">
+            <div className="md:hidden block">
               <Sidebar className={sidebarOpen ? 'block' : 'hidden'} />
             </div>
-            <div className={`col-span-12 h-fit p-2 ${sidebarOpen ? 'lg:col-span-10' : ''}`}>
+            <div className={`col-span-12 h-fit p-2 ${sidebarOpen ? 'md:col-span-10' : ''}`}>
                 {children}
             </div>
           </div>

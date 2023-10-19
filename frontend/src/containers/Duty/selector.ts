@@ -1,15 +1,14 @@
 import { createSelector } from 'reselect'
-import { Duty, DutyCategory } from "./types";
+import { Duty, DutyState } from "./types";
 
-export const selectDuties = createSelector(
-    state => state.duties,
-    state => state.dutyCategories,
-    (duties, dutyCategories) => {
-        return (duties as Duty[]).map((duty : Duty) => {
-            return {
-                ...duty,
-                category: (dutyCategories as DutyCategory[]).find((category : DutyCategory) => category.id === duty.categoryId) as DutyCategory
-            }
-        })
+export const selectDutyByProjectId = createSelector(
+    [
+        ( state : DutyState) => state.duties,
+        ( _ : DutyState, projectId? : string) => projectId
+    ],
+    (duties, projectId) => {
+        if (!projectId) return duties;
+        const id = parseInt(projectId);
+        return (duties as Duty[]).filter((duty : Duty) => duty.projectId === id)
     }
 )

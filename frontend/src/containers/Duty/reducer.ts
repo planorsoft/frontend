@@ -1,20 +1,14 @@
-import { DutyState, Duty, DutyAction, dutyTypes, DutyCategory, DutyPriority, DutySize } from "./types";
+import { DutyState, Duty, DutyAction, dutyTypes, DutyCategory, DutyCategoryAction, DutyCategoryState } from "./types";
 
-const initialState: DutyState = {
+const dutyInitialState: DutyState = {
     duties: [],
     duty: {},
-    dutyCategories: [],
-    dutyCategory: {},
-    dutyPriorities: [],
-    dutyPriority: {},
-    dutySizes: [],
-    dutySize: {},
     loading: false,
     error: null,
     status: null
 };
 
-export const dutyReducer = (state = initialState, action: DutyAction) => {
+export const dutyReducer = (state = dutyInitialState, action: DutyAction) => {
     switch (action.type) {
         // ------------------------------------------------------- DUTY
         case dutyTypes.GET_ACTIVE_DUTIES_REQUEST:
@@ -89,7 +83,7 @@ export const dutyReducer = (state = initialState, action: DutyAction) => {
         case dutyTypes.UPDATE_DUTY_SUCCESS:
             return {
                 ...state,
-                duties: state.duties.map((duty: Duty) => duty.id === action.payload ? action.payload : duty),
+                duties: state.duties.map((duty: Duty) => duty.id === action.payload.id ? action.payload : duty),
                 error: null,
                 loading: false,
                 status: dutyTypes.UPDATE_DUTY_SUCCESS
@@ -106,10 +100,10 @@ export const dutyReducer = (state = initialState, action: DutyAction) => {
                 ...state,
                 duties: state.duties.map(duty => {
                     const updated = action.payload.find(x => x.id === duty.id);
-                  if (updated) {
-                    return {...duty, order: updated.order, categoryId: updated.categoryId};
-                  }
-                  return duty;
+                    if (updated) {
+                        return { ...duty, order: updated.order, categoryId: updated.categoryId };
+                    }
+                    return duty;
                 }).sort((a, b) => a.order - b.order),
                 loading: false,
                 status: dutyTypes.UPDATE_DUTY_ORDERS_REQUEST
@@ -137,7 +131,7 @@ export const dutyReducer = (state = initialState, action: DutyAction) => {
         case dutyTypes.DELETE_DUTY_SUCCESS:
             return {
                 ...state,
-                duties: state.duties.filter((duty : Duty) => duty.id !== action.payload),
+                duties: state.duties.filter((duty: Duty) => duty.id !== action.payload),
                 loading: false,
                 status: dutyTypes.DELETE_DUTY_SUCCESS
             }
@@ -148,7 +142,21 @@ export const dutyReducer = (state = initialState, action: DutyAction) => {
                 loading: false,
                 status: dutyTypes.DELETE_DUTY_FAILURE
             };
-        // ------------------------------------------------------- DUTY CATEGORY
+        default:
+            return state;
+    }
+}
+
+const dutyCategoriesInitalState: DutyCategoryState = {
+    dutyCategories: [],
+    dutyCategory: {},
+    loading: false,
+    error: null,
+    status: null
+};
+
+export const dutyCategoryReducer = (state = dutyCategoriesInitalState, action: DutyCategoryAction) => {
+    switch (action.type) {
         case dutyTypes.GET_DUTY_CATEGORIES_REQUEST:
             return {
                 ...state,
@@ -221,7 +229,7 @@ export const dutyReducer = (state = initialState, action: DutyAction) => {
         case dutyTypes.UPDATE_DUTY_CATEGORY_SUCCESS:
             return {
                 ...state,
-                dutyCategories: state.dutyCategories.map((dutyCategory: DutyCategory) => dutyCategory.id === action.payload ? action.payload : dutyCategory),
+                dutyCategories: state.dutyCategories.map((dutyCategory: DutyCategory) => dutyCategory.id === action.payload.id ? action.payload : dutyCategory),
                 error: null,
                 loading: false,
                 status: dutyTypes.UPDATE_DUTY_CATEGORY_SUCCESS
@@ -242,7 +250,7 @@ export const dutyReducer = (state = initialState, action: DutyAction) => {
         case dutyTypes.DELETE_DUTY_CATEGORY_SUCCESS:
             return {
                 ...state,
-                dutyCategories: state.dutyCategories.filter((dutyCategory) => dutyCategory.id !== action.payload),
+                dutyCategories: state.dutyCategories.filter((dutyCategory : DutyCategory) => dutyCategory.id != action.payload),
                 loading: false,
                 status: dutyTypes.DELETE_DUTY_SUCCESS
             }
@@ -253,6 +261,13 @@ export const dutyReducer = (state = initialState, action: DutyAction) => {
                 loading: false,
                 status: dutyTypes.DELETE_DUTY_CATEGORY_FAILURE
             };
+        default:
+            return state;
+    }
+}
+
+
+/*
         // ------------------------------------------------------- DUTY PRIORITY
         case dutyTypes.GET_DUTY_PRIORITIES_REQUEST:
             return {
@@ -463,7 +478,4 @@ export const dutyReducer = (state = initialState, action: DutyAction) => {
                 loading: false,
                 status: dutyTypes.DELETE_DUTY_SIZE_FAILURE
             };
-        default:
-            return state;
-    }
-}
+*/

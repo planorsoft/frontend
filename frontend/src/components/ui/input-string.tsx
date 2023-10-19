@@ -1,5 +1,5 @@
 import React from "react";
-import { FormControl, FormField, FormItem, FormMessage } from "./form";
+import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "./form";
 import { Input } from "./input";
 import { Control } from "react-hook-form";
 
@@ -17,6 +17,7 @@ const InputString = ({ control, placeholder, fieldName } : InputStringProps) => 
       name={fieldName}
       render={({ field }) => (
         <FormItem>
+          <FormLabel>{placeholder}</FormLabel>
           <FormControl>
             <Input placeholder={placeholder} {...field} />
           </FormControl>

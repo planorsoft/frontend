@@ -6,11 +6,16 @@ import logger from "redux-logger";
 import thunk from "redux-thunk";
 
 import { identityReducer } from "@/containers/Identity/reducer";
-import { dutyReducer } from "@/containers/Duty/reducer";
+import { dutyCategoryReducer, dutyReducer } from "@/containers/Duty/reducer";
+import { applicationReducer } from "@/containers/Settings/Application/reducer";
+import { currencyReducer } from "@/containers/Settings/Currency/reducer";
 
 const rootReducer = combineReducers({
     identity: identityReducer,
     dutyState: dutyReducer,
+    dutyCategoryState: dutyCategoryReducer,
+    applicationState: applicationReducer,
+    currencyState: currencyReducer,
 });
 
 export const store = configureStore({
