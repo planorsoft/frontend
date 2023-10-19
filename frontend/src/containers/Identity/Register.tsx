@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { register } from "@/containers/Identity/actions";
-import { getTenant } from "@/lib/tenant";
-import { useNavigate } from "react-router-dom";
+import { getTenant, setTenant } from "@/lib/tenant";
 import { useToast } from "@/components/ui/use-toast";
 import { useAppDispatch, useAppSelector } from "@/store";
 import { IdentityState, identityTypes } from "./types";
@@ -43,7 +42,6 @@ const formSchema = z.object({
 
 function Register() {
   const dispatch = useAppDispatch();
-  const navigate = useNavigate();
   const { toast } = useToast();
   const identity = useAppSelector<IdentityState>((state) => state.identity);
   const [email, setEmail] = useState<string>("");
@@ -56,36 +54,33 @@ function Register() {
       email: "",
       password: "",
       role: "Manager",
-      tenant: "tenant",
+      tenant: "",
     },
   });
 
   const onSubmit = (values: z.infer<typeof formSchema>) => {
-    values.tenant = getTenant();
-    values.username = values.email.split("@")[0];   
-    setEmail(values.email); 
+    values.username = values.email.split("@")[0];
+    setEmail(values.email);
     dispatch(register(values));
   };
 
   useEffect(() => {
-    const tenant = getTenant();
-    if (!tenant) {
-      navigate("/tenant?redirect=register");
+    const tenantFromUrl = getTenant();
+    form.setValue("tenant", tenantFromUrl);
+    if (tenantFromUrl) {
+      form.setValue("role", "Customer");
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
     if (identity.status === identityTypes.REGISTER_SUCCESS) {
-      toast({
-        title: "Hesabınız oluşturuldu, lütfen mail adresinizi kontrol edin.",
-      });
-      navigate(`/confirm-email?email=${email}`);
+      setTenant(form.getValues().tenant, `/confirm-email?email=${email}`);
     } else if (identity.status === identityTypes.REGISTER_FAILURE) {
       toast({
         title: "Hesabınız oluşturulamadı",
         description: identity.error,
-        variant: "destructive"
+        variant: "destructive",
       });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -109,6 +104,26 @@ function Register() {
                 </FormItem>
               )}
             />
+            {!getTenant() && (
+              <FormField
+                control={form.control}
+                name="tenant"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Alan adı</FormLabel>
+                    <FormControl>
+                      <div className="flex items-center gap-1 relative z-10">
+                        <Input placeholder="sirket-ismi" {...field} />
+                        <span className="absolute right-2">
+                          .planorsoft.com
+                        </span>
+                      </div>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            )}
             <FormField
               control={form.control}
               name="email"
