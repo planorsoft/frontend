@@ -1,6 +1,5 @@
 import { useEffect } from "react";
 import { login } from "@/containers/Identity/actions";
-import { useNavigate } from "react-router-dom";
 import { useToast } from "@/components/ui/use-toast";
 import { useAppDispatch, useAppSelector } from "@/store";
 import { IdentityState, identityTypes } from "./types";

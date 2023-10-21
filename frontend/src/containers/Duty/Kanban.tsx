@@ -11,6 +11,7 @@ import { updateDutyOrders } from "./actions";
 import { Button } from "@/components/ui/button";
 import { GripHorizontal, Pencil } from "lucide-react";
 import { selectDutyByProjectId } from "./selector";
+import { useTheme } from "@/components/theme-provider";
 
 const mapDuties = (duties: Duty[], categories: DutyCategory[]) => {
   const result = {};
@@ -52,6 +53,7 @@ function Kanban({ openUpsertDuty, openUpsertDutyCategory, projectId }: KanbanPro
   const dutyCategories = dutyCategoryState.dutyCategories;
   const [columns, setColumns] = useState(mapDuties(duties, dutyCategories));
   const dispatch = useAppDispatch();
+  const { theme } = useTheme();
 
   const onDragEnd = (result: DropResult) => {
     if (!result.destination) return;
@@ -136,6 +138,12 @@ function Kanban({ openUpsertDuty, openUpsertDutyCategory, projectId }: KanbanPro
                               index={index}
                             >
                               {(provided, snapshot) => {
+                                let backgroundColor = "";
+                                if (snapshot.isDragging) {
+                                  backgroundColor = theme == "dark" ? "#27272a" : "#f1f5f9";
+                                } else {
+                                  backgroundColor = theme == "dark" ? "#090b0f" : "#ffffff";
+                                }
                                 return (
                                   <div
                                     ref={provided.innerRef}
@@ -144,9 +152,7 @@ function Kanban({ openUpsertDuty, openUpsertDutyCategory, projectId }: KanbanPro
                                     className="my-2 p-2 border w-full rounded flex justify-between items-center"
                                     style={{
                                       minHeight: "50px",
-                                      backgroundColor: snapshot.isDragging
-                                        ? "#1d202f"
-                                        : "#0a0b10",
+                                      backgroundColor: backgroundColor,
                                       ...provided.draggableProps.style,
                                     }}
                                   >
