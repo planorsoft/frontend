@@ -11,7 +11,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { deleteAvatar, updateAvatar } from "./actions";
-import { Trash2 } from "lucide-react";
+import { Loader, Trash2 } from "lucide-react";
 import { UserState } from "./types";
 import { useRef } from "react";
 import { profileImageGenerator } from "@/lib/profile-image";
@@ -52,9 +52,14 @@ const UpsertImage = ({ open, setOpen }: UpsertImageProps) => {
           </div>
           <div className="col-span-3">
             <Avatar className="h-20 w-20 mx-auto mb-2">
-              <AvatarImage src={userState.user.avatarUri} />
+              <AvatarImage
+                src={
+                  userState.user.avatarUri ||
+                  profileImageGenerator(userState.user.name)
+                }
+              />
               <AvatarFallback>
-                <img src={profileImageGenerator(userState.user.name)} alt="profile image" />
+                <Loader className="w-8 h-8 animate-spin" />
               </AvatarFallback>
             </Avatar>
           </div>
