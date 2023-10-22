@@ -7,7 +7,7 @@ import {
 } from "@/components/ui/menubar";
 import ThemeToggle from "./theme-toggle";
 import { Button } from "./ui/button";
-import { Menu as MenuIcon, UserIcon } from "lucide-react";
+import { Loader, Menu as MenuIcon, UserIcon } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "@/store";
 import { ApplicationState } from "@/containers/Settings/Application/types";
@@ -53,7 +53,7 @@ export function Menu({ toggleSidebar }: MenuProps) {
             {applicationState.application?.name} {applicationState.title}
           </p>
         ) : (
-          <p>{document.title}</p>
+          <p>{document.title} {applicationState.title}</p> 
         )}
       </div>
       <div className="flex">
@@ -64,9 +64,14 @@ export function Menu({ toggleSidebar }: MenuProps) {
             ) : (
               <>
                 <Avatar className="h-7 w-7">
-                  <AvatarImage src={userState.user.avatarUri} />
+                  <AvatarImage
+                    src={
+                      userState.user.avatarUri ||
+                      profileImageGenerator(userState.user.name)
+                    }
+                  />
                   <AvatarFallback>
-                    <img src={profileImageGenerator(userState.user.name)} alt="profile image" />
+                    <Loader className="w-8 h-8 animate-spin" />
                   </AvatarFallback>
                 </Avatar>
                 {userState.user.name}

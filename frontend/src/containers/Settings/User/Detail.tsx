@@ -3,7 +3,7 @@ import { UserState } from "./types";
 import { useEffect, useState } from "react";
 import { getMyUser, updateMyUser } from "./actions";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { LoaderIcon, Pencil } from "lucide-react";
+import { Loader, LoaderIcon, Pencil } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import UpsertImage from "./UpsertImage";
 import { useForm } from "react-hook-form";
@@ -117,9 +117,9 @@ const Detail = () => {
         </div>
         <div className="col-span-3 text-center">
           <Avatar className="h-36 w-36 mx-auto mb-2">
-            <AvatarImage src={userState.user.avatarUri} />
+            <AvatarImage src={userState.user.avatarUri || profileImageGenerator(userState.user.name)} />
             <AvatarFallback>
-              <img src={profileImageGenerator(userState.user.name)} alt="profile image" />
+              <Loader className="w-8 h-8 animate-spin" />
             </AvatarFallback>
           </Avatar>
           <Button
