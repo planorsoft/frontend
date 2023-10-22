@@ -8,9 +8,10 @@ interface InputStringProps extends React.HTMLAttributes<HTMLDivElement> {
   control: Control<any>;
   placeholder: string;
   fieldName: string;
+  disabled?: boolean;
 }
 
-const InputString = ({ control, placeholder, fieldName } : InputStringProps) => {
+const InputString = ({ control, placeholder, fieldName, disabled } : InputStringProps) => {
   return (
     <FormField
       control={control}
@@ -19,7 +20,7 @@ const InputString = ({ control, placeholder, fieldName } : InputStringProps) => 
         <FormItem>
           <FormLabel>{placeholder}</FormLabel>
           <FormControl>
-            <Input placeholder={placeholder} {...field} />
+            <Input placeholder={placeholder} {...field} disabled={disabled} />
           </FormControl>
           <FormMessage />
         </FormItem>

@@ -58,7 +58,6 @@ const Upsert = ({ open, setOpen, projectId, customerId }: UpsertProps) => {
   }, [projectId]);
 
   const getProjectRequest = async () => {
-    console.log({ customerId });
     if (projectId != 0) {
       setLoading(true);
       try {

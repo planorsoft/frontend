@@ -9,6 +9,7 @@ import { identityReducer } from "@/containers/Identity/reducer";
 import { dutyCategoryReducer, dutyReducer } from "@/containers/Duty/reducer";
 import { applicationReducer } from "@/containers/Settings/Application/reducer";
 import { currencyReducer } from "@/containers/Settings/Currency/reducer";
+import { userReducer } from "./containers/Settings/User/reducer";
 
 const rootReducer = combineReducers({
     identity: identityReducer,
@@ -16,6 +17,7 @@ const rootReducer = combineReducers({
     dutyCategoryState: dutyCategoryReducer,
     applicationState: applicationReducer,
     currencyState: currencyReducer,
+    userState: userReducer,
 });
 
 export const store = configureStore({
