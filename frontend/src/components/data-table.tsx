@@ -165,7 +165,7 @@ function DataTable<T>({ url, entity, select, filter }: DataTableProps) {
         throw error;
       }
       toast({
-        title: "Giriş yapılamadı",
+        title: "Hata",
         description: error.message,
         variant: "destructive",
       });

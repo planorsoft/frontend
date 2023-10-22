@@ -7,12 +7,16 @@ import {
 } from "@/components/ui/menubar";
 import ThemeToggle from "./theme-toggle";
 import { Button } from "./ui/button";
-import { Menu as MenuIcon } from "lucide-react";
+import { Menu as MenuIcon, UserIcon } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "@/store";
 import { ApplicationState } from "@/containers/Settings/Application/types";
 import { useEffect } from "react";
 import { getCurrentApplication } from "@/containers/Settings/Application/actions";
+import { UserState } from "@/containers/Settings/User/types";
+import { getMyUser } from "@/containers/Settings/User/actions";
+import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
+import { profileImageGenerator } from "@/lib/profile-image";
 
 interface MenuProps extends React.HTMLAttributes<HTMLDivElement> {
   toggleSidebar: () => void;
@@ -25,10 +29,14 @@ export function Menu({ toggleSidebar }: MenuProps) {
   const applicationState = useAppSelector<ApplicationState>(
     (state) => state.applicationState
   );
+  const userState = useAppSelector<UserState>((state) => state.userState);
 
   useEffect(() => {
     if (Object.keys(applicationState.application).length <= 0) {
       dispatch(getCurrentApplication());
+    }
+    if (userState.user.email === "") {
+      dispatch(getMyUser());
     }
   }, []);
 
@@ -41,16 +49,39 @@ export function Menu({ toggleSidebar }: MenuProps) {
           </Button>
         </div>
         {Object.keys(applicationState.application).length > 0 ? (
-          <p>{applicationState.application?.name} {applicationState.title}</p>
+          <p>
+            {applicationState.application?.name} {applicationState.title}
+          </p>
         ) : (
           <p>{document.title}</p>
         )}
       </div>
       <div className="flex">
         <MenubarMenu>
-          <MenubarTrigger className="hidden md:block">Hesap</MenubarTrigger>
+          <MenubarTrigger className="hidden md:flex items-center gap-2">
+            {userState.user.email === "" ? (
+              "Hesap"
+            ) : (
+              <>
+                <Avatar className="h-7 w-7">
+                  <AvatarImage src={userState.user.avatarUri} />
+                  <AvatarFallback>
+                    <img src={profileImageGenerator(userState.user.name)} alt="profile image" />
+                  </AvatarFallback>
+                </Avatar>
+                {userState.user.name}
+              </>
+            )}
+          </MenubarTrigger>
           <MenubarContent forceMount>
-            <MenubarItem inset>Hesabı düzenle</MenubarItem>
+            <MenubarItem
+              inset
+              onClick={() => {
+                navigate("/settings/users/me");
+              }}
+            >
+              Hesabı düzenle
+            </MenubarItem>
             <MenubarItem
               inset
               className="text-warning"

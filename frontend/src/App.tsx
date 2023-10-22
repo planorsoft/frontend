@@ -20,6 +20,7 @@ import DutyKanban from "@/containers/Duty/Container";
 import Reports from "@/containers/Reports/Reports";
 import Application from "@/containers/Settings/Application/Container";
 import CurrencyList from "@/containers/Settings/Currency/List";
+import User from "@/containers/Settings/User/Detail";
 
 
 function UseMiddleware() {
@@ -72,6 +73,7 @@ function App() {
           <Route path="/settings/team" element={<Page>Ekipler sayfası geliştirme aşamasındadır</Page>} />
           <Route path="/settings/currency" element={<Page><CurrencyList /></Page>} />
           <Route path="/settings/application" element={<Page><Application /></Page>} />
+          <Route path="/settings/users/me" element={<Page><User /></Page>} />
         </Route>
         <Route path="/logout" element={<ProtectedRoute />}>
           <Route path="/logout" element={<Logout />} />
