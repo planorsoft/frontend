@@ -1,5 +1,5 @@
 import { useHealthCheck } from "@/hooks/use-health-check";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import ProtectedRoute from "@/components/protected-route";
 import { useUnauthorizedResponseHandler } from "@/hooks/use-unauthorized-response-handler";
 
@@ -43,7 +43,7 @@ function App() {
           path="/forgot-confirm-password"
           element={<ForgotConfirmPassword />}
         />
-        <Route path="/" element={<div>Dashboard</div>} />
+        <Route path="/" element={<Navigate to="/login" />} />
         <Route path="*" element={<NotFound />} />
         <Route path="/dashboard" element={<ProtectedRoute />}>
           <Route path="/dashboard" element={<Page><Dashboard /></Page>} />
