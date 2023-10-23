@@ -1,3 +1,5 @@
+import { isDevelopment } from "./config";
+
 export function getTenant() {
   const subdomain = window.location.host.split('.')[1] ? window.location.host.split('.')[0] : "";
   if (subdomain === 'www') {
@@ -8,6 +10,10 @@ export function getTenant() {
 }
 
 export function setTenant(tenant : string, redirect : string) {
-  window.location.assign(`http://${tenant}.localhost:3030${redirect}`);
+  if (isDevelopment) {
+    window.location.assign(`http://${tenant}.localhost:3030${redirect}`);
+  } else {
+    window.location.assign(`http://${tenant}.planorsoft.com${redirect}`);
+  }
   localStorage.setItem('tenant', tenant);
 }
