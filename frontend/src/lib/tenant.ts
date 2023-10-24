@@ -6,6 +6,10 @@ export function getTenant() {
     return "";
   }
 
+  if (subdomain === 'app') {
+    return "";
+  }
+
   return subdomain;
 }
 
