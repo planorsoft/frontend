@@ -21,11 +21,13 @@ import Reports from "@/containers/Reports/Reports";
 import Application from "@/containers/Settings/Application/Container";
 import CurrencyList from "@/containers/Settings/Currency/List";
 import User from "@/containers/Settings/User/Detail";
+import useDevelopmentMessage from "./hooks/use-development-message";
 
 
 function UseMiddleware() {
   useUnauthorizedResponseHandler();
   useHealthCheck();
+  useDevelopmentMessage();
   return null;
 }
 
