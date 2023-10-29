@@ -17,6 +17,7 @@ import { UserState } from "@/containers/Settings/User/types";
 import { getMyUser } from "@/containers/Settings/User/actions";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { profileImageGenerator } from "@/lib/profile-image";
+import { getTenant } from "@/lib/tenant";
 
 interface MenuProps extends React.HTMLAttributes<HTMLDivElement> {
   toggleSidebar: () => void;
@@ -50,7 +51,7 @@ export function Menu({ toggleSidebar }: MenuProps) {
         </div>
         {Object.keys(applicationState.application).length > 0 ? (
           <p>
-            {applicationState.application?.name} {applicationState.title}
+            {getTenant?.name} {getTenant.name} / 
           </p>
         ) : (
           <p>{document.title} {applicationState.title}</p> 

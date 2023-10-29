@@ -110,7 +110,7 @@ function Register() {
                 name="tenant"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Alan adı</FormLabel>
+                    <FormLabel>Şirket Adı</FormLabel>
                     <FormControl>
                       <div className="flex items-center gap-1 relative z-10">
                         <Input placeholder="sirket-ismi" {...field} />
@@ -131,7 +131,7 @@ function Register() {
                 <FormItem>
                   <FormLabel>Email</FormLabel>
                   <FormControl>
-                    <Input placeholder="planor@gmail.com" {...field} />
+                    <Input placeholder="planorsoft@gmail.com" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
