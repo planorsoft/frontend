@@ -124,7 +124,7 @@ function Register() {
                 name="tenant"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Alan adı</FormLabel>
+                    <FormLabel>Şirket Adı</FormLabel>
                     <FormControl>
                       <div className="flex items-center gap-1 relative z-10">
                         <Input placeholder="sirket-ismi" {...field} className="lowercase" />
@@ -140,7 +140,7 @@ function Register() {
             )}
             <InputString
               control={form.control}
-              placeholder="Email"
+              placeholder="planorsoft@gmail.com"
               fieldName="email"
             />
             <InputPassword

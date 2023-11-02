@@ -16,4 +16,4 @@ npm run dev
 
 ### Deployment
 
-Planlanmadı
+Planlanmadı 
