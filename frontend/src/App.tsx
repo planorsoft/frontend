@@ -22,6 +22,7 @@ import Application from "@/containers/Settings/Application/Container";
 import CurrencyList from "@/containers/Settings/Currency/List";
 import User from "@/containers/Settings/User/Detail";
 import useDevelopmentMessage from "./hooks/use-development-message";
+import CustomerPanel from "./containers/CustomerPanel";
 
 
 function UseMiddleware() {
@@ -47,37 +48,40 @@ function App() {
         />
         <Route path="/" element={<Navigate to="/login" />} />
         <Route path="*" element={<NotFound />} />
-        <Route path="/dashboard" element={<ProtectedRoute />}>
+        <Route path="/dashboard" element={<ProtectedRoute route="/dashboard" />}>
           <Route path="/dashboard" element={<Page><Dashboard /></Page>} />
         </Route>
-        <Route path="/customers" element={<ProtectedRoute />}>
+        <Route path="/customers" element={<ProtectedRoute route="/customers" />}>
           <Route path="/customers" element={<Page><CustomerList type="real" /></Page>} />
         </Route>
-        <Route path="/customers/potential" element={<ProtectedRoute />}>
+        <Route path="/customers/potential" element={<ProtectedRoute  route="/customers" />}>
           <Route path="/customers/potential" element={<Page><CustomerList type="potential" /></Page>} />
         </Route>
-        <Route path="/projects" element={<ProtectedRoute />}>
+        <Route path="/projects" element={<ProtectedRoute route="/projects" />}>
           <Route path="/projects" element={<Page><ProjectList /></Page>} />
           <Route path="/projects/:customerId" element={<Page><ProjectList /></Page>} />
         </Route>
-        <Route path="/finance" element={<ProtectedRoute />}>
+        <Route path="/finance" element={<ProtectedRoute route="/finance" />}>
           <Route path="/finance" element={<Page>Finans sayfası geliştirme aşamasındadır</Page>} />
         </Route>
-        <Route path="/reports" element={<ProtectedRoute />}>
+        <Route path="/reports" element={<ProtectedRoute route="/reports" />}>
           <Route path="/reports" element={<Page><Reports /></Page>} />
         </Route>
-        <Route path="/duties" element={<ProtectedRoute />}>
+        <Route path="/duties" element={<ProtectedRoute route="/duties" />}>
           <Route path="/duties" element={<Page><DutyKanban /></Page>} />
           <Route path="/duties/:projectId" element={<Page><DutyKanban /></Page>} />
         </Route>
-        <Route path="/settings" element={<ProtectedRoute />}>
+        <Route path="/settings" element={<ProtectedRoute route="/settings" />}>
           <Route path="/settings" element={<Page>Ayarlar sayfası geliştirme aşamasındadır</Page>} />
           <Route path="/settings/team" element={<Page>Ekipler sayfası geliştirme aşamasındadır</Page>} />
           <Route path="/settings/currency" element={<Page><CurrencyList /></Page>} />
           <Route path="/settings/application" element={<Page><Application /></Page>} />
           <Route path="/settings/users/me" element={<Page><User /></Page>} />
         </Route>
-        <Route path="/logout" element={<ProtectedRoute />}>
+        <Route path="/customer-panel" element={<ProtectedRoute route="/customer-panel" />}>
+          <Route path="/customer-panel" element={<Page role="Customer"><CustomerPanel /></Page>} />
+        </Route>
+        <Route path="/logout" element={<ProtectedRoute route="/logout" />}>
           <Route path="/logout" element={<Logout />} />
         </Route>
       </Routes>

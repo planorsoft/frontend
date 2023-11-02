@@ -25,9 +25,9 @@ const formSchema = z.object({
   id: z.number(),
   title: z.string().nonempty({ message: "Lütfen geçerli bir başlık giriniz" }),
   description: z.string(),
-  isOutsource: z.boolean(),
+  isCompleted: z.boolean(),
   customerId: z.string(),
-  price: z.string(),
+  price: z.number(),
 });
 
 interface UpsertProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -47,9 +47,9 @@ const Upsert = ({ open, setOpen, projectId, customerId }: UpsertProps) => {
       id: 0,
       title: "",
       description: "",
-      isOutsource: false,
+      isCompleted: false,
       customerId: "",
-      price: "",
+      price: 0,
     },
   });
 
@@ -65,7 +65,7 @@ const Upsert = ({ open, setOpen, projectId, customerId }: UpsertProps) => {
         form.setValue("id", result?.id);
         form.setValue("title", result?.title);
         form.setValue("description", result?.description);
-        form.setValue("isOutsource", result?.isOutsource);
+        form.setValue("isCompleted", result?.isCompleted);
         form.setValue("customerId", customerId || "");
         form.setValue("price", result?.price);
       } catch (error) {
@@ -93,9 +93,9 @@ const Upsert = ({ open, setOpen, projectId, customerId }: UpsertProps) => {
         id: values.id,
         title: values.title,
         description: values.description,
-        isOutsource: values.isOutsource,
+        isCompleted: values.isCompleted,
         customerId: parseInt(values.customerId),
-        price: parseInt(values.price),
+        price: values.price,
       };
       if (projectId === 0) {
         await createProject(request);
@@ -153,8 +153,8 @@ const Upsert = ({ open, setOpen, projectId, customerId }: UpsertProps) => {
                   />
                   <InputBoolean
                     control={form.control}
-                    placeholder="Dış kaynak kullanıldı mı?"
-                    fieldName="isOutsource"
+                    placeholder="Tamamlandı mı?"
+                    fieldName="isCompleted"
                   />
                   <InputServerSelect
                     control={form.control}

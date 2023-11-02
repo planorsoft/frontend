@@ -62,7 +62,6 @@ const Upsert = ({ open, setOpen, customerId }: UpsertProps) => {
   }, [customerId]);
 
   useEffect(() => {
-    console.log(currencyState.currencies);
     if (currencyState.currencies.length == 0) {
       dispatch(getCurrencies());
     }

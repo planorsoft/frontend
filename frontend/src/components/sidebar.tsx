@@ -1,17 +1,5 @@
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import {
-  KanbanSquare,
-  LayoutDashboard,
-  CalendarDays,
-  Users,
-  UserPlus,
-  Folder,
-  Landmark,
-  FileText,
-  Settings,
-  Currency,
-} from "lucide-react";
 import { useLocation, useNavigate } from "react-router-dom";
 import {
   DropdownMenu,
@@ -19,81 +7,32 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { LucideIcon } from "lucide-react";
 
+interface SidebarProps extends React.HTMLAttributes<HTMLDivElement> {
+  sidebar: (
+    | {
+        name: string;
+        icon: LucideIcon;
+        to: string;
+        child?: undefined;
+      }
+    | {
+        name: string;
+        icon: LucideIcon;
+        to: string;
+        child: {
+          name: string;
+          icon: LucideIcon;
+          to: string;
+        }[];
+      }
+  )[];
+}
 
-interface SidebarProps extends React.HTMLAttributes<HTMLDivElement> {}
-
-export function Sidebar({ className }: SidebarProps) {
+export function Sidebar({ sidebar, className }: SidebarProps) {
   const location = useLocation();
   const navigate = useNavigate();
-
-
-  const sidebar = [
-    {
-      name: "Ana sayfa",
-      icon: LayoutDashboard,
-      to: "/dashboard",
-    },
-    {
-      name: "Takvim",
-      icon: CalendarDays,
-      to: "/calendar",
-    },
-    {
-      name: "Müşteriler",
-      icon: Users,
-      to: "/customers",
-    },
-    {
-      name: "Potansiyel müşteriler",
-      icon: UserPlus,
-      to: "/customers/potential",
-    },
-    {
-      name: "Projeler",
-      icon: Folder,
-      to: "/projects",
-    },
-    {
-      name: "Görevler",
-      icon: KanbanSquare,
-      to: "/duties",
-    },
-    {
-      name: "Finans",
-      icon: Landmark,
-      to: "/finance",
-    },
-    /*
-    {
-      name: "Raporlar",
-      icon: FileText,
-      to: "/reports",
-    },
-    */
-    {
-      name: "Ayarlar",
-      icon: Settings,
-      to: "/settings",
-      child: [
-        {
-          name: "Ekip",
-          icon: Users,
-          to: "/settings/team",
-        },
-        {
-          name: "Uygulama",
-          icon: Users,
-          to: "/settings/application",
-        },
-        {
-          name: "Döviz",
-          icon: Currency,
-          to: "/settings/currency",
-        },
-      ],
-    },
-  ];
 
   return (
     <div
