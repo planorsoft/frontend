@@ -18,6 +18,7 @@ import { getMyUser } from "@/containers/Settings/User/actions";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { profileImageGenerator } from "@/lib/profile-image";
 import { getTenant } from "@/lib/tenant";
+import jwtDecoder from "@/lib/jwtDecoder";
 
 interface MenuProps extends React.HTMLAttributes<HTMLDivElement> {
   toggleSidebar: () => void;
@@ -31,6 +32,7 @@ export function Menu({ toggleSidebar }: MenuProps) {
     (state) => state.applicationState
   );
   const userState = useAppSelector<UserState>((state) => state.userState);
+  const decodedToken = jwtDecoder();
 
   useEffect(() => {
     if (Object.keys(applicationState.application).length <= 0) {
@@ -51,10 +53,12 @@ export function Menu({ toggleSidebar }: MenuProps) {
         </div>
         {Object.keys(applicationState.application).length > 0 ? (
           <p>
-            {getTenant?.name} {getTenant.name} / 
+            {getTenant?.name} {getTenant.name} /
           </p>
         ) : (
-          <p>{document.title} {applicationState.title}</p> 
+          <p>
+            {document.title} {applicationState.title}
+          </p>
         )}
       </div>
       <div className="flex">
@@ -80,14 +84,16 @@ export function Menu({ toggleSidebar }: MenuProps) {
             )}
           </MenubarTrigger>
           <MenubarContent forceMount>
-            <MenubarItem
-              inset
-              onClick={() => {
-                navigate("/settings/users/me");
-              }}
-            >
-              Hesabı düzenle
-            </MenubarItem>
+            {!decodedToken.roles.includes("Customer") && (
+              <MenubarItem
+                inset
+                onClick={() => {
+                  navigate("/settings/users/me");
+                }}
+              >
+                Hesabı düzenle
+              </MenubarItem>
+            )}
             <MenubarItem
               inset
               className="text-warning"
