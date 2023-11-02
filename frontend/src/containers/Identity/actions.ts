@@ -3,6 +3,7 @@ import { ConfirmData, ForgotConfirmPasswordData, ForgotPasswordData, LoginData, 
 import jwtDecoder from "@/lib/jwtDecoder";
 import { AppDispatch } from "@/store";
 import { AxiosError } from "axios";
+import { getMyUser } from "../Settings/User/actions";
 
 export const setToken = (token : string | null = null) => {
   // If token is gived by parameter
@@ -52,6 +53,7 @@ export const login = ({email, password, tenant} : LoginData) => async (dispatch 
       tenant,
     });
     dispatch(setToken(data.accessToken))
+    dispatch(getMyUser());
     dispatch({ type: identityTypes.LOGIN_SUCCESS, payload: data });
   } catch (error) {
     if(!(error instanceof AxiosError)) { throw error; }

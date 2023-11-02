@@ -7,7 +7,7 @@ import {
 } from "@/components/ui/menubar";
 import ThemeToggle from "./theme-toggle";
 import { Button } from "./ui/button";
-import { Loader, Menu as MenuIcon, UserIcon } from "lucide-react";
+import { Loader, Menu as MenuIcon } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "@/store";
 import { ApplicationState } from "@/containers/Settings/Application/types";
@@ -53,11 +53,11 @@ export function Menu({ toggleSidebar }: MenuProps) {
         </div>
         {Object.keys(applicationState.application).length > 0 ? (
           <p>
-            {getTenant?.name} {getTenant.name} /
+            {getTenant()} {applicationState.title}
           </p>
         ) : (
           <p>
-            {document.title} {applicationState.title}
+            {document.title}
           </p>
         )}
       </div>
