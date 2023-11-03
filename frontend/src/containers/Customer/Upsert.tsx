@@ -19,10 +19,10 @@ import Loader from "@/components/ui/loader";
 import formSchema from "./formSchema";
 import { LoaderIcon, Trash2 } from "lucide-react";
 import Remove from "@/components/remove";
-import { useAppDispatch, useAppSelector } from "@/store";
+import { useAppSelector } from "@/store";
 import { CurrencyState } from "../Settings/Currency/types";
-import { getCurrencies } from "../Settings/Currency/actions";
 import { InputSelect } from "@/components/ui/input-select";
+import { selectCurrencyByDefault } from "../Settings/Currency/selector";
 
 interface UpsertProps extends React.HTMLAttributes<HTMLDivElement> {
   open: boolean;
@@ -36,7 +36,7 @@ const Upsert = ({ open, setOpen, customerId }: UpsertProps) => {
   const currencyState = useAppSelector<CurrencyState>(
     (state) => state.currencyState
   );
-  const dispatch = useAppDispatch();
+  const defaultCurrency = selectCurrencyByDefault(currencyState);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -46,26 +46,20 @@ const Upsert = ({ open, setOpen, customerId }: UpsertProps) => {
       isCompany: false,
       address: "",
       city: "",
-      district: undefined,
-      postCode: undefined,
+      district: "",
+      postCode: "",
       country: "",
-      phoneNumber: undefined,
-      website: undefined,
+      phoneNumber: "",
+      website: "",
       governmentId: "",
       isPotantial: false,
-      currencyCode: undefined,
+      currencyCode: "",
     },
   });
 
   useEffect(() => {
     getCustomerRequest();
   }, [customerId]);
-
-  useEffect(() => {
-    if (currencyState.currencies.length == 0) {
-      dispatch(getCurrencies());
-    }
-  }, []);
 
   const getCustomerRequest = async () => {
     if (customerId != 0) {
@@ -77,14 +71,14 @@ const Upsert = ({ open, setOpen, customerId }: UpsertProps) => {
         form.setValue("isCompany", result?.isCompany || false);
         form.setValue("address", result?.address || "");
         form.setValue("city", result?.city || "");
-        form.setValue("district", result?.district || undefined);
-        form.setValue("postCode", result?.postCode || undefined);
+        form.setValue("district", result?.district || "");
+        form.setValue("postCode", result?.postCode || "");
         form.setValue("country", result?.country || "");
-        form.setValue("phoneNumber", result?.phoneNumber || undefined);
-        form.setValue("website", result?.website || undefined);
+        form.setValue("phoneNumber", result?.phoneNumber || "");
+        form.setValue("website", result?.website || "");
         form.setValue("governmentId", result?.governmentId || "");
         form.setValue("isPotantial", result?.isPotantial || false);
-        form.setValue("currencyCode", result?.currencyCode || undefined);
+        form.setValue("currencyCode", result?.currencyCode || defaultCurrency);
       } catch (error) {
         if (!(error instanceof AxiosError)) {
           throw error;
@@ -98,6 +92,7 @@ const Upsert = ({ open, setOpen, customerId }: UpsertProps) => {
       setLoading(false);
     } else {
       form.reset();
+      form.setValue("currencyCode", defaultCurrency?.code || "");
     }
   };
 
@@ -167,12 +162,12 @@ const Upsert = ({ open, setOpen, customerId }: UpsertProps) => {
                   />
                   <InputString
                     control={form.control}
-                    placeholder="Adres*"
+                    placeholder="Adres"
                     fieldName="address"
                   />
                   <InputString
                     control={form.control}
-                    placeholder="Şehir*"
+                    placeholder="Şehir"
                     fieldName="city"
                   />
                   <InputString
@@ -187,7 +182,7 @@ const Upsert = ({ open, setOpen, customerId }: UpsertProps) => {
                   />
                   <InputString
                     control={form.control}
-                    placeholder="Ülke*"
+                    placeholder="Ülke"
                     fieldName="country"
                   />
                   <InputString
@@ -202,7 +197,7 @@ const Upsert = ({ open, setOpen, customerId }: UpsertProps) => {
                   />
                   <InputString
                     control={form.control}
-                    placeholder="TCKNO / Vergi No*"
+                    placeholder="TCKNO / Vergi No"
                     fieldName="governmentId"
                   />
                   <InputSelect

@@ -16,26 +16,16 @@ const formSchema = z.object({
   isCompany: z.boolean(),
   address: z
     .string()
-    .min(2, {
-      message: "Lütfen geçerli bir adres giriniz.",
-    })
     .max(128, {
       message: "Lütfen geçerli bir adres giriniz.",
     })
-    .nonempty({
-      message: "Lütfen geçerli bir adres giriniz.",
-    }),
+    .optional(),
   city: z
     .string()
-    .min(2, {
-      message: "Lütfen geçerli bir şehir giriniz.",
-    })
     .max(64, {
       message: "Lütfen geçerli bir şehir giriniz.",
     })
-    .nonempty({
-      message: "Lütfen geçerli bir şehir giriniz.",
-    }),
+    .optional(),
   district: z
     .string()
     .max(64, {
@@ -50,15 +40,10 @@ const formSchema = z.object({
     .optional(),
   country: z
     .string()
-    .min(2, {
-      message: "Lütfen geçerli bir ülke giriniz.",
-    })
     .max(64, {
       message: "Lütfen geçerli bir ülke giriniz.",
     })
-    .nonempty({
-      message: "Lütfen geçerli bir ülke giriniz.",
-    }),
+    .optional(),
   phoneNumber: z
     .string()
     .max(64, {
@@ -73,15 +58,10 @@ const formSchema = z.object({
     .optional(),
   governmentId: z
     .string()
-    .min(10, {
-      message: "Lütfen geçerli bir TCKNO / Vergi no giriniz.",
-    })
     .max(64, {
       message: "Lütfen geçerli bir TCKNO / Vergi no giriniz.",
     })
-    .nonempty({
-      message: "Lütfen geçerli bir TCKNO / Vergi no giriniz.",
-    }),
+    .optional(),
   isPotantial: z.boolean(),
   currencyCode: z
     .string()

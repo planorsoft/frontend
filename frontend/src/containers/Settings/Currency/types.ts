@@ -19,6 +19,8 @@ export const currenyTypes = {
     DELETE_CURRENCY_REQUEST: 'DELETE_CURRENCY_REQUEST',
     DELETE_CURRENCY_SUCCESS: 'DELETE_CURRENCY_SUCCESS',
     DELETE_CURRENCY_FAILURE: 'DELETE_CURRENCY_FAILURE',
+
+    RESET_CURRENCY_STATUS: 'RESET_CURRENCY_STATUS'
 }
 
 export interface Currency {
@@ -26,6 +28,7 @@ export interface Currency {
     code: string;
     symbol?: string;
     rate: number;
+    isDefault: boolean;
 }
 
 export interface CurrencyState {

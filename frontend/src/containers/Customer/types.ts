@@ -2,14 +2,14 @@ export interface Customer {
     id: number | null;
     name: string;
     isCompany: boolean;
-    address: string;
-    city: string;
+    address?: string;
+    city?: string;
     district?: string;
     postCode?: string;
-    country: string;
+    country?: string;
     phoneNumber?: string;
     website?: string;
-    governmentId: string;
+    governmentId?: string;
     currencyCode?: string;
     isPotantial: boolean;
 }

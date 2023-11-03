@@ -12,6 +12,9 @@ import {
   Settings,
   Currency,
 } from "lucide-react";
+import { useAppDispatch, useAppSelector } from "@/store";
+import { getCurrencies } from "@/containers/Settings/Currency/actions";
+import { CurrencyState } from "@/containers/Settings/Currency/types";
 
 const defaultSidebar = [
   {
@@ -95,6 +98,16 @@ interface PageProps extends React.HTMLAttributes<HTMLDivElement> {
 export default function Page({ role, children }: PageProps) {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [sidebar, setSidebar] = useState(defaultSidebar);
+  const currencyState = useAppSelector<CurrencyState>(
+    (state) => state.currencyState
+  );
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    if (currencyState.currencies.length == 0) {
+      dispatch(getCurrencies());
+    }
+  }, []);
 
   const toggleSidebar = () => {
     setSidebarOpen(!sidebarOpen);
@@ -116,10 +129,18 @@ export default function Page({ role, children }: PageProps) {
         <div className="bg-background">
           <div className="grid grid-cols-12">
             <div className="hidden sm:block col-span-2">
-              <Sidebar sidebar={sidebar} setSidebarOpen={setSidebarOpen} className={sidebarOpen ? "block" : "hidden"} />
+              <Sidebar
+                sidebar={sidebar}
+                setSidebarOpen={setSidebarOpen}
+                className={sidebarOpen ? "block" : "hidden"}
+              />
             </div>
             <div className="sm:hidden block">
-              <Sidebar sidebar={sidebar} setSidebarOpen={setSidebarOpen} className={sidebarOpen ? "block" : "hidden"} />
+              <Sidebar
+                sidebar={sidebar}
+                setSidebarOpen={setSidebarOpen}
+                className={sidebarOpen ? "block" : "hidden"}
+              />
             </div>
             <div
               className={`col-span-12 h-fit p-2 ${
