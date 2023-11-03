@@ -115,15 +115,15 @@ export default function Page({ role, children }: PageProps) {
       <div className="border-t">
         <div className="bg-background">
           <div className="grid grid-cols-12">
-            <div className="hidden md:block col-span-2">
-              <Sidebar sidebar={sidebar} className={sidebarOpen ? "block" : "hidden"} />
+            <div className="hidden sm:block col-span-2">
+              <Sidebar sidebar={sidebar} setSidebarOpen={setSidebarOpen} className={sidebarOpen ? "block" : "hidden"} />
             </div>
-            <div className="md:hidden block">
-              <Sidebar sidebar={sidebar} className={sidebarOpen ? "block" : "hidden"} />
+            <div className="sm:hidden block">
+              <Sidebar sidebar={sidebar} setSidebarOpen={setSidebarOpen} className={sidebarOpen ? "block" : "hidden"} />
             </div>
             <div
               className={`col-span-12 h-fit p-2 ${
-                sidebarOpen ? "md:col-span-10" : ""
+                sidebarOpen ? "sm:col-span-10" : ""
               }`}
             >
               {children}

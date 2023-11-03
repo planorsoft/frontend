@@ -2,11 +2,11 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import {
-  SheetContent,
-  SheetTitle,
-  SheetHeader,
-  Sheet,
-} from "@/components/ui/sheet";
+  DialogContent,
+  DialogTitle,
+  DialogHeader,
+  Dialog,
+} from "@/components/ui/dialog";
 import { createCustomer, getCustomer, updateCustomer } from "./service";
 import { Form } from "@/components/ui/form";
 import { useEffect, useState } from "react";
@@ -136,12 +136,12 @@ const Upsert = ({ open, setOpen, customerId }: UpsertProps) => {
 
   return (
     <>
-      <Sheet open={open} onOpenChange={setOpen}>
-        <SheetContent className="overflow-y-scroll">
-          <SheetHeader>
-            <SheetTitle>
+      <Dialog open={open} onOpenChange={setOpen}>
+        <DialogContent className="overflow-y-scroll h-full w-screen m-2 md:w-6/12">
+          <DialogHeader>
+            <DialogTitle>
               {customerId === 0 ? "Müşteri oluştur" : "Müşteri düzenle"}
-            </SheetTitle>
+            </DialogTitle>
             {loading ? (
               <Loader />
             ) : (
@@ -207,7 +207,7 @@ const Upsert = ({ open, setOpen, customerId }: UpsertProps) => {
                   />
                   <InputSelect
                     control={form.control}
-                    placeholder="Kur"
+                    placeholder="Döviz"
                     fieldName="currencyCode"
                     selectList={currencyState.currencies.map((item) => ({
                       value: item.code,
@@ -248,9 +248,9 @@ const Upsert = ({ open, setOpen, customerId }: UpsertProps) => {
                 </form>
               </Form>
             )}
-          </SheetHeader>
-        </SheetContent>
-      </Sheet>
+          </DialogHeader>
+        </DialogContent>
+      </Dialog>
       <Remove
         open={remove}
         setOpen={setRemove}

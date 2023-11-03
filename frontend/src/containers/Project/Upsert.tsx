@@ -2,11 +2,11 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import {
-  SheetContent,
-  SheetTitle,
-  SheetHeader,
-  Sheet,
-} from "@/components/ui/sheet";
+  DialogContent,
+  DialogTitle,
+  DialogHeader,
+  Dialog,
+} from "@/components/ui/dialog";
 import { createProject, getProject, updateProject } from "./service";
 import { Form } from "@/components/ui/form";
 import { useEffect, useState } from "react";
@@ -127,12 +127,12 @@ const Upsert = ({ open, setOpen, projectId, customerId }: UpsertProps) => {
 
   return (
     <>
-      <Sheet open={open} onOpenChange={setOpen}>
-        <SheetContent className="overflow-y-scroll">
-          <SheetHeader>
-            <SheetTitle>
+      <Dialog open={open} onOpenChange={setOpen}>
+        <DialogContent className="w-screen m-2 md:w-6/12">
+          <DialogHeader>
+            <DialogTitle>
               {projectId === 0 ? "Proje oluştur" : "Proje düzenle"}
-            </SheetTitle>
+            </DialogTitle>
             {loading ? (
               <Loader />
             ) : (
@@ -201,9 +201,9 @@ const Upsert = ({ open, setOpen, projectId, customerId }: UpsertProps) => {
                 </form>
               </Form>
             )}
-          </SheetHeader>
-        </SheetContent>
-      </Sheet>
+          </DialogHeader>
+        </DialogContent>
+      </Dialog>
       <Remove
         open={remove}
         setOpen={setRemove}

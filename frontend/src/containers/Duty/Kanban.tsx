@@ -98,7 +98,7 @@ function Kanban({ openUpsertDuty, openUpsertDutyCategory, projectId }: KanbanPro
 
   return (
     <>
-      <div className="flex justify-between w-full gap-4 overflow-y-auto min-h-screen">
+      <div className="flex justify-start w-full gap-4 overflow-y-auto min-h-screen">
         <DragDropContext onDragEnd={(result) => onDragEnd(result)}>
           {Object.entries(columns).map(([columnId, column], index) => {
             return (

@@ -29,9 +29,9 @@ const List = ({ type }: ListProps) => {
   }
 
   return (
-    <div>
+    <div className="px-2 py-4 md:px-20 mx-auto">
       <div className="flex justify-between my-2">
-        <h2 className="text-2xl font-semibold">
+        <h2 className="text-xl md:text-2xl font-semibold">
           {type === "real" ? "Müşteriler" : "Potansiyel Müşteriler"}
         </h2>
           <Button onClick={openUpsert}>

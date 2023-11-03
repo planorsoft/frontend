@@ -80,7 +80,7 @@ const Detail = () => {
   };
 
   return (
-    <div className="container mx-auto px-0 md:px-12 lg:px-36">
+    <div className="px-2 py-4 md:px-20 lg:px-36 mx-auto">
       <div className="grid grid-cols-12 gap-1 mt-2">
         <div className="col-span-9 w-full md:w-1/2 md:mx-5">
           <Form {...form}>

@@ -53,7 +53,7 @@ export function Menu({ toggleSidebar }: MenuProps) {
         </div>
         {Object.keys(applicationState.application).length > 0 ? (
           <p>
-            {getTenant()} {applicationState.title}
+            {applicationState.application.name}
           </p>
         ) : (
           <p>

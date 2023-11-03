@@ -51,6 +51,9 @@ function App() {
         <Route path="/dashboard" element={<ProtectedRoute route="/dashboard" />}>
           <Route path="/dashboard" element={<Page><Dashboard /></Page>} />
         </Route>
+        <Route path="/calendar" element={<ProtectedRoute route="/calendar" />}>
+          <Route path="/calendar" element={<Page>Takvim sayfası geliştirme aşamasındadır</Page>} />
+        </Route>
         <Route path="/customers" element={<ProtectedRoute route="/customers" />}>
           <Route path="/customers" element={<Page><CustomerList type="real" /></Page>} />
         </Route>

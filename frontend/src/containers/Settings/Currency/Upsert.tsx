@@ -2,11 +2,11 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import {
-  SheetContent,
-  SheetTitle,
-  SheetHeader,
-  Sheet,
-} from "@/components/ui/sheet";
+  DialogContent,
+  DialogTitle,
+  DialogHeader,
+  Dialog,
+} from "@/components/ui/dialog";
 import { Form } from "@/components/ui/form";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
@@ -108,16 +108,16 @@ const UpsertCurrency = ({ open, setOpen, currencyId }: UpsertCurrencyProps) => {
   }
 
   return (
-    <Sheet open={open} onOpenChange={setOpen}>
-      <SheetContent className="overflow-y-scroll">
-        <SheetHeader>
-          <SheetTitle>
+    <Dialog open={open} onOpenChange={setOpen}>
+      <DialogContent className="w-screen m-2 md:w-6/12">
+        <DialogHeader>
+          <DialogTitle>
             {currencyId === 0 ? (
               <p>Kur oluştur</p>
             ) : (
               <p>Kur düzenle</p>
             )}
-          </SheetTitle>
+          </DialogTitle>
           {loading ? (
             <Loader />
           ) : (
@@ -165,8 +165,8 @@ const UpsertCurrency = ({ open, setOpen, currencyId }: UpsertCurrencyProps) => {
               </form>
             </Form>
           )}
-        </SheetHeader>
-      </SheetContent>
+        </DialogHeader>
+      </DialogContent>
       <Remove
         open={remove}
         setOpen={setRemove}
@@ -174,7 +174,7 @@ const UpsertCurrency = ({ open, setOpen, currencyId }: UpsertCurrencyProps) => {
         entityId={currencyId}
         onDeleted={onDeleted}
       />
-    </Sheet>
+    </Dialog>
   );
 };
 

@@ -36,6 +36,10 @@ const routes = [
     roles: ["Manager", "Employee"],
   },
   {
+    path: "/calendar",
+    roles: ["Manager", "Employee"],
+  },
+  {
     path: "/customer-panel",
     roles: ["Customer"],
   }

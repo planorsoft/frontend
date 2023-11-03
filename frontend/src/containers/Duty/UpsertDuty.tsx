@@ -2,11 +2,11 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import {
-  SheetContent,
-  SheetTitle,
-  SheetHeader,
-  Sheet,
-} from "@/components/ui/sheet";
+  DialogContent,
+  DialogTitle,
+  DialogHeader,
+  Dialog,
+} from "@/components/ui/dialog";
 import { Form } from "@/components/ui/form";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
@@ -142,16 +142,16 @@ const UpsertDuty = ({ open, setOpen, dutyId, projectId }: UpsertDutyProps) => {
   }
 
   return (
-    <Sheet open={open} onOpenChange={setOpen}>
-      <SheetContent className="overflow-y-scroll">
-        <SheetHeader>
-          <SheetTitle>
+    <Dialog open={open} onOpenChange={setOpen}>
+      <DialogContent className="w-screen m-2 md:w-6/12">
+        <DialogHeader>
+          <DialogTitle>
             {dutyId === 0 ? (
               <p>Görev oluştur</p>
             ) : (
               <p>Görev düzenle</p>
             )}
-          </SheetTitle>
+          </DialogTitle>
           {loading ? (
             <Loader />
           ) : (
@@ -214,8 +214,8 @@ const UpsertDuty = ({ open, setOpen, dutyId, projectId }: UpsertDutyProps) => {
               </form>
             </Form>
           )}
-        </SheetHeader>
-      </SheetContent>
+        </DialogHeader>
+      </DialogContent>
       <Remove
         open={remove}
         setOpen={setRemove}
@@ -223,7 +223,7 @@ const UpsertDuty = ({ open, setOpen, dutyId, projectId }: UpsertDutyProps) => {
         entityId={dutyId}
         onDeleted={onDeleted}
       />
-    </Sheet>
+    </Dialog>
   );
 };
 

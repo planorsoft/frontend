@@ -49,7 +49,7 @@ const List = () => {
   };
 
   return (
-    <>
+    <div className="px-2 py-4 md:px-20 mx-auto">
       {currencyState.loading ? (
         <Loader />
       ) : currencyState.currencies.length == 0 ? (
@@ -60,7 +60,7 @@ const List = () => {
           </AlertDescription>
         </Alert>
       ) : (
-        <div>
+        <>
           <div className="flex justify-between my-2">
             <h2 className="text-2xl font-semibold">Dövizler</h2>
             <div className="flex justify-end gap-2">
@@ -100,10 +100,10 @@ const List = () => {
               ))}
             </TableBody>
           </Table>
-        </div>
+        </>
       )}
       <Upsert open={upsert} setOpen={showUpsert} currencyId={id} />
-    </>
+    </div>
   );
 };
 
