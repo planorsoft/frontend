@@ -63,12 +63,12 @@ export function Menu({ toggleSidebar }: MenuProps) {
       </div>
       <div className="flex">
         <MenubarMenu>
-          <MenubarTrigger className="hidden md:flex items-center gap-2">
+          <MenubarTrigger className="items-center gap-2">
             {userState.user.email === "" ? (
               "Hesap"
             ) : (
               <>
-                <Avatar className="h-7 w-7">
+                <Avatar className="h-7 w-7 max-[320px]:hidden">
                   <AvatarImage
                     src={
                       userState.user.avatarUri ||
