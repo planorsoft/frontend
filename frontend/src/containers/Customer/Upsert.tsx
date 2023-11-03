@@ -2,11 +2,11 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import {
-  SheetContent,
-  SheetTitle,
-  SheetHeader,
-  Sheet,
-} from "@/components/ui/sheet";
+  DialogContent,
+  DialogTitle,
+  DialogHeader,
+  Dialog,
+} from "@/components/ui/dialog";
 import { createCustomer, getCustomer, updateCustomer } from "./service";
 import { Form } from "@/components/ui/form";
 import { useEffect, useState } from "react";
@@ -19,10 +19,10 @@ import Loader from "@/components/ui/loader";
 import formSchema from "./formSchema";
 import { LoaderIcon, Trash2 } from "lucide-react";
 import Remove from "@/components/remove";
-import { useAppDispatch, useAppSelector } from "@/store";
+import { useAppSelector } from "@/store";
 import { CurrencyState } from "../Settings/Currency/types";
-import { getCurrencies } from "../Settings/Currency/actions";
 import { InputSelect } from "@/components/ui/input-select";
+import { selectCurrencyByDefault } from "../Settings/Currency/selector";
 
 interface UpsertProps extends React.HTMLAttributes<HTMLDivElement> {
   open: boolean;
@@ -36,7 +36,7 @@ const Upsert = ({ open, setOpen, customerId }: UpsertProps) => {
   const currencyState = useAppSelector<CurrencyState>(
     (state) => state.currencyState
   );
-  const dispatch = useAppDispatch();
+  const defaultCurrency = selectCurrencyByDefault(currencyState);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -46,27 +46,20 @@ const Upsert = ({ open, setOpen, customerId }: UpsertProps) => {
       isCompany: false,
       address: "",
       city: "",
-      district: undefined,
-      postCode: undefined,
+      district: "",
+      postCode: "",
       country: "",
-      phoneNumber: undefined,
-      website: undefined,
+      phoneNumber: "",
+      website: "",
       governmentId: "",
       isPotantial: false,
-      currencyCode: undefined,
+      currencyCode: "",
     },
   });
 
   useEffect(() => {
     getCustomerRequest();
   }, [customerId]);
-
-  useEffect(() => {
-    console.log(currencyState.currencies);
-    if (currencyState.currencies.length == 0) {
-      dispatch(getCurrencies());
-    }
-  }, []);
 
   const getCustomerRequest = async () => {
     if (customerId != 0) {
@@ -78,14 +71,14 @@ const Upsert = ({ open, setOpen, customerId }: UpsertProps) => {
         form.setValue("isCompany", result?.isCompany || false);
         form.setValue("address", result?.address || "");
         form.setValue("city", result?.city || "");
-        form.setValue("district", result?.district || undefined);
-        form.setValue("postCode", result?.postCode || undefined);
+        form.setValue("district", result?.district || "");
+        form.setValue("postCode", result?.postCode || "");
         form.setValue("country", result?.country || "");
-        form.setValue("phoneNumber", result?.phoneNumber || undefined);
-        form.setValue("website", result?.website || undefined);
+        form.setValue("phoneNumber", result?.phoneNumber || "");
+        form.setValue("website", result?.website || "");
         form.setValue("governmentId", result?.governmentId || "");
         form.setValue("isPotantial", result?.isPotantial || false);
-        form.setValue("currencyCode", result?.currencyCode || undefined);
+        form.setValue("currencyCode", result?.currencyCode || defaultCurrency);
       } catch (error) {
         if (!(error instanceof AxiosError)) {
           throw error;
@@ -99,6 +92,7 @@ const Upsert = ({ open, setOpen, customerId }: UpsertProps) => {
       setLoading(false);
     } else {
       form.reset();
+      form.setValue("currencyCode", defaultCurrency?.code || "");
     }
   };
 
@@ -137,12 +131,12 @@ const Upsert = ({ open, setOpen, customerId }: UpsertProps) => {
 
   return (
     <>
-      <Sheet open={open} onOpenChange={setOpen}>
-        <SheetContent className="overflow-y-scroll">
-          <SheetHeader>
-            <SheetTitle>
+      <Dialog open={open} onOpenChange={setOpen}>
+        <DialogContent className="overflow-y-scroll h-full w-screen m-2 md:w-6/12">
+          <DialogHeader>
+            <DialogTitle>
               {customerId === 0 ? "Müşteri oluştur" : "Müşteri düzenle"}
-            </SheetTitle>
+            </DialogTitle>
             {loading ? (
               <Loader />
             ) : (
@@ -168,12 +162,12 @@ const Upsert = ({ open, setOpen, customerId }: UpsertProps) => {
                   />
                   <InputString
                     control={form.control}
-                    placeholder="Adres*"
+                    placeholder="Adres"
                     fieldName="address"
                   />
                   <InputString
                     control={form.control}
-                    placeholder="Şehir*"
+                    placeholder="Şehir"
                     fieldName="city"
                   />
                   <InputString
@@ -188,7 +182,7 @@ const Upsert = ({ open, setOpen, customerId }: UpsertProps) => {
                   />
                   <InputString
                     control={form.control}
-                    placeholder="Ülke*"
+                    placeholder="Ülke"
                     fieldName="country"
                   />
                   <InputString
@@ -203,12 +197,12 @@ const Upsert = ({ open, setOpen, customerId }: UpsertProps) => {
                   />
                   <InputString
                     control={form.control}
-                    placeholder="TCKNO / Vergi No*"
+                    placeholder="TCKNO / Vergi No"
                     fieldName="governmentId"
                   />
                   <InputSelect
                     control={form.control}
-                    placeholder="Kur"
+                    placeholder="Döviz"
                     fieldName="currencyCode"
                     selectList={currencyState.currencies.map((item) => ({
                       value: item.code,
@@ -249,9 +243,9 @@ const Upsert = ({ open, setOpen, customerId }: UpsertProps) => {
                 </form>
               </Form>
             )}
-          </SheetHeader>
-        </SheetContent>
-      </Sheet>
+          </DialogHeader>
+        </DialogContent>
+      </Dialog>
       <Remove
         open={remove}
         setOpen={setRemove}

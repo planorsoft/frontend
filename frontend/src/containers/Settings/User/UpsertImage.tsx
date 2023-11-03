@@ -28,7 +28,7 @@ const UpsertImage = ({ open, setOpen }: UpsertImageProps) => {
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogContent>
+      <DialogContent className="w-screen m-2 md:w-6/12">
         <DialogHeader>
           <DialogTitle>Profil fotoğrafını güncelle</DialogTitle>
           <DialogDescription>

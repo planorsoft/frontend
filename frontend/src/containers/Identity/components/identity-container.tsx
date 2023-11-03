@@ -44,7 +44,7 @@ function IdentityContainer({ children, type } : IdentityContainerProps) {
               alt="Planor Logo"
               className="w-6 h-6 mr-2"
             />
-            { (type === "login" || type === "register") ? tenant.charAt(0).toUpperCase() + tenant.slice(1) : "Planor" }
+            { tenant ? tenant : "Planor" }
           </div>
           <div className="relative z-20 mt-auto">
             <blockquote className="space-y-2">

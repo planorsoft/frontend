@@ -10,7 +10,11 @@ export const getCurrencies = () => async (dispatch: Dispatch) => {
         dispatch({ type: 'GET_CURRENCIES_SUCCESS', payload: response.data });
     } catch (error: unknown) {
         if (!(error instanceof AxiosError)) { throw error; }
-        dispatch({ type: 'GET_CURRENCIES_FAILURE', payload: error.response?.data.title });
+        if (error.response) {
+            dispatch({ type: 'GET_CURRENCIES_FAILURE', payload: error.response?.data.title });
+        } else {
+            dispatch({ type: 'GET_CURRENCIES_FAILURE', payload: error.message });
+        }
     }
 }
 
@@ -21,7 +25,11 @@ export const getCurrency = (id: number) => async (dispatch: Dispatch) => {
         dispatch({ type: 'GET_CURRENCY_SUCCESS', payload: response.data });
     } catch (error: unknown) {
         if (!(error instanceof AxiosError)) { throw error; }
-        dispatch({ type: 'GET_CURRENCY_FAILURE', payload: error.response?.data.title });
+        if (error.response) {
+            dispatch({ type: 'GET_CURRENCY_FAILURE', payload: error.response?.data.title });
+        } else {
+            dispatch({ type: 'GET_CURRENCY_FAILURE', payload: error.message });
+        }
     }
 }
 
@@ -34,7 +42,11 @@ export const createCurrency = (data: Currency) => async (dispatch: Dispatch) => 
         dispatch({ type: 'CREATE_CURRENCY_SUCCESS', payload: response });
     } catch (error: unknown) {
         if (!(error instanceof AxiosError)) { throw error; }
-        dispatch({ type: 'CREATE_CURRENCY_FAILURE', payload: error.message });
+        if (error.response) {
+            dispatch({ type: 'CREATE_CURRENCY_FAILURE', payload: error.response?.data.detail });
+        } else {
+            dispatch({ type: 'CREATE_CURRENCY_FAILURE', payload: error.message });
+        }
     }
 }
 
@@ -45,7 +57,12 @@ export const updateCurrency = (id: number, data: Currency) => async (dispatch: D
         dispatch({ type: 'UPDATE_CURRENCY_SUCCESS', payload: data });
     } catch (error: unknown) {
         if (!(error instanceof AxiosError)) { throw error; }
-        dispatch({ type: 'UPDATE_CURRENCY_FAILURE', payload: error.message });
+        console.log(error.response);
+        if (error.response) {
+            dispatch({ type: 'UPDATE_CURRENCY_FAILURE', payload: error.response?.data.detail });
+        } else {
+            dispatch({ type: 'UPDATE_CURRENCY_FAILURE', payload: error.message });
+        }
     }
 }
 
@@ -56,7 +73,15 @@ export const deleteCurrency = (id: number) => async (dispatch: Dispatch) => {
         dispatch({ type: 'DELETE_CURRENCY_SUCCESS', payload: id });
     } catch (error: unknown) {
         if (!(error instanceof AxiosError)) { throw error; }
-        dispatch({ type: 'DELETE_CURRENCY_FAILURE', payload: error.message });
+        if (error.response) {
+            dispatch({ type: 'DELETE_CURRENCY_FAILURE', payload: error.response?.data.detail });
+        } else {
+            dispatch({ type: 'DELETE_CURRENCY_FAILURE', payload: error.message });
+        }
     }
+}
+
+export const resetCurrencyStatus = () => (dispatch: Dispatch) => {
+    dispatch({ type: 'RESET_CURRENCY_STATUS' });
 }
 

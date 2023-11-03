@@ -84,12 +84,12 @@ const columnDefs: ColumnDefs = {
       header: "Fiyat",
     },
     {
-      accessorKey: "IsOutsource",
-      header: "Dış Müşteri",
+      accessorKey: "IsCompleted",
+      header: "Tamamlandı",
       cell: ({ row }) => {
-        const isOutsource = row.getValue("IsOutsource");
+        const isCompleted = row.getValue("IsCompleted");
         
-        if (isOutsource) {
+        if (isCompleted) {
             return <div className="text-right font-medium"><Check /></div>
         } else {
             return <div className="text-right font-medium"><X /></div>

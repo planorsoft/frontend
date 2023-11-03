@@ -1,7 +1,7 @@
 export interface Project {
     id?: number;
     title: string;
-    isOutsource: boolean;
+    isCompleted: boolean;
     customerId: number;
     description: string | null;
     price: number;

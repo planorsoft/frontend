@@ -7,7 +7,7 @@ import {
 } from "@/components/ui/menubar";
 import ThemeToggle from "./theme-toggle";
 import { Button } from "./ui/button";
-import { Loader, Menu as MenuIcon, UserIcon } from "lucide-react";
+import { Loader, Menu as MenuIcon } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "@/store";
 import { ApplicationState } from "@/containers/Settings/Application/types";
@@ -18,6 +18,7 @@ import { getMyUser } from "@/containers/Settings/User/actions";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { profileImageGenerator } from "@/lib/profile-image";
 import { getTenant } from "@/lib/tenant";
+import jwtDecoder from "@/lib/jwtDecoder";
 
 interface MenuProps extends React.HTMLAttributes<HTMLDivElement> {
   toggleSidebar: () => void;
@@ -31,6 +32,7 @@ export function Menu({ toggleSidebar }: MenuProps) {
     (state) => state.applicationState
   );
   const userState = useAppSelector<UserState>((state) => state.userState);
+  const decodedToken = jwtDecoder();
 
   useEffect(() => {
     if (Object.keys(applicationState.application).length <= 0) {
@@ -51,20 +53,22 @@ export function Menu({ toggleSidebar }: MenuProps) {
         </div>
         {Object.keys(applicationState.application).length > 0 ? (
           <p>
-            {getTenant?.name} {getTenant.name} / 
+            {applicationState.application.name}
           </p>
         ) : (
-          <p>{document.title} {applicationState.title}</p> 
+          <p>
+            {document.title}
+          </p>
         )}
       </div>
       <div className="flex">
         <MenubarMenu>
-          <MenubarTrigger className="hidden md:flex items-center gap-2">
+          <MenubarTrigger className="items-center gap-2">
             {userState.user.email === "" ? (
               "Hesap"
             ) : (
               <>
-                <Avatar className="h-7 w-7">
+                <Avatar className="h-7 w-7 max-[320px]:hidden">
                   <AvatarImage
                     src={
                       userState.user.avatarUri ||
@@ -80,14 +84,16 @@ export function Menu({ toggleSidebar }: MenuProps) {
             )}
           </MenubarTrigger>
           <MenubarContent forceMount>
-            <MenubarItem
-              inset
-              onClick={() => {
-                navigate("/settings/users/me");
-              }}
-            >
-              Hesabı düzenle
-            </MenubarItem>
+            {!decodedToken.roles.includes("Customer") && (
+              <MenubarItem
+                inset
+                onClick={() => {
+                  navigate("/settings/users/me");
+                }}
+              >
+                Hesabı düzenle
+              </MenubarItem>
+            )}
             <MenubarItem
               inset
               className="text-warning"

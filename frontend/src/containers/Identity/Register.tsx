@@ -19,6 +19,8 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useForm } from "react-hook-form";
 import IdentityContainer from "./components/identity-container";
+import InputString from "@/components/ui/input-string";
+import InputPassword from "@/components/ui/input-password";
 
 const formSchema = z.object({
   name: z.string().min(2, {
@@ -34,6 +36,9 @@ const formSchema = z.object({
       message: "Lütfen geçerli bir mail adresi giriniz.",
     }),
   password: z.string().min(6, {
+    message: "Parola 6 haneden fazla karakter içermelidir.",
+  }),
+  rePassword: z.string().min(6, {
     message: "Parola 6 haneden fazla karakter içermelidir.",
   }),
   role: z.string(),
@@ -53,6 +58,7 @@ function Register() {
       username: "",
       email: "",
       password: "",
+      rePassword: "",
       role: "Manager",
       tenant: "",
     },
@@ -60,7 +66,15 @@ function Register() {
 
   const onSubmit = (values: z.infer<typeof formSchema>) => {
     values.username = values.email.split("@")[0];
+    if (values.password !== values.rePassword) {
+      form.setError("rePassword", {
+        type: "manual",
+        message: "Parolalar eşleşmiyor.",
+      });
+      return;
+    }
     setEmail(values.email);
+    values.tenant = values.tenant.toLowerCase();
     dispatch(register(values));
   };
 
@@ -113,7 +127,7 @@ function Register() {
                     <FormLabel>Şirket Adı</FormLabel>
                     <FormControl>
                       <div className="flex items-center gap-1 relative z-10">
-                        <Input placeholder="sirket-ismi" {...field} />
+                        <Input placeholder="sirket-ismi" {...field} className="lowercase" />
                         <span className="absolute right-2">
                           .planorsoft.com
                         </span>
@@ -124,31 +138,21 @@ function Register() {
                 )}
               />
             )}
-            <FormField
+            <InputString
               control={form.control}
-              name="email"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Email</FormLabel>
-                  <FormControl>
-                    <Input placeholder="planorsoft@gmail.com" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
+              placeholder="planorsoft@gmail.com"
+              fieldName="email"
             />
-            <FormField
+            <InputPassword
               control={form.control}
-              name="password"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Parola</FormLabel>
-                  <FormControl>
-                    <Input type="password" placeholder="******" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
+              placeholder="Parola"
+              fieldName="password"
+            />
+            <InputPassword
+              className="bg-red-500"
+              control={form.control}
+              placeholder="Parolayı yeniden giriniz"
+              fieldName="rePassword"
             />
             <Button
               disabled={identity.loading}

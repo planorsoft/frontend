@@ -2,11 +2,11 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import {
-  SheetContent,
-  SheetTitle,
-  SheetHeader,
-  Sheet,
-} from "@/components/ui/sheet";
+  DialogContent,
+  DialogTitle,
+  DialogHeader,
+  Dialog,
+} from "@/components/ui/dialog";
 import { Form } from "@/components/ui/form";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
@@ -94,16 +94,16 @@ const UpsertDutyCategory = ({ open, setOpen, dutyCategoryId }: UpsertDutyCategor
   }
 
   return (
-    <Sheet open={open} onOpenChange={setOpen}>
-      <SheetContent className="overflow-y-scroll">
-        <SheetHeader>
-          <SheetTitle>
+    <Dialog open={open} onOpenChange={setOpen}>
+      <DialogContent className="w-screen m-2 md:w-6/12">
+        <DialogHeader>
+          <DialogTitle>
             {dutyCategoryId === 0 ? (
               <p>Kategori oluştur</p>
             ) : (
               <p>Kategori düzenle</p>
             )}
-          </SheetTitle>
+          </DialogTitle>
           {loading ? (
             <Loader />
           ) : (
@@ -141,8 +141,8 @@ const UpsertDutyCategory = ({ open, setOpen, dutyCategoryId }: UpsertDutyCategor
               </form>
             </Form>
           )}
-        </SheetHeader>
-      </SheetContent>
+        </DialogHeader>
+      </DialogContent>
       <Remove
         open={remove}
         setOpen={setRemove}
@@ -150,7 +150,7 @@ const UpsertDutyCategory = ({ open, setOpen, dutyCategoryId }: UpsertDutyCategor
         entityId={dutyCategoryId}
         onDeleted={onDeleted}
       />
-    </Sheet>
+    </Dialog>
   );
 };
 

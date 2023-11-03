@@ -2,11 +2,11 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import {
-  SheetContent,
-  SheetTitle,
-  SheetHeader,
-  Sheet,
-} from "@/components/ui/sheet";
+  DialogContent,
+  DialogTitle,
+  DialogHeader,
+  Dialog,
+} from "@/components/ui/dialog";
 import { Form } from "@/components/ui/form";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
@@ -20,12 +20,14 @@ import { CurrencyState } from "./types";
 import Remove from "@/components/remove";
 import { selectCurrencyById } from "./selector";
 import InputNumber from "@/components/ui/input-number";
+import InputBoolean from "@/components/ui/input-boolean";
 
 const formSchema = z.object({
   id: z.number().optional(),
   code: z.string().min(2).max(10),
   symbol: z.string().max(10).optional(),
   rate: z.string().min(0),
+  isDefault: z.boolean(),
 });
 
 interface UpsertCurrencyProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -36,7 +38,9 @@ interface UpsertCurrencyProps extends React.HTMLAttributes<HTMLDivElement> {
 
 const UpsertCurrency = ({ open, setOpen, currencyId }: UpsertCurrencyProps) => {
   const dispatch = useAppDispatch();
-  const currencyState = useAppSelector<CurrencyState>((state) => state.currencyState);
+  const currencyState = useAppSelector<CurrencyState>(
+    (state) => state.currencyState
+  );
   const loading = currencyState.loading;
   const error = currencyState.error;
   const currency = selectCurrencyById(currencyState, currencyId);
@@ -51,6 +55,7 @@ const UpsertCurrency = ({ open, setOpen, currencyId }: UpsertCurrencyProps) => {
       code: "",
       symbol: "",
       rate: "",
+      isDefault: false,
     },
   });
 
@@ -68,21 +73,12 @@ const UpsertCurrency = ({ open, setOpen, currencyId }: UpsertCurrencyProps) => {
   }, []);
 
   useEffect(() => {
-    if (error) {
-      toast({
-        title: "Hata oluştu",
-        description: error,
-        variant: "destructive",
-      });
-    }
-  }, [error]);
-
-  useEffect(() => {
     if (currency) {
       form.setValue("id", currency.id || 0);
       form.setValue("code", currency.code || "");
       form.setValue("symbol", currency.symbol || "");
       form.setValue("rate", currency.rate?.toString() || "");
+      form.setValue("isDefault", currency.isDefault || false);
     }
   }, [currency]);
 
@@ -93,31 +89,60 @@ const UpsertCurrency = ({ open, setOpen, currencyId }: UpsertCurrencyProps) => {
       code: values.code,
       symbol: values.symbol,
       rate: parseFloat(values.rate),
-    }
+      isDefault: values.isDefault,
+    };
     if (values.id == 0) {
       dispatch(createCurrency(request));
     } else {
       dispatch(updateCurrency(currencyId, request));
     }
-    setOpen(false);
   };
+
+  useEffect(() => {
+    switch (currencyState.status) {
+      case "UPDATE_CURRENCY_SUCCESS":
+        toast({
+          title: "Döviz güncellendi",
+        });
+        setOpen(false);
+        break;
+      case "CREATE_CURRENCY_SUCCESS":
+        toast({
+          title: "Döviz oluşturuldu",
+        });
+        setOpen(false);
+        break;
+      case "UPDATE_CURRENCY_FAILURE":
+        toast({
+          title: "Hata oluştu",
+          description: currencyState.error,
+          variant: "destructive",
+        });
+        break;
+      case "CREATE_CURRENCY_FAILURE":
+        toast({
+          title: "Hata oluştu",
+          description: currencyState.error,
+          variant: "destructive",
+        });
+        break;
+      default:
+        break;
+    }
+  }, [currencyState.status]);
 
   const onDeleted = () => {
     setRemove(false);
     setOpen(false);
-  }
+  };
 
   return (
-    <Sheet open={open} onOpenChange={setOpen}>
-      <SheetContent className="overflow-y-scroll">
-        <SheetHeader>
-          <SheetTitle>
-            {currencyId === 0 ? (
-              <p>Kur oluştur</p>
-            ) : (
-              <p>Kur düzenle</p>
-            )}
-          </SheetTitle>
+    <Dialog open={open} onOpenChange={setOpen}>
+      <DialogContent className="w-screen m-2 md:w-6/12">
+        <DialogHeader>
+          <DialogTitle>
+            {currencyId === 0 ? <p>Kur oluştur</p> : <p>Kur düzenle</p>}
+          </DialogTitle>
           {loading ? (
             <Loader />
           ) : (
@@ -141,6 +166,11 @@ const UpsertCurrency = ({ open, setOpen, currencyId }: UpsertCurrencyProps) => {
                   placeholder="Kur"
                   fieldName="rate"
                 />
+                <InputBoolean
+                  control={form.control}
+                  placeholder="Varsayılan olarak ayarla"
+                  fieldName="isDefault"
+                />
 
                 {currencyId === 0 ? (
                   <Button disabled={loading} type="submit" className="w-full">
@@ -151,13 +181,24 @@ const UpsertCurrency = ({ open, setOpen, currencyId }: UpsertCurrencyProps) => {
                   </Button>
                 ) : (
                   <div className="grid grid-cols-12 gap-2">
-                    <Button disabled={loading} type="submit" className="col-span-10">
+                    <Button
+                      disabled={loading}
+                      type="submit"
+                      className="col-span-10"
+                    >
                       {loading && (
                         <LoaderIcon className="mr-2 h-4 w-4 animate-spin" />
                       )}
                       Gönder
                     </Button>
-                    <Button disabled={loading} onClick={() => { setRemove(true) }} variant="destructive" className="col-span-2">
+                    <Button
+                      disabled={loading}
+                      onClick={() => {
+                        setRemove(true);
+                      }}
+                      variant="destructive"
+                      className="col-span-2"
+                    >
                       <Trash2 className="w-4 h-4" />
                     </Button>
                   </div>
@@ -165,8 +206,8 @@ const UpsertCurrency = ({ open, setOpen, currencyId }: UpsertCurrencyProps) => {
               </form>
             </Form>
           )}
-        </SheetHeader>
-      </SheetContent>
+        </DialogHeader>
+      </DialogContent>
       <Remove
         open={remove}
         setOpen={setRemove}
@@ -174,7 +215,7 @@ const UpsertCurrency = ({ open, setOpen, currencyId }: UpsertCurrencyProps) => {
         entityId={currencyId}
         onDeleted={onDeleted}
       />
-    </Sheet>
+    </Dialog>
   );
 };
 

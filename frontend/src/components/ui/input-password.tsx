@@ -38,7 +38,7 @@ const InputPassword = ({
             <div className="relative">
               <Input
                 type={showPassword ? "text" : "password"}
-                placeholder={placeholder}
+                placeholder="********"
                 {...field}
                 disabled={disabled}
               />
