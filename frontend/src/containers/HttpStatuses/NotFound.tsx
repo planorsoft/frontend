@@ -3,6 +3,15 @@ import { useNavigate } from "react-router-dom"
 
 function NotFound() {
   const navigate = useNavigate();
+  const token = localStorage.getItem("token");
+
+  const navigateHandler = () => {
+    if (token) {
+      navigate("/dashboard")
+    } else {
+      navigate("/login")
+    }
+  }
 
   return (
     <div className="h-screen w-full flex justify-center items-center">
@@ -13,7 +22,7 @@ function NotFound() {
         <p className="leading-7 m-3">
           Aradığınız sayfayı bulamadık. Lütfen tekrar deneyin.
         </p>
-        <Button onClick={() => { navigate("/dashboard") }}>
+        <Button onClick={() => { navigateHandler() }}>
           Ana Sayfaya Dön
         </Button>
       </div>
