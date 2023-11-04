@@ -113,7 +113,7 @@ function Register() {
                     <FormLabel>Şirket Adı</FormLabel>
                     <FormControl>
                       <div className="flex items-center gap-1 relative z-10">
-                        <Input placeholder="sirket-ismi" {...field} />
+                        <Input placeholder="sirket-adi" {...field} />
                         <span className="absolute right-2">
                           .planorsoft.com
                         </span>
