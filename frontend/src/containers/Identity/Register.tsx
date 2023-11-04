@@ -98,7 +98,7 @@ function Register() {
                 <FormItem>
                   <FormLabel>Ad Soyad</FormLabel>
                   <FormControl>
-                    <Input placeholder="Berk Selvi" {...field} />
+                    <Input placeholder="Ad Soyad" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

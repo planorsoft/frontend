@@ -51,7 +51,7 @@ function IdentityContainer({ children, type } : IdentityContainerProps) {
               <p className="text-lg">
                 &ldquo;Planor kullanarak küçük işletmemi çok daha farklı bir seviyeye taşıdım. Excel ile yürüttüğüm işletmemi artık çok daha profosyonel bir şekilde yönetiyor ve gerçekten nereden para kazanıp nereden para kaybettiğimi öğrenebiliyorum.&rdquo;
               </p>
-              <footer className="text-sm">Enes Demir</footer>
+              <footer className="text-sm">ABC Şirketi</footer>
             </blockquote>
           </div>
         </div>

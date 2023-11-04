@@ -80,6 +80,7 @@ function Login() {
       <IdentityContainer type="login">
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+<<<<<<< Updated upstream
             {!getTenant() && (
               <FormField
                 control={form.control}
@@ -99,6 +100,63 @@ function Login() {
                   </FormItem>
                 )}
               />
+=======
+            {!tenant ? (
+              <>
+                <FormField
+                  control={form.control}
+                  name="tenant"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Şirket İsmi</FormLabel>
+                      <FormControl>
+                        <div className="flex items-center gap-1 relative z-10">
+                          <Input placeholder="sirket-ismi" {...field} className="lowercase" />
+                          <span className="absolute right-2">
+                            .planorsoft.com
+                          </span>
+                        </div>
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <Button
+                  disabled={identity.loading}
+                  type="button"
+                  className="w-full"
+                  onClick={setTenantHandler}
+                >
+                  {identity.loading && (
+                    <Loader className="mr-2 h-4 w-4 animate-spin" />
+                  )}
+                  Devam et
+                </Button>
+              </>
+            ) : (
+              <>
+                <InputString
+                  control={form.control}
+                  placeholder="Email"
+                  fieldName="email"
+                />
+                <InputPassword
+                  control={form.control}
+                  placeholder="Parola"
+                  fieldName="password"
+                />
+                <Button
+                  disabled={identity.loading}
+                  type="submit"
+                  className="w-full"
+                >
+                  {identity.loading && (
+                    <Loader className="mr-2 h-4 w-4 animate-spin" />
+                  )}
+                  Giriş yap
+                </Button>
+              </>
+>>>>>>> Stashed changes
             )}
             <FormField
               control={form.control}
