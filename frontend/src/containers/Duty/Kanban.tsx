@@ -44,7 +44,11 @@ interface KanbanProps extends React.HTMLAttributes<HTMLDivElement> {
   projectId?: string;
 }
 
-function Kanban({ openUpsertDuty, openUpsertDutyCategory, projectId }: KanbanProps) {
+function Kanban({
+  openUpsertDuty,
+  openUpsertDutyCategory,
+  projectId,
+}: KanbanProps) {
   const dutyState = useAppSelector<DutyState>((state) => state.dutyState);
   const duties = selectDutyByProjectId(dutyState, projectId);
   const dutyCategoryState = useAppSelector<DutyCategoryState>(
@@ -108,19 +112,19 @@ function Kanban({ openUpsertDuty, openUpsertDutyCategory, projectId }: KanbanPro
               >
                 <div className="flex justify-between items-center group h-10">
                   <h2>{column.name}</h2>
-                    <div className="w-10 h-10 flex items-center justify-center">
-                      <GripHorizontal className="w-4 h-4 block group-hover:hidden" />
-                    </div>
-                    <Button
-                      className="hidden group-hover:flex"
-                      variant="outline"
-                      size="icon"
-                      onClick={() => {
-                        openUpsertDutyCategory(columnId);
-                      }}
-                    >
-                      <Pencil className="w-4 h-4" />
-                    </Button>
+                  <div className="w-10 h-10 flex items-center justify-center">
+                    <GripHorizontal className="w-4 h-4 block group-hover:hidden" />
+                  </div>
+                  <Button
+                    className="hidden group-hover:flex"
+                    variant="outline"
+                    size="icon"
+                    onClick={() => {
+                      openUpsertDutyCategory(columnId);
+                    }}
+                  >
+                    <Pencil className="w-4 h-4" />
+                  </Button>
                 </div>
                 <Droppable droppableId={columnId} key={columnId}>
                   {(provided) => {
@@ -137,35 +141,22 @@ function Kanban({ openUpsertDuty, openUpsertDutyCategory, projectId }: KanbanPro
                               draggableId={item.id?.toString()}
                               index={index}
                             >
-                              {(provided, snapshot) => {
-                                let backgroundColor = "";
-                                if (snapshot.isDragging) {
-                                  backgroundColor = theme == "dark" ? "#27272a" : "#f1f5f9";
-                                } else {
-                                  backgroundColor = theme == "dark" ? "#090b0f" : "#ffffff";
-                                }
+                              {(provided) => {
                                 return (
                                   <div
                                     ref={provided.innerRef}
                                     {...provided.draggableProps}
                                     {...provided.dragHandleProps}
-                                    className="my-2 p-2 border w-full rounded flex justify-between items-center"
+                                    className="my-2 p-2 border w-full rounded flex justify-between items-center cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-800"
                                     style={{
                                       minHeight: "50px",
-                                      backgroundColor: backgroundColor,
                                       ...provided.draggableProps.style,
+                                    }}
+                                    onClick={() => {
+                                      openUpsertDuty(item.id);
                                     }}
                                   >
                                     {item.title}
-                                    <Button
-                                      variant="outline"
-                                      size="icon"
-                                      onClick={() => {
-                                        openUpsertDuty(item.id);
-                                      }}
-                                    >
-                                      <Pencil className="w-4 h-4" />
-                                    </Button>
                                   </div>
                                 );
                               }}

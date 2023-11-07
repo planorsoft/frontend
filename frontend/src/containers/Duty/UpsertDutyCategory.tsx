@@ -14,7 +14,11 @@ import InputString from "@/components/ui/input-string";
 import { toast } from "@/components/ui/use-toast";
 import Loader from "@/components/ui/loader";
 import { LoaderIcon, Trash2 } from "lucide-react";
-import { createDutyCategory, getDutyCategory, updateDutyCategory } from "./actions";
+import {
+  createDutyCategory,
+  getDutyCategory,
+  updateDutyCategory,
+} from "./actions";
 import { useAppDispatch, useAppSelector } from "@/store";
 import { DutyCategoryState } from "./types";
 import Remove from "@/components/remove";
@@ -23,7 +27,7 @@ const formSchema = z.object({
   id: z.number().optional(),
   title: z.string().nonempty({
     message: "Lütfen geçerli bir başlık giriniz.",
-  })
+  }),
 });
 
 interface UpsertDutyCategoryProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -32,9 +36,15 @@ interface UpsertDutyCategoryProps extends React.HTMLAttributes<HTMLDivElement> {
   dutyCategoryId: number;
 }
 
-const UpsertDutyCategory = ({ open, setOpen, dutyCategoryId }: UpsertDutyCategoryProps) => {
+const UpsertDutyCategory = ({
+  open,
+  setOpen,
+  dutyCategoryId,
+}: UpsertDutyCategoryProps) => {
   const dispatch = useAppDispatch();
-  const dutyCategoryState = useAppSelector<DutyCategoryState>((state) => state.dutyCategoryState);
+  const dutyCategoryState = useAppSelector<DutyCategoryState>(
+    (state) => state.dutyCategoryState
+  );
   const loading = dutyCategoryState.loading;
   const error = dutyCategoryState.error;
   const dutyCategory = dutyCategoryState.dutyCategory;
@@ -50,14 +60,12 @@ const UpsertDutyCategory = ({ open, setOpen, dutyCategoryId }: UpsertDutyCategor
   });
 
   useEffect(() => {
-    console.log(form.getValues());
-  }, []);
+    form.reset();
+  }, [open]);
 
   useEffect(() => {
     if (dutyCategoryId != 0) {
       dispatch(getDutyCategory(dutyCategoryId));
-    } else {
-      form.reset();
     }
   }, [dutyCategoryId]);
 
@@ -91,7 +99,7 @@ const UpsertDutyCategory = ({ open, setOpen, dutyCategoryId }: UpsertDutyCategor
   const onDeleted = () => {
     setRemove(false);
     setOpen(false);
-  }
+  };
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -127,13 +135,24 @@ const UpsertDutyCategory = ({ open, setOpen, dutyCategoryId }: UpsertDutyCategor
                   </Button>
                 ) : (
                   <div className="grid grid-cols-12 gap-2">
-                    <Button disabled={loading} type="submit" className="col-span-10">
+                    <Button
+                      disabled={loading}
+                      type="submit"
+                      className="col-span-10"
+                    >
                       {loading && (
                         <LoaderIcon className="mr-2 h-4 w-4 animate-spin" />
                       )}
                       Gönder
                     </Button>
-                    <Button disabled={loading} onClick={() => { setRemove(true) }} variant="destructive" className="col-span-2">
+                    <Button
+                      disabled={loading}
+                      onClick={() => {
+                        setRemove(true);
+                      }}
+                      variant="destructive"
+                      className="col-span-2"
+                    >
                       <Trash2 className="w-4 h-4" />
                     </Button>
                   </div>
