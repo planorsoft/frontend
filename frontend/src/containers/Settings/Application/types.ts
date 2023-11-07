@@ -21,6 +21,7 @@ export const applicationTypes = {
 export interface Application {
     id?: number;
     name: string;
+    code: string | null;
 }
 
 export interface ApplicationState {

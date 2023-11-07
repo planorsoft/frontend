@@ -81,7 +81,7 @@ export interface DutyPriority {
 
 export interface DutyState {
     duties: Duty[];
-    duty: Duty | object;
+    duty: Duty;
     loading: boolean;
     error: string | null;
     status: string | null;

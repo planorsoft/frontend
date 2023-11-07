@@ -156,7 +156,8 @@ function Kanban({
                                       openUpsertDuty(item.id);
                                     }}
                                   >
-                                    {item.title}
+                                    
+                                    {item.id} {item.title}
                                   </div>
                                 );
                               }}
