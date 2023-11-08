@@ -25,7 +25,7 @@ export interface Application {
 }
 
 export interface ApplicationState {
-    application: Application | object;
+    application: Application;
     title: string;
     loading: boolean;
     error: string | null;

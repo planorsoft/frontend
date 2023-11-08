@@ -1,4 +1,4 @@
-import { DutyState, Duty, DutyAction, dutyTypes, DutyCategory, DutyCategoryAction, DutyCategoryState } from "./types";
+import { DutyState, Duty, DutyAction, dutyTypes, DutyCategory, DutyCategoryAction, DutyCategoryState, DutySize, DutySizeAction, DutySizeState } from "./types";
 
 const dutyInitialState: DutyState = {
     duties: [],
@@ -260,6 +260,129 @@ export const dutyCategoryReducer = (state = dutyCategoriesInitalState, action: D
                 error: action.payload,
                 loading: false,
                 status: dutyTypes.DELETE_DUTY_CATEGORY_FAILURE
+            };
+        default:
+            return state;
+    }
+}
+
+const dutySizesInitalState: DutySizeState = {
+    dutySizes: [],
+    dutySize: {
+        id: 0,
+        name: "",
+        score: 0
+    },
+    loading: false,
+    error: null,
+    status: null
+};
+
+export const dutySizeReducer = (state = dutySizesInitalState, action: DutySizeAction) => {
+    switch (action.type) {
+        case dutyTypes.GET_DUTY_SIZES_REQUEST:
+            return {
+                ...state,
+                loading: true,
+                status: dutyTypes.GET_DUTY_SIZES_REQUEST
+            };
+        case dutyTypes.GET_DUTY_SIZES_SUCCESS:
+            return {
+                ...state,
+                dutySizes: action.payload,
+                error: null,
+                loading: false,
+                status: dutyTypes.GET_DUTY_SIZES_SUCCESS
+            };
+        case dutyTypes.GET_DUTY_SIZES_FAILURE:
+            return {
+                ...state,
+                error: action.payload,
+                loading: false,
+                status: dutyTypes.GET_DUTY_SIZES_FAILURE
+            };
+        case dutyTypes.GET_DUTY_SIZE_REQUEST:
+            return {
+                ...state,
+                loading: true,
+                status: dutyTypes.GET_DUTY_SIZE_REQUEST
+            };
+        case dutyTypes.GET_DUTY_SIZE_SUCCESS:
+            return {
+                ...state,
+                dutySize: action.payload,
+                error: null,
+                loading: false,
+                status: dutyTypes.GET_DUTY_SIZE_SUCCESS
+            };
+        case dutyTypes.GET_DUTY_SIZE_FAILURE:
+            return {
+                ...state,
+                error: action.payload,
+                loading: false,
+                status: dutyTypes.GET_DUTY_SIZE_FAILURE
+            };
+        case dutyTypes.CREATE_DUTY_SIZE_REQUEST:
+            return {
+                ...state,
+                loading: true,
+                status: dutyTypes.CREATE_DUTY_SIZE_REQUEST
+            };
+        case dutyTypes.CREATE_DUTY_SIZE_SUCCESS:
+            return {
+                ...state,
+                dutySizes: [...state.dutySizes, action.payload],
+                error: null,
+                loading: false,
+                status: dutyTypes.CREATE_DUTY_SIZE_SUCCESS
+            };
+        case dutyTypes.CREATE_DUTY_SIZE_FAILURE:
+            return {
+                ...state,
+                error: action.payload,
+                loading: false,
+                status: dutyTypes.CREATE_DUTY_SIZE_FAILURE
+            };
+        case dutyTypes.UPDATE_DUTY_SIZE_REQUEST:
+            return {
+                ...state,
+                loading: true,
+                status: dutyTypes.UPDATE_DUTY_SIZE_REQUEST
+            };
+        case dutyTypes.UPDATE_DUTY_SIZE_SUCCESS:
+            return {
+                ...state,
+                dutySizes: state.dutySizes.map((dutySize: DutySize) => dutySize.id === action.payload?.id ? action.payload : dutySize),
+                error: null,
+                loading: false,
+                status: dutyTypes.UPDATE_DUTY_SIZE_SUCCESS
+            };
+        case dutyTypes.UPDATE_DUTY_SIZE_FAILURE:
+            return {
+                ...state,
+                error: action.payload,
+                loading: false,
+                status: dutyTypes.UPDATE_DUTY_SIZE_FAILURE
+            };
+        case dutyTypes.DELETE_DUTY_SIZE_REQUEST:
+            return {
+                ...state,
+                loading: true,
+                status: dutyTypes.DELETE_DUTY_SIZE_REQUEST
+            };
+        case dutyTypes.DELETE_DUTY_SIZE_SUCCESS:
+            return {
+                ...state,
+                dutySizes: state.dutySizes.filter((dutySize : DutySize) => dutySize.id != action.payload),
+                loading: false,
+                status: dutyTypes.DELETE_DUTY_SUCCESS
+            }
+        case dutyTypes.DELETE_DUTY_SIZE_FAILURE:
+            return {
+                ...state,
+                error: action.payload,
+                loading: false,
+                status: dutyTypes.DELETE_DUTY_SIZE_FAILURE
             };
         default:
             return state;

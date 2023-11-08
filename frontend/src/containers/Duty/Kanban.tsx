@@ -4,14 +4,21 @@ import {
   DropResult,
   Droppable,
 } from "react-beautiful-dnd";
-import { Duty, DutyCategory, DutyCategoryState, DutyState } from "./types";
+import {
+  Duty,
+  DutyCategory,
+  DutyCategoryState,
+  DutySizeState,
+  DutyState,
+} from "./types";
 import { useState } from "react";
 import { useAppDispatch, useAppSelector } from "@/store";
 import { updateDutyOrders } from "./actions";
 import { Button } from "@/components/ui/button";
 import { GripHorizontal, Pencil } from "lucide-react";
-import { selectDutyByProjectId } from "./selector";
+import { selectDutyByProjectId, selectDutySizeById } from "./selector";
 import { useTheme } from "@/components/theme-provider";
+import { ApplicationState } from "../Settings/Application/types";
 
 const mapDuties = (duties: Duty[], categories: DutyCategory[]) => {
   const result = {};
@@ -55,9 +62,14 @@ function Kanban({
     (state) => state.dutyCategoryState
   );
   const dutyCategories = dutyCategoryState.dutyCategories;
+  const dutySizeState = useAppSelector<DutySizeState>(
+    (state) => state.dutySizeState
+  );
   const [columns, setColumns] = useState(mapDuties(duties, dutyCategories));
   const dispatch = useAppDispatch();
-  const { theme } = useTheme();
+  const applicationState = useAppSelector<ApplicationState>(
+    (state) => state.applicationState
+  );
 
   const onDragEnd = (result: DropResult) => {
     if (!result.destination) return;
@@ -135,6 +147,7 @@ function Kanban({
                         style={{ width: 250, minHeight: 500 }}
                       >
                         {column.duties.map((item, index) => {
+                          console.log(item);
                           return (
                             <Draggable
                               key={index}
@@ -147,7 +160,7 @@ function Kanban({
                                     ref={provided.innerRef}
                                     {...provided.draggableProps}
                                     {...provided.dragHandleProps}
-                                    className="my-2 p-2 border w-full rounded flex justify-between items-center cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-800"
+                                    className="my-2 p-2 border w-full rounded flex flex-col justify-between cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-800"
                                     style={{
                                       minHeight: "50px",
                                       ...provided.draggableProps.style,
@@ -156,8 +169,23 @@ function Kanban({
                                       openUpsertDuty(item.id);
                                     }}
                                   >
-                                    
-                                    {item.id} {item.title}
+                                    <div className="flex justify-between items-center">
+                                      {item.title}
+                                      {applicationState?.application?.code && (
+                                        <span className="text-sm">
+                                          {applicationState?.application?.code}-
+                                          {item.id}
+                                        </span>
+                                      )}
+                                    </div>
+                                    <p className="dark:text-gray-400 text-gray-700">
+                                      {
+                                        selectDutySizeById(
+                                          dutySizeState,
+                                          item.sizeId
+                                        )?.name
+                                      }
+                                    </p>
                                   </div>
                                 );
                               }}

@@ -19,7 +19,8 @@ export const createApplication = (data: Application) => async (dispatch: Dispatc
     dispatch({ type: 'CREATE_APPLICATION_REQUEST' });
     try {
         await axios.post('/apps', data);
-        dispatch({ type: 'CREATE_APPLICATION_SUCCESS', payload: data });
+        dispatch({ type: 'CREATE_APPLICATION_SUCCESS' });
+        dispatch(getCurrentApplication());
     } catch (error: unknown) {
         if (!(error instanceof AxiosError)) { throw error; }
         dispatch({ type: 'CREATE_APPLICATION_FAILURE', payload: error.message });

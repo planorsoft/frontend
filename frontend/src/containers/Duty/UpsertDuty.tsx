@@ -16,7 +16,7 @@ import Loader from "@/components/ui/loader";
 import { LoaderIcon, Trash2 } from "lucide-react";
 import { createDuty, getDuty, updateDuty } from "./actions";
 import { useAppDispatch, useAppSelector } from "@/store";
-import { DutyCategoryState, DutyState } from "./types";
+import { DutyCategoryState, DutySizeState, DutyState } from "./types";
 import { InputSelect } from "@/components/ui/input-select";
 import { InputServerSelect } from "@/components/ui/input-server-select";
 import Remove from "@/components/remove";
@@ -47,8 +47,15 @@ const formSchema = z.object({
     .nonempty({
       message: "Lütfen geçerli bir kategori giriniz.",
     }),
+  sizeId: z
+    .string()
+    .min(1, {
+      message: "Lütfen geçerli bir büyüklük giriniz.",
+    })
+    .nonempty({
+      message: "Lütfen geçerli bir büyüklük giriniz.",
+    }),
   // priorityId: z.number().int().optional(),
-  // sizeId: z.number().int().optional(),
 });
 
 interface UpsertDutyProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -64,9 +71,17 @@ const UpsertDuty = ({ open, setOpen, dutyId, projectId }: UpsertDutyProps) => {
   const loading = dutyState.loading;
   const error = dutyState.error;
   const duty = dutyState.duty;
-  const dutyCategoryState = useAppSelector<DutyCategoryState>((state) => state.dutyCategoryState);
+  const dutyCategoryState = useAppSelector<DutyCategoryState>(
+    (state) => state.dutyCategoryState
+  );
   const dutyCategories = dutyCategoryState.dutyCategories;
-  const applicationState = useAppSelector<ApplicationState>((state) => state.applicationState);
+  const dutySizeState = useAppSelector<DutySizeState>(
+    (state) => state.dutySizeState
+  )
+  const dutySizes = dutySizeState.dutySizes;
+  const applicationState = useAppSelector<ApplicationState>(
+    (state) => state.applicationState
+  );
   const [remove, setRemove] = useState<boolean>();
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -78,6 +93,7 @@ const UpsertDuty = ({ open, setOpen, dutyId, projectId }: UpsertDutyProps) => {
       description: "",
       projectId: projectId || "",
       categoryId: "",
+      sizeId: "",
     },
   });
 
@@ -86,10 +102,10 @@ const UpsertDuty = ({ open, setOpen, dutyId, projectId }: UpsertDutyProps) => {
   }, [open]);
 
   useEffect(() => {
-    if (dutyId != 0) {
+    if (dutyId != 0 && open) {
       dispatch(getDuty(dutyId));
     }
-  }, [dutyId]);
+  }, [open]);
 
   useEffect(() => {
     if (error) {
@@ -103,12 +119,14 @@ const UpsertDuty = ({ open, setOpen, dutyId, projectId }: UpsertDutyProps) => {
 
   useEffect(() => {
     if (duty) {
+      console.log(duty);
       form.setValue("id", duty.id || 0);
       form.setValue("title", duty.title || "");
       form.setValue("description", duty.description || "");
       form.setValue("categoryId", duty.categoryId?.toString() || "");
-      form.setValue("projectId", duty.projectId?.toString() || projectId || "");
-    } 
+      form.setValue("projectId", duty.projectId?.toString() || "");
+      form.setValue("sizeId", duty.sizeId?.toString() || "");
+    }
   }, [duty]);
 
   const onSubmit = (values: z.infer<typeof formSchema>) => {
@@ -119,6 +137,7 @@ const UpsertDuty = ({ open, setOpen, dutyId, projectId }: UpsertDutyProps) => {
       description: values.description,
       categoryId: parseInt(values.categoryId),
       projectId: parseInt(values.projectId),
+      sizeId: parseInt(values.sizeId)
     };
 
     if (values.id == 0) {
@@ -139,7 +158,17 @@ const UpsertDuty = ({ open, setOpen, dutyId, projectId }: UpsertDutyProps) => {
       <DialogContent className="w-screen m-2 md:w-6/12">
         <DialogHeader>
           <DialogTitle>
-            {dutyId === 0 ? <p>Görev oluştur</p> : <p>Görev düzenle</p>}
+            <div className="flex justify-start">
+              {dutyId === 0 ? (
+                <p>Görev oluştur</p>
+              ) : applicationState.application?.code ? (
+                <p>
+                  {applicationState.application?.code}-{dutyId}, Görevini düzenle
+                </p>
+              ) : (
+                <p>Görevi düzenle</p>
+              )}
+            </div>
           </DialogTitle>
           {loading ? (
             <Loader />
@@ -166,6 +195,15 @@ const UpsertDuty = ({ open, setOpen, dutyId, projectId }: UpsertDutyProps) => {
                   selectList={dutyCategories.map((x) => ({
                     value: x.id.toString(),
                     label: x.title,
+                  }))}
+                />
+                <InputSelect
+                  control={form.control}
+                  placeholder="Büyüklük"
+                  fieldName="sizeId"
+                  selectList={dutySizes.map((x) => ({
+                    value: x.id.toString(),
+                    label: x.name,
                   }))}
                 />
                 <InputServerSelect
