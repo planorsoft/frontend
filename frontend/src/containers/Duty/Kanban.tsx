@@ -4,14 +4,21 @@ import {
   DropResult,
   Droppable,
 } from "react-beautiful-dnd";
-import { Duty, DutyCategory, DutyCategoryState, DutyState } from "./types";
+import {
+  Duty,
+  DutyCategory,
+  DutyCategoryState,
+  DutySizeState,
+  DutyState,
+} from "./types";
 import { useState } from "react";
 import { useAppDispatch, useAppSelector } from "@/store";
 import { updateDutyOrders } from "./actions";
 import { Button } from "@/components/ui/button";
 import { GripHorizontal, Pencil } from "lucide-react";
-import { selectDutyByProjectId } from "./selector";
+import { selectDutyByProjectId, selectDutySizeById } from "./selector";
 import { useTheme } from "@/components/theme-provider";
+import { ApplicationState } from "../Settings/Application/types";
 
 const mapDuties = (duties: Duty[], categories: DutyCategory[]) => {
   const result = {};
@@ -44,16 +51,25 @@ interface KanbanProps extends React.HTMLAttributes<HTMLDivElement> {
   projectId?: string;
 }
 
-function Kanban({ openUpsertDuty, openUpsertDutyCategory, projectId }: KanbanProps) {
+function Kanban({
+  openUpsertDuty,
+  openUpsertDutyCategory,
+  projectId,
+}: KanbanProps) {
   const dutyState = useAppSelector<DutyState>((state) => state.dutyState);
   const duties = selectDutyByProjectId(dutyState, projectId);
   const dutyCategoryState = useAppSelector<DutyCategoryState>(
     (state) => state.dutyCategoryState
   );
   const dutyCategories = dutyCategoryState.dutyCategories;
+  const dutySizeState = useAppSelector<DutySizeState>(
+    (state) => state.dutySizeState
+  );
   const [columns, setColumns] = useState(mapDuties(duties, dutyCategories));
   const dispatch = useAppDispatch();
-  const { theme } = useTheme();
+  const applicationState = useAppSelector<ApplicationState>(
+    (state) => state.applicationState
+  );
 
   const onDragEnd = (result: DropResult) => {
     if (!result.destination) return;
@@ -108,19 +124,19 @@ function Kanban({ openUpsertDuty, openUpsertDutyCategory, projectId }: KanbanPro
               >
                 <div className="flex justify-between items-center group h-10">
                   <h2>{column.name}</h2>
-                    <div className="w-10 h-10 flex items-center justify-center">
-                      <GripHorizontal className="w-4 h-4 block group-hover:hidden" />
-                    </div>
-                    <Button
-                      className="hidden group-hover:flex"
-                      variant="outline"
-                      size="icon"
-                      onClick={() => {
-                        openUpsertDutyCategory(columnId);
-                      }}
-                    >
-                      <Pencil className="w-4 h-4" />
-                    </Button>
+                  <div className="w-10 h-10 flex items-center justify-center">
+                    <GripHorizontal className="w-4 h-4 block group-hover:hidden" />
+                  </div>
+                  <Button
+                    className="hidden group-hover:flex"
+                    variant="outline"
+                    size="icon"
+                    onClick={() => {
+                      openUpsertDutyCategory(columnId);
+                    }}
+                  >
+                    <Pencil className="w-4 h-4" />
+                  </Button>
                 </div>
                 <Droppable droppableId={columnId} key={columnId}>
                   {(provided) => {
@@ -131,41 +147,45 @@ function Kanban({ openUpsertDuty, openUpsertDutyCategory, projectId }: KanbanPro
                         style={{ width: 250, minHeight: 500 }}
                       >
                         {column.duties.map((item, index) => {
+                          console.log(item);
                           return (
                             <Draggable
                               key={index}
                               draggableId={item.id?.toString()}
                               index={index}
                             >
-                              {(provided, snapshot) => {
-                                let backgroundColor = "";
-                                if (snapshot.isDragging) {
-                                  backgroundColor = theme == "dark" ? "#27272a" : "#f1f5f9";
-                                } else {
-                                  backgroundColor = theme == "dark" ? "#090b0f" : "#ffffff";
-                                }
+                              {(provided) => {
                                 return (
                                   <div
                                     ref={provided.innerRef}
                                     {...provided.draggableProps}
                                     {...provided.dragHandleProps}
-                                    className="my-2 p-2 border w-full rounded flex justify-between items-center"
+                                    className="my-2 p-2 border w-full rounded flex flex-col justify-between cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-800"
                                     style={{
                                       minHeight: "50px",
-                                      backgroundColor: backgroundColor,
                                       ...provided.draggableProps.style,
                                     }}
+                                    onClick={() => {
+                                      openUpsertDuty(item.id);
+                                    }}
                                   >
-                                    {item.title}
-                                    <Button
-                                      variant="outline"
-                                      size="icon"
-                                      onClick={() => {
-                                        openUpsertDuty(item.id);
-                                      }}
-                                    >
-                                      <Pencil className="w-4 h-4" />
-                                    </Button>
+                                    <div className="flex justify-between items-center">
+                                      {item.title}
+                                      {applicationState?.application?.code && (
+                                        <span className="text-sm">
+                                          {applicationState?.application?.code}-
+                                          {item.id}
+                                        </span>
+                                      )}
+                                    </div>
+                                    <p className="dark:text-gray-400 text-gray-700">
+                                      {
+                                        selectDutySizeById(
+                                          dutySizeState,
+                                          item.sizeId
+                                        )?.name
+                                      }
+                                    </p>
                                   </div>
                                 );
                               }}

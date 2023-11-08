@@ -15,39 +15,42 @@ import { toast } from "@/components/ui/use-toast";
 import Loader from "@/components/ui/loader";
 import { LoaderIcon, Trash2 } from "lucide-react";
 import {
-  createDutyCategory,
-  getDutyCategory,
-  updateDutyCategory,
+  createDutySize,
+  getDutySize,
+  updateDutySize,
 } from "./actions";
 import { useAppDispatch, useAppSelector } from "@/store";
-import { DutyCategoryState } from "./types";
+import { DutySizeState } from "./types";
 import Remove from "@/components/remove";
 
 const formSchema = z.object({
   id: z.number().optional(),
-  title: z.string().nonempty({
-    message: "Lütfen geçerli bir başlık giriniz.",
+  name: z.string().nonempty({
+    message: "Lütfen geçerli bir isim giriniz.",
+  }),
+  score: z.string().nonempty({
+    message: "Lütfen geçerli bir büyüklük giriniz.",
   }),
 });
 
-interface UpsertDutyCategoryProps extends React.HTMLAttributes<HTMLDivElement> {
+interface UpsertDutySizeProps extends React.HTMLAttributes<HTMLDivElement> {
   open: boolean;
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  dutyCategoryId: number;
+  dutySizeId: number;
 }
 
-const UpsertDutyCategory = ({
+const UpsertDutySize = ({
   open,
   setOpen,
-  dutyCategoryId,
-}: UpsertDutyCategoryProps) => {
+  dutySizeId,
+}: UpsertDutySizeProps) => {
   const dispatch = useAppDispatch();
-  const dutyCategoryState = useAppSelector<DutyCategoryState>(
-    (state) => state.dutyCategoryState
+  const dutySizeState = useAppSelector<DutySizeState>(
+    (state) => state.dutySizeState
   );
-  const loading = dutyCategoryState.loading;
-  const error = dutyCategoryState.error;
-  const dutyCategory = dutyCategoryState.dutyCategory;
+  const loading = dutySizeState.loading;
+  const error = dutySizeState.error;
+  const dutySize = dutySizeState.dutySize;
   const [remove, setRemove] = useState<boolean>();
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -55,7 +58,8 @@ const UpsertDutyCategory = ({
 
     defaultValues: {
       id: 0,
-      title: "",
+      name: "",
+      score: ""
     },
   });
 
@@ -64,10 +68,10 @@ const UpsertDutyCategory = ({
   }, [open]);
 
   useEffect(() => {
-    if (dutyCategoryId != 0) {
-      dispatch(getDutyCategory(dutyCategoryId));
+    if (dutySizeId != 0) {
+      dispatch(getDutySize(dutySizeId));
     }
-  }, [dutyCategoryId]);
+  }, [dutySizeId]);
 
   useEffect(() => {
     if (error) {
@@ -80,18 +84,24 @@ const UpsertDutyCategory = ({
   }, [error]);
 
   useEffect(() => {
-    if (dutyCategory) {
-      form.setValue("id", dutyCategory.id || 0);
-      form.setValue("title", dutyCategory.title || "");
+    if (dutySize) {
+      form.setValue("id", dutySize.id || 0);
+      form.setValue("name", dutySize.name || "");
+      form.setValue("score", dutySize.score.toString() || "");
     }
-  }, [dutyCategory]);
+  }, [dutySize]);
 
   const onSubmit = (values: z.infer<typeof formSchema>) => {
-    console.log(values);
+    const request = {
+        id: values.id,
+        name: values.name,
+        score: parseInt(values.score)
+    }
+
     if (values.id == 0) {
-      dispatch(createDutyCategory(values));
+      dispatch(createDutySize(request));
     } else {
-      dispatch(updateDutyCategory(values.id, values));
+      dispatch(updateDutySize(request.id, request));
     }
     setOpen(false);
   };
@@ -106,10 +116,10 @@ const UpsertDutyCategory = ({
       <DialogContent className="w-screen m-2 md:w-6/12">
         <DialogHeader>
           <DialogTitle>
-            {dutyCategoryId === 0 ? (
-              <p>Kategori oluştur</p>
+            {dutySizeId === 0 ? (
+              <p>Büyüklük oluştur</p>
             ) : (
-              <p>Kategori düzenle</p>
+              <p>Büyüklük düzenle</p>
             )}
           </DialogTitle>
           {loading ? (
@@ -123,10 +133,15 @@ const UpsertDutyCategory = ({
                 <InputString
                   control={form.control}
                   placeholder="Başlık*"
-                  fieldName="title"
+                  fieldName="name"
+                />
+                <InputString
+                  control={form.control}
+                  placeholder="Büyüklük*"
+                  fieldName="score"
                 />
 
-                {dutyCategoryId === 0 ? (
+                {dutySizeId === 0 ? (
                   <Button disabled={loading} type="submit" className="w-full">
                     {loading && (
                       <LoaderIcon className="mr-2 h-4 w-4 animate-spin" />
@@ -165,12 +180,12 @@ const UpsertDutyCategory = ({
       <Remove
         open={remove}
         setOpen={setRemove}
-        entity="dutyCategory"
-        entityId={dutyCategoryId}
+        entity="dutySize"
+        entityId={dutySizeId}
         onDeleted={onDeleted}
       />
     </Dialog>
   );
 };
 
-export default UpsertDutyCategory;
+export default UpsertDutySize;

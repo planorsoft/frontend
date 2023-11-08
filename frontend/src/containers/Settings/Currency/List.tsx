@@ -15,7 +15,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
-import { Pencil, Plus } from "lucide-react";
+import { Check, Pencil, Plus, X } from "lucide-react";
 import Upsert from "@/containers/Settings/Currency/Upsert";
 
 const List = () => {
@@ -64,7 +64,11 @@ const List = () => {
           <div className="flex justify-between my-2">
             <h2 className="text-2xl font-semibold">Dövizler</h2>
             <div className="flex justify-end gap-2">
-              <Button onClick={() => { handleUpsert(0); }} >
+              <Button
+                onClick={() => {
+                  handleUpsert(0);
+                }}
+              >
                 <Plus className="w-4 h-4" /> Kur
               </Button>
             </div>
@@ -77,6 +81,7 @@ const List = () => {
                 <TableHead>Kod</TableHead>
                 <TableHead>Sembol</TableHead>
                 <TableHead>Kur / TRY</TableHead>
+                <TableHead>Varsayılan</TableHead>
                 <TableHead>Aksiyon</TableHead>
               </TableRow>
             </TableHeader>
@@ -87,6 +92,17 @@ const List = () => {
                   <TableCell>{currency.code}</TableCell>
                   <TableCell>{currency.symbol}</TableCell>
                   <TableCell>{currency.rate}</TableCell>
+                  <TableCell>
+                    {currency.isDefault ? (
+                      <div className="text-right font-medium">
+                        <Check />
+                      </div>
+                    ) : (
+                      <div className="text-right font-medium">
+                        <X />
+                      </div>
+                    )}
+                  </TableCell>
                   <TableCell>
                     <Button
                       variant="outline"

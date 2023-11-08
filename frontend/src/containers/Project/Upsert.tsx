@@ -26,8 +26,8 @@ const formSchema = z.object({
   title: z.string().nonempty({ message: "Lütfen geçerli bir başlık giriniz" }),
   description: z.string(),
   isCompleted: z.boolean(),
-  customerId: z.string(),
-  price: z.number(),
+  customerId: z.string().nonempty({ message: "Lütfen geçerli bir müşteri seçiniz" }),
+  price: z.string(),
 });
 
 interface UpsertProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -49,7 +49,7 @@ const Upsert = ({ open, setOpen, projectId, customerId }: UpsertProps) => {
       description: "",
       isCompleted: false,
       customerId: "",
-      price: 0,
+      price: "0",
     },
   });
 
@@ -66,8 +66,8 @@ const Upsert = ({ open, setOpen, projectId, customerId }: UpsertProps) => {
         form.setValue("title", result?.title);
         form.setValue("description", result?.description);
         form.setValue("isCompleted", result?.isCompleted);
-        form.setValue("customerId", customerId || "");
-        form.setValue("price", result?.price);
+        form.setValue("customerId", result?.customerId.toString() || "");
+        form.setValue("price", result?.price.toString() || "0");
       } catch (error) {
         if (!(error instanceof AxiosError)) {
           throw error;
@@ -95,16 +95,19 @@ const Upsert = ({ open, setOpen, projectId, customerId }: UpsertProps) => {
         description: values.description,
         isCompleted: values.isCompleted,
         customerId: parseInt(values.customerId),
-        price: values.price,
+        price: parseInt(values.price),
       };
       if (projectId === 0) {
         await createProject(request);
+        toast({
+          title: "Proje oluşturuldu",
+        });
       } else {
         await updateProject(values.id, request);
+        toast({
+          title: "Proje güncellendi",
+        });
       }
-      toast({
-        title: "Proje oluşturuldu",
-      });
       setOpen(false);
       window.location.reload();
     } catch (error) {
@@ -162,7 +165,7 @@ const Upsert = ({ open, setOpen, projectId, customerId }: UpsertProps) => {
                     fieldName="customerId"
                     entity="customer"
                   />
-                  <InputNumber
+                  <InputString
                     control={form.control}
                     placeholder="Fiyat"
                     fieldName="price"

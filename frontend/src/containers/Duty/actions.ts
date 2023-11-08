@@ -1,6 +1,6 @@
 import axios from "@/lib/axios";
 import { Dispatch } from "redux";
-import { Duty, DutyCategory, dutyTypes } from "./types";
+import { Duty, DutyCategory, DutySize, dutyTypes } from "./types";
 
 // ---------------------------------------------------------------------------- DUTY
 export const getActiveDuties = ( projectId?: number) => async (dispatch: Dispatch) => {
@@ -124,6 +124,58 @@ export const deleteDutyCategory = (id: number) => async (dispatch: Dispatch) => 
     }
 }
 
+// ---------------------------------------------------------------------------- DUTY SIZE
+
+export const getDutySizes = () => async (dispatch: Dispatch) => {
+    dispatch({ type: dutyTypes.GET_DUTY_SIZES_REQUEST });
+    try {
+        const { data } = await axios.get("/duty/sizes");
+        dispatch({ type: dutyTypes.GET_DUTY_SIZES_SUCCESS, payload: data });
+    } catch (error) {
+        dispatch({ type: dutyTypes.GET_DUTY_SIZES_FAILURE, payload: error });
+    }
+}
+
+export const getDutySize = (id: number) => async (dispatch: Dispatch) => {
+    dispatch({ type: dutyTypes.GET_DUTY_SIZE_REQUEST });
+    try {
+        const { data } = await axios.get(`/duty/sizes/${id}`);
+        dispatch({ type: dutyTypes.GET_DUTY_SIZE_SUCCESS, payload: data });
+    } catch (error) {
+        dispatch({ type: dutyTypes.GET_DUTY_SIZE_FAILURE, payload: error });
+    }
+}
+
+export const createDutySize = (data: DutySize) => async (dispatch: Dispatch) => {
+    dispatch({ type: dutyTypes.CREATE_DUTY_SIZE_REQUEST });
+    try {
+        const response = await axios.post("/duty/sizes", data);
+        dispatch({ type: dutyTypes.CREATE_DUTY_SIZE_SUCCESS, payload: response.data });
+    } catch (error) {
+        dispatch({ type: dutyTypes.CREATE_DUTY_SIZE_FAILURE, payload: error });
+    }
+}
+
+export const updateDutySize = (id: number, data: DutySize) => async (dispatch: Dispatch) => {
+    dispatch({ type: dutyTypes.UPDATE_DUTY_SIZE_REQUEST });
+    try {
+        const response = await axios.put(`/duty/sizes/${id}`, data);
+        dispatch({ type: dutyTypes.UPDATE_DUTY_SIZE_SUCCESS, payload: response.data });
+    } catch (error) {
+        dispatch({ type: dutyTypes.UPDATE_DUTY_SIZE_FAILURE, payload: error });
+    }
+}
+
+export const deleteDutySize = (id: number) => async (dispatch: Dispatch) => {
+    dispatch({ type: dutyTypes.DELETE_DUTY_SIZE_REQUEST });
+    try {
+        await axios.delete(`/duty/sizes/${id}`);
+        dispatch({ type: dutyTypes.DELETE_DUTY_SIZE_SUCCESS, payload: id });
+    } catch (error) {
+        dispatch({ type: dutyTypes.DELETE_DUTY_SIZE_FAILURE, payload: error });
+    }
+}
+
 /*
 // ---------------------------------------------------------------------------- DUTY PRIORITIES
 
@@ -175,58 +227,6 @@ export const deleteDutyPriority = (id: number) => async (dispatch: Dispatch) => 
         dispatch({ type: dutyTypes.DELETE_DUTY_PRIORITY_SUCCESS, payload: id });
     } catch (error) {
         dispatch({ type: dutyTypes.DELETE_DUTY_PRIORITY_FAILURE, payload: error });
-    }
-}
-
-// ---------------------------------------------------------------------------- DUTY SIZE
-
-export const getDutySizes = () => async (dispatch: Dispatch) => {
-    dispatch({ type: dutyTypes.GET_DUTY_SIZES_REQUEST });
-    try {
-        const { data } = await axios.get("/duties/sizes");
-        dispatch({ type: dutyTypes.GET_DUTY_SIZES_SUCCESS, payload: data });
-    } catch (error) {
-        dispatch({ type: dutyTypes.GET_DUTY_SIZES_FAILURE, payload: error });
-    }
-}
-
-export const getDutySize = (id: number) => async (dispatch: Dispatch) => {
-    dispatch({ type: dutyTypes.GET_DUTY_SIZE_REQUEST });
-    try {
-        const { data } = await axios.get(`/duties/sizes/${id}`);
-        dispatch({ type: dutyTypes.GET_DUTY_SIZE_SUCCESS, payload: data });
-    } catch (error) {
-        dispatch({ type: dutyTypes.GET_DUTY_SIZE_FAILURE, payload: error });
-    }
-}
-
-export const createDutySize = (data: DutySize) => async (dispatch: Dispatch) => {
-    dispatch({ type: dutyTypes.CREATE_DUTY_SIZE_REQUEST });
-    try {
-        const response = await axios.post("/duties/sizes", data);
-        dispatch({ type: dutyTypes.CREATE_DUTY_SIZE_SUCCESS, payload: response.data });
-    } catch (error) {
-        dispatch({ type: dutyTypes.CREATE_DUTY_SIZE_FAILURE, payload: error });
-    }
-}
-
-export const updateDutySize = (id: number, data: DutySize) => async (dispatch: Dispatch) => {
-    dispatch({ type: dutyTypes.UPDATE_DUTY_SIZE_REQUEST });
-    try {
-        const response = await axios.put(`/duties/sizes/${id}`, data);
-        dispatch({ type: dutyTypes.UPDATE_DUTY_SIZE_SUCCESS, payload: response.data });
-    } catch (error) {
-        dispatch({ type: dutyTypes.UPDATE_DUTY_SIZE_FAILURE, payload: error });
-    }
-}
-
-export const deleteDutySize = (id: number) => async (dispatch: Dispatch) => {
-    dispatch({ type: dutyTypes.DELETE_DUTY_SIZE_REQUEST });
-    try {
-        await axios.delete(`/duties/sizes/${id}`);
-        dispatch({ type: dutyTypes.DELETE_DUTY_SIZE_SUCCESS, payload: id });
-    } catch (error) {
-        dispatch({ type: dutyTypes.DELETE_DUTY_SIZE_FAILURE, payload: error });
     }
 }
 */

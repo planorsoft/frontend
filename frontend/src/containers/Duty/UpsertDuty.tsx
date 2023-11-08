@@ -11,17 +11,17 @@ import { Form } from "@/components/ui/form";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import InputString from "@/components/ui/input-string";
-import InputBoolean from "@/components/ui/input-boolean";
 import { toast } from "@/components/ui/use-toast";
 import Loader from "@/components/ui/loader";
 import { LoaderIcon, Trash2 } from "lucide-react";
 import { createDuty, getDuty, updateDuty } from "./actions";
 import { useAppDispatch, useAppSelector } from "@/store";
-import { DutyCategoryState, DutyState } from "./types";
+import { DutyCategoryState, DutySizeState, DutyState } from "./types";
 import { InputSelect } from "@/components/ui/input-select";
 import { InputServerSelect } from "@/components/ui/input-server-select";
 import Remove from "@/components/remove";
 import InputMarkdown from "@/components/ui/input-markdown";
+import { ApplicationState } from "../Settings/Application/types";
 
 const formSchema = z.object({
   id: z.number().optional(),
@@ -47,9 +47,15 @@ const formSchema = z.object({
     .nonempty({
       message: "Lütfen geçerli bir kategori giriniz.",
     }),
+  sizeId: z
+    .string()
+    .min(1, {
+      message: "Lütfen geçerli bir büyüklük giriniz.",
+    })
+    .nonempty({
+      message: "Lütfen geçerli bir büyüklük giriniz.",
+    }),
   // priorityId: z.number().int().optional(),
-  // sizeId: z.number().int().optional(),
-  hasTodos: z.boolean(),
 });
 
 interface UpsertDutyProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -69,6 +75,13 @@ const UpsertDuty = ({ open, setOpen, dutyId, projectId }: UpsertDutyProps) => {
     (state) => state.dutyCategoryState
   );
   const dutyCategories = dutyCategoryState.dutyCategories;
+  const dutySizeState = useAppSelector<DutySizeState>(
+    (state) => state.dutySizeState
+  )
+  const dutySizes = dutySizeState.dutySizes;
+  const applicationState = useAppSelector<ApplicationState>(
+    (state) => state.applicationState
+  );
   const [remove, setRemove] = useState<boolean>();
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -78,23 +91,21 @@ const UpsertDuty = ({ open, setOpen, dutyId, projectId }: UpsertDutyProps) => {
       id: 0,
       title: "",
       description: "",
-      hasTodos: false,
       projectId: projectId || "",
       categoryId: "",
+      sizeId: "",
     },
   });
 
   useEffect(() => {
-    console.log(form.getValues());
-  }, []);
+    form.reset();
+  }, [open]);
 
   useEffect(() => {
-    if (dutyId != 0) {
+    if (dutyId != 0 && open) {
       dispatch(getDuty(dutyId));
-    } else {
-      form.reset();
     }
-  }, [dutyId]);
+  }, [open]);
 
   useEffect(() => {
     if (error) {
@@ -108,12 +119,13 @@ const UpsertDuty = ({ open, setOpen, dutyId, projectId }: UpsertDutyProps) => {
 
   useEffect(() => {
     if (duty) {
+      console.log(duty);
       form.setValue("id", duty.id || 0);
       form.setValue("title", duty.title || "");
       form.setValue("description", duty.description || "");
-      form.setValue("hasTodos", duty.hasTodos || false);
       form.setValue("categoryId", duty.categoryId?.toString() || "");
-      form.setValue("projectId", duty.projectId?.toString() || projectId || "");
+      form.setValue("projectId", duty.projectId?.toString() || "");
+      form.setValue("sizeId", duty.sizeId?.toString() || "");
     }
   }, [duty]);
 
@@ -123,9 +135,9 @@ const UpsertDuty = ({ open, setOpen, dutyId, projectId }: UpsertDutyProps) => {
       id: values.id,
       title: values.title,
       description: values.description,
-      hasTodos: values.hasTodos,
       categoryId: parseInt(values.categoryId),
       projectId: parseInt(values.projectId),
+      sizeId: parseInt(values.sizeId)
     };
 
     if (values.id == 0) {
@@ -139,18 +151,24 @@ const UpsertDuty = ({ open, setOpen, dutyId, projectId }: UpsertDutyProps) => {
   const onDeleted = () => {
     setRemove(false);
     setOpen(false);
-  }
+  };
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogContent className="w-screen m-2 md:w-6/12">
         <DialogHeader>
           <DialogTitle>
-            {dutyId === 0 ? (
-              <p>Görev oluştur</p>
-            ) : (
-              <p>Görev düzenle</p>
-            )}
+            <div className="flex justify-start">
+              {dutyId === 0 ? (
+                <p>Görev oluştur</p>
+              ) : applicationState.application?.code ? (
+                <p>
+                  {applicationState.application?.code}-{dutyId}, Görevini düzenle
+                </p>
+              ) : (
+                <p>Görevi düzenle</p>
+              )}
+            </div>
           </DialogTitle>
           {loading ? (
             <Loader />
@@ -179,16 +197,20 @@ const UpsertDuty = ({ open, setOpen, dutyId, projectId }: UpsertDutyProps) => {
                     label: x.title,
                   }))}
                 />
+                <InputSelect
+                  control={form.control}
+                  placeholder="Büyüklük"
+                  fieldName="sizeId"
+                  selectList={dutySizes.map((x) => ({
+                    value: x.id.toString(),
+                    label: x.name,
+                  }))}
+                />
                 <InputServerSelect
                   control={form.control}
                   placeholder="Proje"
                   fieldName="projectId"
                   entity="project"
-                />
-                <InputBoolean
-                  control={form.control}
-                  placeholder="Yapılacaklar listesi kullanılsın mı?"
-                  fieldName="hasTodos"
                 />
 
                 {dutyId === 0 ? (
@@ -200,13 +222,24 @@ const UpsertDuty = ({ open, setOpen, dutyId, projectId }: UpsertDutyProps) => {
                   </Button>
                 ) : (
                   <div className="grid grid-cols-12 gap-2">
-                    <Button disabled={loading} type="submit" className="col-span-10">
+                    <Button
+                      disabled={loading}
+                      type="submit"
+                      className="col-span-10"
+                    >
                       {loading && (
                         <LoaderIcon className="mr-2 h-4 w-4 animate-spin" />
                       )}
                       Gönder
                     </Button>
-                    <Button disabled={loading} onClick={() => { setRemove(true) }} variant="destructive" className="col-span-2">
+                    <Button
+                      disabled={loading}
+                      onClick={() => {
+                        setRemove(true);
+                      }}
+                      variant="destructive"
+                      className="col-span-2"
+                    >
                       <Trash2 className="w-4 h-4" />
                     </Button>
                   </div>

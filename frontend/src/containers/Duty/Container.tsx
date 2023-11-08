@@ -1,6 +1,6 @@
 import { useAppDispatch, useAppSelector } from "@/store";
 import { useEffect, useState } from "react";
-import { getActiveDuties, getDutyCategories } from "./actions";
+import { getActiveDuties, getDutyCategories, getDutySizes } from "./actions";
 import { DutyCategoryState, DutyState } from "./types";
 import Kanban from "./Kanban";
 import { Button } from "@/components/ui/button";
@@ -21,13 +21,15 @@ const Container = () => {
   );
   const [isOpenUpsertDuty, setIsOpenUpsertDuty] = useState<boolean>(false);
   const [dutyId, setDutyId] = useState<number>(0);
-  const [isOpenUpsertDutyCategory, setIsOpenUpsertDutyCategory] = useState<boolean>(false);
+  const [isOpenUpsertDutyCategory, setIsOpenUpsertDutyCategory] =
+    useState<boolean>(false);
   const [dutyCategoryId, setDutyCategoryId] = useState<number>(0);
   const { projectId } = useParams();
 
   useEffect(() => {
     dispatch(getActiveDuties(Number(projectId)));
     dispatch(getDutyCategories());
+    dispatch(getDutySizes());
   }, []);
 
   const openUpsertDuty = (id: number = 0) => {
@@ -68,7 +70,13 @@ const Container = () => {
         dutyState.duties.length > 0 &&
         dutyCategoryState.dutyCategories.length > 0
       ) {
-        return <Kanban openUpsertDuty={openUpsertDuty} openUpsertDutyCategory={openUpsertDutyCategory} projectId={projectId} />;
+        return (
+          <Kanban
+            openUpsertDuty={openUpsertDuty}
+            openUpsertDutyCategory={openUpsertDutyCategory}
+            projectId={projectId}
+          />
+        );
       } else {
         return (
           <Alert>
@@ -112,11 +120,13 @@ const Container = () => {
         dutyId={dutyId}
         projectId={projectId}
       />
-      <UpsertDutyCategory
-        open={isOpenUpsertDutyCategory}
-        setOpen={setIsOpenUpsertDutyCategory}
-        dutyCategoryId={dutyCategoryId}
-      />
+      {isOpenUpsertDutyCategory && (
+        <UpsertDutyCategory
+          open={isOpenUpsertDutyCategory}
+          setOpen={setIsOpenUpsertDutyCategory}
+          dutyCategoryId={dutyCategoryId}
+        />
+      )}
     </div>
   );
 };
