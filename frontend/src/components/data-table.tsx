@@ -13,6 +13,7 @@ import {
   Check,
   Folder,
   KanbanSquare,
+  Loader,
   Pencil,
   UserCog,
   X,
@@ -34,6 +35,8 @@ import { toast } from "./ui/use-toast";
 import OData from "@/lib/odata";
 import { Project } from "@/containers/Project/types";
 import { useNavigate } from "react-router-dom";
+import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
+import { profileImageGenerator } from "@/lib/profile-image";
 
 interface ColumnDefs {
   customer: ColumnDef<Customer>[];
@@ -45,6 +48,24 @@ const columnDefs: ColumnDefs = {
     {
       accessorKey: "Id",
       header: "Id",
+    },
+    {
+      accessorKey: "ImageUri",
+      header: "Fotoğraf",
+      cell: ({ row }) => {
+        const image = row.getValue("ImageUri");
+
+        return (
+          <Avatar className="ml-2 h-7 w-7 max-[320px]:hidden">
+            <AvatarImage
+              src={image || profileImageGenerator(row.getValue("Name"))}
+            />
+            <AvatarFallback>
+              <Loader className="w-8 h-8 animate-spin" />
+            </AvatarFallback>
+          </Avatar>
+        );
+      },
     },
     {
       accessorKey: "Name",

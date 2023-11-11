@@ -49,6 +49,20 @@ export const getCustomer = async (id: number) => {
     return response.data;
 }
 
+export const updateCustomerImage = async (id: number, file: File) => {
+    const formData = new FormData();
+    formData.append("file", file);
+    return await axios.post(`/customers/${id}/image`, formData, {
+        headers: {
+            "Content-Type": "multipart/form-data"
+        }
+    });
+}
+
+export const deleteCustomerImage = async (id: number) => {
+    return await axios.delete(`/customers/${id}/image`);
+}
+
 export const createContact = async (customerId: number, data: Contact) => {
     return await axios.post(`/customers/${customerId}/contacts`, {
         ...data,
