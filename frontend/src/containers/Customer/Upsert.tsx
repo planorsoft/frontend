@@ -54,6 +54,7 @@ const Upsert = ({ open, setOpen, customerId }: UpsertProps) => {
       governmentId: "",
       isPotantial: false,
       currencyCode: "",
+      contacts: [],
     },
   });
 
@@ -78,7 +79,7 @@ const Upsert = ({ open, setOpen, customerId }: UpsertProps) => {
         form.setValue("website", result?.website || "");
         form.setValue("governmentId", result?.governmentId || "");
         form.setValue("isPotantial", result?.isPotantial || false);
-        form.setValue("currencyCode", result?.currencyCode || defaultCurrency);
+        form.setValue("currencyCode", result?.currencyCode || defaultCurrency?.code || "");
       } catch (error) {
         if (!(error instanceof AxiosError)) {
           throw error;
@@ -99,16 +100,18 @@ const Upsert = ({ open, setOpen, customerId }: UpsertProps) => {
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     if (remove) return;
     setLoading(true);
-    console.log(customerId, values.id);
     try {
       if (customerId === 0) {
         await createCustomer(values);
+        toast({
+          title: "Müşteri oluşturuldu",
+        });
       } else {
         await updateCustomer(values.id, values);
+        toast({
+          title: "Müşteri güncellendi",
+        });
       }
-      toast({
-        title: "Müşteri oluşturuldu",
-      });
       setOpen(false);
       window.location.reload();
     } catch (error) {

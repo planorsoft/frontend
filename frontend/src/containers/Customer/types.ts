@@ -13,3 +13,8 @@ export interface Customer {
     currencyCode?: string;
     isPotantial: boolean;
 }
+
+export interface Contact {
+    name: string;
+    email: string;
+}
