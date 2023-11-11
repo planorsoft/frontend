@@ -123,12 +123,11 @@ export function InputServerSelect({
                       <SelectValue placeholder={placeholder} />
                     </SelectTrigger>
                   </FormControl>
-                  <SelectContent className="overflow-y-auto h-40">
+                  <SelectContent>
                     {selectList.map((item, index) => (
                       <SelectItem
                         key={index}
                         value={item.value}
-                        className="overflow-y-scroll"
                       >
                         {item.label}
                       </SelectItem>

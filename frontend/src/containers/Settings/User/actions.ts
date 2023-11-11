@@ -3,6 +3,22 @@ import { UpdateUserCommand } from "./types";
 import { Dispatch } from "redux";
 import { AxiosError } from "axios";
 
+export const getTeam = () => async (dispatch: Dispatch) => {
+    dispatch({ type: 'GET_TEAM_REQUEST' });
+    try {
+        const { data } = await axios.get('/users/team');
+        dispatch({ type: 'GET_TEAM_SUCCESS', payload: data });
+    } catch (error: unknown) {
+        if (!(error instanceof AxiosError)) { throw error; }
+        if (error.response?.data) {
+            dispatch({ type: 'GET_TEAM_FAILURE', payload: error.response.data.detail });
+        } else {
+            dispatch({ type: 'GET_TEAM_FAILURE', payload: error.message });
+        }
+    }
+}
+
+
 export const getMyUser = () => async (dispatch: Dispatch) => {
     dispatch({ type: 'GET_MY_USER_REQUEST' });
     try {
@@ -10,7 +26,11 @@ export const getMyUser = () => async (dispatch: Dispatch) => {
         dispatch({ type: 'GET_MY_USER_SUCCESS', payload: data });
     } catch (error: unknown) {
         if (!(error instanceof AxiosError)) { throw error; }
-        dispatch({ type: 'GET_MY_USER_FAILURE', payload: error.message });
+        if (error.response?.data) {
+            dispatch({ type: 'GET_MY_USER_FAILURE', payload: error.response.data.detail });
+        } else {
+            dispatch({ type: 'GET_MY_USER_FAILURE', payload: error.message });
+        }
     }
 }
 
@@ -19,9 +39,10 @@ export const updateMyUser = (data: UpdateUserCommand) => async (dispatch: Dispat
     try {
         await axios.post(`/users/me`, data);
         dispatch({ type: 'UPDATE_MY_USER_SUCCESS', payload: data });
+        dispatch(getTeam());
     } catch (error: unknown) {
         if (!(error instanceof AxiosError)) { throw error; }
-        if (error.response) {
+        if (error.response?.data) {
             dispatch({ type: 'UPDATE_MY_USER_FAILURE', payload: error.response.data.detail });
         } else {
             dispatch({ type: 'UPDATE_MY_USER_FAILURE', payload: error.message });
@@ -40,9 +61,14 @@ export const updateAvatar = (file: File) => async (dispatch: Dispatch) => {
             }
         });
         dispatch({ type: 'UPDATE_AVATAR_SUCCESS', payload: data });
+        dispatch(getTeam());
     } catch (error: unknown) {
         if (!(error instanceof AxiosError)) { throw error; }
-        dispatch({ type: 'UPDATE_AVATAR_FAILURE', payload: error.message });
+        if (error.response?.data) {
+            dispatch({ type: 'UPDATE_AVATAR_FAILURE', payload: error.response.data.detail });
+        } else {
+            dispatch({ type: 'UPDATE_AVATAR_FAILURE', payload: error.message });
+        }
     }
 }
 
@@ -51,8 +77,13 @@ export const deleteAvatar = () => async (dispatch: Dispatch) => {
     try {
         await axios.delete(`/users/image`);
         dispatch({ type: 'DELETE_AVATAR_SUCCESS' });
+        dispatch(getTeam());
     } catch (error: unknown) {
         if (!(error instanceof AxiosError)) { throw error; }
-        dispatch({ type: 'DELETE_AVATAR_FAILURE', payload: error.message });
+        if (error.response?.data) {
+            dispatch({ type: 'DELETE_AVATAR_FAILURE', payload: error.response.data.detail });
+        } else {
+            dispatch({ type: 'DELETE_AVATAR_FAILURE', payload: error.message });
+        }
     }
 }

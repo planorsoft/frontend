@@ -1,5 +1,5 @@
 import axios from "@/lib/axios";
-import { Customer } from "./types";
+import { Contact, Customer } from "./types";
 
 export const createCustomer = async ({
     id,
@@ -47,4 +47,36 @@ export const deleteCustomer = async (id: number) => {
 export const getCustomer = async (id: number) => {
     const response = await axios.get(`/customers/${id}`);
     return response.data;
+}
+
+export const updateCustomerImage = async (id: number, file: File) => {
+    const formData = new FormData();
+    formData.append("file", file);
+    return await axios.post(`/customers/${id}/image`, formData, {
+        headers: {
+            "Content-Type": "multipart/form-data"
+        }
+    });
+}
+
+export const deleteCustomerImage = async (id: number) => {
+    return await axios.delete(`/customers/${id}/image`);
+}
+
+export const createContact = async (customerId: number, data: Contact) => {
+    return await axios.post(`/customers/${customerId}/contacts`, {
+        ...data,
+        customerId
+    });
+}
+
+export const removeContact = async (customerId: number, email: string) => {
+    return await axios.delete(`/customers/${customerId}/contacts/${email}`);
+}
+
+export const inviteContact = async (customerId: number, email: string) => {
+    return await axios.post(`/customers/${customerId}/contacts/invite`, {
+        customerId,
+        email
+    });
 }

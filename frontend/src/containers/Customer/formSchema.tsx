@@ -69,6 +69,28 @@ const formSchema = z.object({
       message: "Lütfen geçerli bir kur giriniz.",
     })
     .optional(),
+  contacts: z.array(
+    z.object({
+      id: z.number(),
+      name: z
+        .string()
+        .min(2, {
+          message: "Lütfen geçerli bir isim giriniz.",
+        })
+        .max(64, {
+          message: "Lütfen geçerli bir isim giriniz.",
+        })
+        .nonempty({
+          message: "Lütfen geçerli bir isim giriniz.",
+        }),
+      email: z
+        .string()
+        .max(64, {
+          message: "Lütfen geçerli bir email giriniz.",
+        })
+        .optional(),
+    })
+  ),
 });
 
 export default formSchema;

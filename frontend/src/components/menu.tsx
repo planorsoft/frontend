@@ -17,7 +17,6 @@ import { UserState } from "@/containers/Settings/User/types";
 import { getMyUser } from "@/containers/Settings/User/actions";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { profileImageGenerator } from "@/lib/profile-image";
-import { getTenant } from "@/lib/tenant";
 import jwtDecoder from "@/lib/jwtDecoder";
 
 interface MenuProps extends React.HTMLAttributes<HTMLDivElement> {

@@ -15,10 +15,14 @@ import { useState } from "react";
 import { useAppDispatch, useAppSelector } from "@/store";
 import { updateDutyOrders } from "./actions";
 import { Button } from "@/components/ui/button";
-import { GripHorizontal, Pencil } from "lucide-react";
+import { GripHorizontal, Loader, Pencil } from "lucide-react";
 import { selectDutyByProjectId, selectDutySizeById } from "./selector";
 import { useTheme } from "@/components/theme-provider";
 import { ApplicationState } from "../Settings/Application/types";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { selectUserByEmail } from "../Settings/User/selector";
+import { UserState } from "../Settings/User/types";
+import { profileImageGenerator } from "@/lib/profile-image";
 
 const mapDuties = (duties: Duty[], categories: DutyCategory[]) => {
   const result = {};
@@ -65,6 +69,7 @@ function Kanban({
   const dutySizeState = useAppSelector<DutySizeState>(
     (state) => state.dutySizeState
   );
+  const userState = useAppSelector<UserState>((state) => state.userState);
   const [columns, setColumns] = useState(mapDuties(duties, dutyCategories));
   const dispatch = useAppDispatch();
   const applicationState = useAppSelector<ApplicationState>(
@@ -146,8 +151,11 @@ function Kanban({
                         ref={provided.innerRef}
                         style={{ width: 250, minHeight: 500 }}
                       >
-                        {column.duties.map((item, index) => {
-                          console.log(item);
+                        {column.duties.map((item: Duty, index) => {
+                          const user = selectUserByEmail(
+                            userState,
+                            item.assignedTo
+                          );
                           return (
                             <Draggable
                               key={index}
@@ -171,21 +179,38 @@ function Kanban({
                                   >
                                     <div className="flex justify-between items-center">
                                       {item.title}
+                                    </div>
+                                    <div className="flex justify-between items-center">
                                       {applicationState?.application?.code && (
                                         <span className="text-sm">
                                           {applicationState?.application?.code}-
                                           {item.id}
                                         </span>
                                       )}
+                                      <div className="flex justify-center gap-2">
+                                      <p className="dark:text-gray-400 text-gray-700">
+                                        {
+                                          selectDutySizeById(
+                                            dutySizeState,
+                                            item.sizeId
+                                          )?.name
+                                        }
+                                      </p>
+                                      {user && (
+                                        <Avatar className="h-7 w-7 max-[320px]:hidden">
+                                          <AvatarImage
+                                            src={
+                                              user.avatarUri ||
+                                              profileImageGenerator(user.name)
+                                            }
+                                          />
+                                          <AvatarFallback>
+                                            <Loader className="w-8 h-8 animate-spin" />
+                                          </AvatarFallback>
+                                        </Avatar>
+                                      )}
+                                      </div>
                                     </div>
-                                    <p className="dark:text-gray-400 text-gray-700">
-                                      {
-                                        selectDutySizeById(
-                                          dutySizeState,
-                                          item.sizeId
-                                        )?.name
-                                      }
-                                    </p>
                                   </div>
                                 );
                               }}

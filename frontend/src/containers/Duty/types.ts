@@ -80,6 +80,7 @@ export interface Duty {
     project?: Project;
     completed?: boolean;
     order?: number;
+    assignedTo?: string;
 }
 
 export interface DutyCategory {

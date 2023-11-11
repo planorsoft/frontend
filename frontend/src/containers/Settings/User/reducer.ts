@@ -2,6 +2,7 @@ import { userTypes, UserAction, UserState } from "./types";
 
 
 const userInitalState: UserState = {
+    users: [],
     user: {
         name: '',
         email: '',
@@ -15,29 +16,86 @@ const userInitalState: UserState = {
 export const userReducer = (state = userInitalState, action: UserAction) => {
     switch (action.type) {
         case userTypes.GET_MY_USER_REQUEST:
-            return { ...state, loading: true };
+            return { 
+                ...state, 
+                loading: true 
+            };
         case userTypes.GET_MY_USER_SUCCESS:
-            return { ...state, loading: false, user: action.payload };
+            return { 
+                ...state, 
+                loading: false, 
+                user: action.payload 
+            };
         case userTypes.GET_MY_USER_FAILURE:
-            return { ...state, loading: false, error: action.payload };
+            return { 
+                ...state, 
+                loading: false, 
+                error: action.payload };
         case userTypes.UPDATE_MY_USER_REQUEST:
-            return { ...state, loading: true };
+            return { 
+                ...state, 
+                loading: true 
+            };
         case userTypes.UPDATE_MY_USER_SUCCESS:
-            return { ...state, loading: false, user: { ...state.user, name: action.payload.name }, status: userTypes.UPDATE_MY_USER_SUCCESS };
+            return { 
+                ...state, 
+                loading: false, 
+                user: { ...state.user, name: action.payload.name }, 
+                status: userTypes.UPDATE_MY_USER_SUCCESS };
         case userTypes.UPDATE_MY_USER_FAILURE:
-            return { ...state, loading: false, error: action.payload, status: userTypes.UPDATE_MY_USER_FAILURE };
+            return { 
+                ...state, 
+                loading: false, 
+                error: action.payload, 
+                status: userTypes.UPDATE_MY_USER_FAILURE };
         case userTypes.UPDATE_AVATAR_REQUEST:
-            return { ...state, loading: true };
+            return { 
+                ...state, 
+                loading: true 
+            };
         case userTypes.UPDATE_AVATAR_SUCCESS:
-            return { ...state, loading: false, user: { ...state.user, avatarUri: action.payload }, status: userTypes.UPDATE_AVATAR_SUCCESS };
+            return { 
+                ...state, 
+                loading: false, 
+                user: { ...state.user, avatarUri: action.payload }, status: userTypes.UPDATE_AVATAR_SUCCESS };
         case userTypes.UPDATE_AVATAR_FAILURE:
-            return { ...state, loading: false, error: action.payload };
+            return { 
+                ...state, 
+                loading: false, 
+                error: action.payload };
         case userTypes.DELETE_AVATAR_REQUEST:
-            return { ...state, loading: true };
+            return { 
+                ...state, 
+                loading: true 
+            };
         case userTypes.DELETE_AVATAR_SUCCESS:
-            return { ...state, loading: false, user: { ...state.user, avatarUri: null } };
+            return { 
+                ...state, 
+                loading: false, 
+                user: { ...state.user, avatarUri: null } };
         case userTypes.DELETE_AVATAR_FAILURE:
-            return { ...state, loading: false, error: action.payload };
+            return { 
+                ...state, 
+                loading: false, 
+                error: action.payload 
+            };
+        case userTypes.GET_TEAM_REQUEST:
+            return { 
+                ...state, 
+                loading: true 
+            };
+        case userTypes.GET_TEAM_SUCCESS:
+            return { 
+                ...state, 
+                loading: false, 
+                users: action.payload 
+            };
+        case userTypes.GET_TEAM_FAILURE:
+            return { 
+                ...state, 
+                loading: false, 
+                error: action.payload 
+            };
         default:
             return state;
     }
