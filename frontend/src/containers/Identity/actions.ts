@@ -5,7 +5,7 @@ import { AppDispatch } from "@/store";
 import { AxiosError } from "axios";
 import { getMyUser } from "../Settings/User/actions";
 
-export const setToken = (token : string | null = null) => {
+export const setToken = (token: string | null = null) => {
   // If token is gived by parameter
   if (token !== null) {
     localStorage.setItem("token", token);
@@ -44,7 +44,7 @@ export const resetToken = () => {
   };
 };
 
-export const login = ({email, password, tenant} : LoginData) => async (dispatch : AppDispatch) => {
+export const login = ({ email, password, tenant }: LoginData) => async (dispatch: AppDispatch) => {
   dispatch({ type: identityTypes.LOGIN_REQUEST, payload: null });
   try {
     const { data } = await axios.post("/identity/login", {
@@ -56,7 +56,7 @@ export const login = ({email, password, tenant} : LoginData) => async (dispatch 
     dispatch(getMyUser());
     dispatch({ type: identityTypes.LOGIN_SUCCESS, payload: data });
   } catch (error) {
-    if(!(error instanceof AxiosError)) { throw error; }
+    if (!(error instanceof AxiosError)) { throw error; }
 
     dispatch({
       type: identityTypes.LOGIN_FAILURE,
@@ -65,29 +65,29 @@ export const login = ({email, password, tenant} : LoginData) => async (dispatch 
   }
 };
 
-export const register = ({name, email, username, password, tenant, role} : RegisterData) => async (dispatch : AppDispatch) => {
-    dispatch({ type: identityTypes.REGISTER_REQUEST, payload: null });
-    try {
-      const { data } = await axios.post("/identity/register", {
-        name,
-        email,
-        username,
-        password,
-        tenant,
-        role,
-      });
-      dispatch({ type: identityTypes.REGISTER_SUCCESS, payload: data });
-    } catch (error) {
-        if(!(error instanceof AxiosError)) { throw error; }
+export const register = ({ name, email, username, password, tenant, role }: RegisterData) => async (dispatch: AppDispatch) => {
+  dispatch({ type: identityTypes.REGISTER_REQUEST, payload: null });
+  try {
+    const { data } = await axios.post("/identity/register", {
+      name,
+      email,
+      username,
+      password,
+      tenant,
+      role,
+    });
+    dispatch({ type: identityTypes.REGISTER_SUCCESS, payload: data });
+  } catch (error) {
+    if (!(error instanceof AxiosError)) { throw error; }
 
-      dispatch({
-        type: identityTypes.REGISTER_FAILURE,
-        payload: error.response?.data.detail,
-      });
-    }
-  };
+    dispatch({
+      type: identityTypes.REGISTER_FAILURE,
+      payload: error.response?.data.detail,
+    });
+  }
+};
 
-export const confirm = ({email, token, tenant} : ConfirmData) => async (dispatch : AppDispatch) => {
+export const confirm = ({ email, token, tenant }: ConfirmData) => async (dispatch: AppDispatch) => {
   dispatch({ type: identityTypes.CONFIRM_REQUEST, payload: null });
   try {
     const { data } = await axios.post("/identity/confirm", {
@@ -97,8 +97,8 @@ export const confirm = ({email, token, tenant} : ConfirmData) => async (dispatch
     });
     dispatch({ type: identityTypes.CONFIRM_SUCCESS, payload: data });
   } catch (error) {
-    if(!(error instanceof AxiosError)) { throw error; }
-    
+    if (!(error instanceof AxiosError)) { throw error; }
+
     dispatch({
       type: identityTypes.CONFIRM_FAILURE,
       payload: error.response?.data.detail,
@@ -107,7 +107,7 @@ export const confirm = ({email, token, tenant} : ConfirmData) => async (dispatch
 };
 
 
-export const forgotPassword = ({email, tenant}: ForgotPasswordData) => async (dispatch: AppDispatch) => {
+export const forgotPassword = ({ email, tenant }: ForgotPasswordData) => async (dispatch: AppDispatch) => {
   dispatch({ type: identityTypes.FORGOT_PASSWORD_REQUEST, payload: null });
   try {
     const { data } = await axios.post("/identity/forgot", {
@@ -116,18 +116,18 @@ export const forgotPassword = ({email, tenant}: ForgotPasswordData) => async (di
     });
     dispatch({ type: identityTypes.FORGOT_PASSWORD_SUCCESS, payload: data });
   } catch (error) {
-        if(!(error instanceof AxiosError)) { throw error; }
-        dispatch({
+    if (!(error instanceof AxiosError)) { throw error; }
+    dispatch({
       type: identityTypes.FORGOT_PASSWORD_FAILURE,
       payload: error.response?.data.detail,
     });
   }
 };
 
-export const forgotConfirmPassword = ({email, token, password, tenant} : ForgotConfirmPasswordData) => async (dispatch: AppDispatch) => {
+export const forgotConfirmPassword = ({ email, token, password, tenant }: ForgotConfirmPasswordData) => async (dispatch: AppDispatch) => {
   dispatch({ type: identityTypes.FORGOT_CONFIRM_PASSWORD_REQUEST, payload: null });
   try {
-    const { data } = await axios.post("/identity/forgot/confirm", {
+    const { data } = await axios.post("/identity/forgot-confirm", {
       email,
       token,
       password,
@@ -135,13 +135,17 @@ export const forgotConfirmPassword = ({email, token, password, tenant} : ForgotC
     });
     dispatch({ type: identityTypes.FORGOT_CONFIRM_PASSWORD_SUCCESS, payload: data });
   } catch (error) {
-        if(!(error instanceof AxiosError)) { throw error; }
-        dispatch({
+    if (!(error instanceof AxiosError)) { throw error; }
+    dispatch({
       type: identityTypes.FORGOT_CONFIRM_PASSWORD_FAILURE,
       payload: error.response?.data.detail,
     });
   }
 };
+
+export const resetIdentityError = () => ({
+  type: identityTypes.RESET_IDENTITY_ERROR,
+});
 
 export const resetMessage = () => ({
   type: identityTypes.RESET_MESSAGE,

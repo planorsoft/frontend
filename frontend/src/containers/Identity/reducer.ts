@@ -135,11 +135,17 @@ export const identityReducer = (state = initialState, action: IdentityAction ) =
         isAuthenticated: false,
         status: identityTypes.FORGOT_CONFIRM_PASSWORD_FAILURE
       };
+    case identityTypes.RESET_IDENTITY_ERROR:
+      return {
+        ...state,
+        error: null,
+        status: null
+      };
     case identityTypes.RESET_MESSAGE:
       return {
         ...state,
         message: null,
-        status: null
+        status: null,
       };
     default:
       return state;

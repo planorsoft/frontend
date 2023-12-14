@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { login } from "@/containers/Identity/actions";
+import { login, resetIdentityError } from "@/containers/Identity/actions";
 import { useToast } from "@/components/ui/use-toast";
 import { useAppDispatch, useAppSelector } from "@/store";
 import { IdentityState, identityTypes } from "./types";
@@ -61,6 +61,7 @@ function Login() {
   };
 
   useEffect(() => {
+    dispatch(resetIdentityError());
     const tenantFromUrl = tenant;
     form.setValue("tenant", tenantFromUrl);
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -105,70 +106,83 @@ function Login() {
   };
 
   return (
-    <>
-      <IdentityContainer type="login">
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-            {!tenant ? (
-              <>
-                <FormField
-                  control={form.control}
-                  name="tenant"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Alan adı</FormLabel>
-                      <FormControl>
-                        <div className="flex items-center gap-1 relative z-10">
-                          <Input placeholder="sirket-ismi" {...field} className="lowercase" />
-                          <span className="absolute right-2">
-                            .planorsoft.com
-                          </span>
-                        </div>
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+    <IdentityContainer type="login">
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+          {!tenant ? (
+            <>
+              <FormField
+                control={form.control}
+                name="tenant"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Alan adı</FormLabel>
+                    <FormControl>
+                      <div className="flex items-center gap-1 relative z-10">
+                        <Input
+                          placeholder="sirket-ismi"
+                          {...field}
+                          className="lowercase"
+                        />
+                        <span className="absolute right-2">
+                          .planorsoft.com
+                        </span>
+                      </div>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <Button
+                disabled={identity.loading}
+                type="button"
+                className="w-full"
+                onClick={setTenantHandler}
+              >
+                {identity.loading && (
+                  <Loader className="mr-2 h-4 w-4 animate-spin" />
+                )}
+                Devam et
+              </Button>
+            </>
+          ) : (
+            <>
+              <InputString
+                control={form.control}
+                placeholder="Email"
+                fieldName="email"
+              />
+              <InputPassword
+                control={form.control}
+                placeholder="Parola"
+                fieldName="password"
+              />
+              <Button
+                disabled={identity.loading}
+                type="submit"
+                className="w-full"
+              >
+                {identity.loading && (
+                  <Loader className="mr-2 h-4 w-4 animate-spin" />
+                )}
+                Giriş yap
+              </Button>
+              <div className="flex flex-col space-y-1 text-center text-sm text-muted-foreground my-1">
                 <Button
-                  disabled={identity.loading}
-                  type="button"
-                  className="w-full"
-                  onClick={setTenantHandler}
+                  variant="ghost"
+                  className="underline p-1 m-1"
+                  onClick={() => {
+                    navigate("/forgot-password");
+                  }}
                 >
-                  {identity.loading && (
-                    <Loader className="mr-2 h-4 w-4 animate-spin" />
-                  )}
-                  Devam et
+                  Şifreni hatırlamıyor musun?
                 </Button>
-              </>
-            ) : (
-              <>
-                <InputString
-                  control={form.control}
-                  placeholder="Email"
-                  fieldName="email"
-                />
-                <InputPassword
-                  control={form.control}
-                  placeholder="Parola"
-                  fieldName="password"
-                />
-                <Button
-                  disabled={identity.loading}
-                  type="submit"
-                  className="w-full"
-                >
-                  {identity.loading && (
-                    <Loader className="mr-2 h-4 w-4 animate-spin" />
-                  )}
-                  Giriş yap
-                </Button>
-              </>
-            )}
-          </form>
-        </Form>
-      </IdentityContainer>
-    </>
+              </div>
+            </>
+          )}
+        </form>
+      </Form>
+    </IdentityContainer>
   );
 }
 
