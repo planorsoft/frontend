@@ -8,7 +8,16 @@ import {
   getPaginationRowModel,
   PaginationState,
 } from "@tanstack/react-table";
-import { ArrowUpDown, Check, Folder, KanbanSquare, Pencil, X } from "lucide-react";
+import {
+  ArrowUpDown,
+  Check,
+  Folder,
+  KanbanSquare,
+  Loader,
+  Pencil,
+  UserCog,
+  X,
+} from "lucide-react";
 import {
   Table,
   TableBody,
@@ -26,6 +35,8 @@ import { toast } from "./ui/use-toast";
 import OData from "@/lib/odata";
 import { Project } from "@/containers/Project/types";
 import { useNavigate } from "react-router-dom";
+import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
+import { profileImageGenerator } from "@/lib/profile-image";
 
 interface ColumnDefs {
   customer: ColumnDef<Customer>[];
@@ -37,6 +48,24 @@ const columnDefs: ColumnDefs = {
     {
       accessorKey: "id",
       header: "Id",
+    },
+    {
+      accessorKey: "ImageUri",
+      header: "Fotoğraf",
+      cell: ({ row }) => {
+        const image = row.getValue("ImageUri");
+
+        return (
+          <Avatar className="ml-2 h-7 w-7 max-[320px]:hidden">
+            <AvatarImage
+              src={image || profileImageGenerator(row.getValue("Name"))}
+            />
+            <AvatarFallback>
+              <Loader className="w-8 h-8 animate-spin" />
+            </AvatarFallback>
+          </Avatar>
+        );
+      },
     },
     {
       accessorKey: "name",
@@ -57,11 +86,19 @@ const columnDefs: ColumnDefs = {
       header: "Şirket",
       cell: ({ row }) => {
         const isCompany = row.getValue("IsCompany");
-        
+
         if (isCompany) {
-            return <div className="text-right font-medium"><Check /></div>
+          return (
+            <div className="text-right font-medium">
+              <Check />
+            </div>
+          );
         } else {
-            return <div className="text-right font-medium"><X /></div>
+          return (
+            <div className="text-right font-medium">
+              <X />
+            </div>
+          );
         }
       },
     },
@@ -88,11 +125,19 @@ const columnDefs: ColumnDefs = {
       header: "Tamamlandı",
       cell: ({ row }) => {
         const isCompleted = row.getValue("IsCompleted");
-        
+
         if (isCompleted) {
-            return <div className="text-right font-medium"><Check /></div>
+          return (
+            <div className="text-right font-medium">
+              <Check />
+            </div>
+          );
         } else {
-            return <div className="text-right font-medium"><X /></div>
+          return (
+            <div className="text-right font-medium">
+              <X />
+            </div>
+          );
         }
       },
     },
@@ -102,27 +147,31 @@ const columnDefs: ColumnDefs = {
 interface DataTableProps extends React.HTMLAttributes<HTMLDivElement> {
   url: string;
   entity: "customer" | "project";
-  select: (id: number) => void
+  select: (id: number, type?: string) => void;
   filter?: string;
 }
 
 function DataTable<T>({ url, entity, select, filter }: DataTableProps) {
   const navigate = useNavigate();
-  const columns: ColumnDef<T>[] = columnDefs[ entity as keyof ColumnDefs ] as ColumnDef<T>[];
+  const columns: ColumnDef<T>[] = columnDefs[
+    entity as keyof ColumnDefs
+  ] as ColumnDef<T>[];
 
   const odata = new OData<T>();
   const [data, setData] = useState<T[]>([]);
   const [sorting, setSorting] = useState<SortingState>([]);
   const [count, setCount] = useState<number>(0);
-  const [{pageIndex, pageSize}, setPagination] = useState<PaginationState>({ pageIndex: 0, pageSize: 10 })
+  const [{ pageIndex, pageSize }, setPagination] = useState<PaginationState>({
+    pageIndex: 0,
+    pageSize: 10,
+  });
   const pagination = useMemo(
     () => ({
       pageIndex,
       pageSize,
     }),
     [pageIndex, pageSize]
-  )
-
+  );
 
   const table = useReactTable({
     data,
@@ -136,26 +185,25 @@ function DataTable<T>({ url, entity, select, filter }: DataTableProps) {
     manualPagination: true,
     state: {
       pagination,
-      sorting
+      sorting,
     },
   });
 
-
-  async function fetchData({ sort, go }: { sort?: string, go: number }) {
+  async function fetchData({ sort, go }: { sort?: string; go: number }) {
     const select = odata.createSelectFromColumns(columns);
     url = `${url}?$count=true&$select=${select}&$top=${pageSize}`;
-    
+
     if (filter) {
       url = `${url}&$filter=${filter}`;
     }
 
     if (sort) {
-        url = `${url}&$orderby=${sort}`;
+      url = `${url}&$orderby=${sort}`;
     }
 
     const skip = (pageIndex + go) * pageSize;
     url = `${url}&$skip=${skip}`;
-   
+
     try {
       const response = await axios.get(url);
       setData(response.data.value);
@@ -177,7 +225,6 @@ function DataTable<T>({ url, entity, select, filter }: DataTableProps) {
     fetchData({ sort, go: 0 });
   }, [sorting, filter]);
 
-
   const goNextPage = () => {
     if (table.getCanNextPage()) {
       table.nextPage();
@@ -185,7 +232,7 @@ function DataTable<T>({ url, entity, select, filter }: DataTableProps) {
       const sort = odata.createSortFromSortingState(sorting);
       fetchData({ sort, go: 1 });
     }
-  }
+  };
 
   const goPreviousPage = () => {
     if (table.getCanPreviousPage()) {
@@ -194,7 +241,7 @@ function DataTable<T>({ url, entity, select, filter }: DataTableProps) {
       const sort = odata.createSortFromSortingState(sorting);
       fetchData({ sort, go: -1 });
     }
-  }
+  };
 
   return (
     <div>
@@ -204,6 +251,7 @@ function DataTable<T>({ url, entity, select, filter }: DataTableProps) {
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
                 {headerGroup.headers.map((header) => {
+                  if (header.id === "Id") return null;
                   return (
                     <TableHead key={header.id}>
                       {header.isPlaceholder
@@ -215,44 +263,76 @@ function DataTable<T>({ url, entity, select, filter }: DataTableProps) {
                     </TableHead>
                   );
                 })}
-                <TableHead>
-                  Aksiyon
-                </TableHead>
+                <TableHead>Aksiyon</TableHead>
               </TableRow>
             ))}
           </TableHeader>
           <TableBody>
             {table.getRowModel().rows?.length ? (
-              table.getRowModel().rows.map((row) => (
-                <TableRow
-                  key={row.id}
-                  data-state={row.getIsSelected() && "selected"}
-                >
-                  {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext()
-                      )}
-                    </TableCell>
-                  ))}
-                   <TableCell className="flex gap-1">
-                      <Button variant="outline" size="icon" onClick={() => { select(row.getValue("Id")) }}>
+              table.getRowModel().rows.map((row) => {
+                return (
+                  <TableRow
+                    key={row.id}
+                    data-state={row.getIsSelected() && "selected"}
+                  >
+                    {row.getVisibleCells().map((cell) => {
+                      if (cell.column.id === "Id") return null;
+                      return (
+                        <TableCell key={cell.id}>
+                          {flexRender(
+                            cell.column.columnDef.cell,
+                            cell.getContext()
+                          )}
+                        </TableCell>
+                      );
+                    })}
+                    <TableCell className="flex gap-1">
+                      <Button
+                        variant="outline"
+                        size="icon"
+                        onClick={() => {
+                          select(row.getValue("Id"));
+                        }}
+                      >
                         <Pencil className="w-4 h-4" />
                       </Button>
                       {entity === "project" && (
-                        <Button variant="outline" size="icon" onClick={() => { navigate(`/duties/${row.getValue("Id")}`)  }}>
+                        <Button
+                          variant="outline"
+                          size="icon"
+                          onClick={() => {
+                            navigate(`/duties/${row.getValue("Id")}`);
+                          }}
+                        >
                           <KanbanSquare className="w-4 h-4" />
                         </Button>
                       )}
                       {entity === "customer" && (
-                        <Button variant="outline" size="icon" onClick={() => { navigate(`/projects/${row.getValue("Id")}`)  }}>
-                          <Folder className="w-4 h-4" />
-                        </Button>
+                        <>
+                          <Button
+                            variant="outline"
+                            size="icon"
+                            onClick={() => {
+                              select(row.getValue("Id"), "contact");
+                            }}
+                          >
+                            <UserCog className="w-4 h-4" />
+                          </Button>
+                          <Button
+                            variant="outline"
+                            size="icon"
+                            onClick={() => {
+                              navigate(`/projects/${row.getValue("Id")}`);
+                            }}
+                          >
+                            <Folder className="w-4 h-4" />
+                          </Button>
+                        </>
                       )}
                     </TableCell>
-                </TableRow>
-              ))
+                  </TableRow>
+                );
+              })
             ) : (
               <TableRow>
                 <TableCell

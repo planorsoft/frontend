@@ -15,6 +15,9 @@ import {
 import { useAppDispatch, useAppSelector } from "@/store";
 import { getCurrencies } from "@/containers/Settings/Currency/actions";
 import { CurrencyState } from "@/containers/Settings/Currency/types";
+import { checkVersion } from "@/lib/config";
+import { UserState } from "@/containers/Settings/User/types";
+import { getTeam } from "@/containers/Settings/User/actions";
 import { setSidebarInStore } from "@/containers/Settings/Application/actions";
 
 const defaultSidebar = [
@@ -102,12 +105,22 @@ export default function Page({ role, children }: PageProps) {
   const currencyState = useAppSelector<CurrencyState>(
     (state) => state.currencyState
   );
+  const userState = useAppSelector<UserState>(
+    (state) => state.userState 
+  );
   const dispatch = useAppDispatch();
 
   useEffect(() => {
     if (currencyState.currencies.length == 0) {
       dispatch(getCurrencies());
     }
+    if (userState.users.length == 0) {
+      dispatch(getTeam());
+    }
+  }, []);
+
+  useEffect(() => {
+    checkVersion();
   }, []);
 
   const toggleSidebar = () => {

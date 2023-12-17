@@ -5,6 +5,7 @@ import { Plus } from "lucide-react";
 import { useEffect, useState } from "react";
 import Upsert from "@/containers/Customer/Upsert";
 import useTitle from "@/hooks/use-title";
+import UpsertContacts from "./UpsertContacts";
 
 interface ListProps extends React.HTMLAttributes<HTMLDivElement> {
   type: "real" | "potential";
@@ -13,15 +14,19 @@ interface ListProps extends React.HTMLAttributes<HTMLDivElement> {
 const List = ({ type }: ListProps) => {
   useTitle("Müşteriler");
   const [open, setOpen] = useState<boolean>(false);
+  const [openContacts, setOpenContacts] = useState<boolean>(false);
   const [id, setId] = useState<number>(0);
-  const filter =
-    type === "real" ? "IsPotantial eq false" : "IsPotantial eq true";
+  const filter = type === "real" ? "IsPotantial eq false" : "IsPotantial eq true";
 
   useEffect(() => {}, [type]);
 
-  const select = (id: number) => {
+  const select = (id: number, type?: string) => {
     setId(id);
-    setOpen(true);
+    if (type === "contact") {
+      setOpenContacts(true);        
+    } else {
+      setOpen(true);
+    }
   };
 
   const openUpsert = () => {
@@ -46,6 +51,7 @@ const List = ({ type }: ListProps) => {
         select={select}
       />
       {open && <Upsert open={open} setOpen={setOpen} customerId={id} />}
+      {openContacts && <UpsertContacts open={openContacts} setOpen={setOpenContacts} customerId={id} />}
     </div>
   );
 };

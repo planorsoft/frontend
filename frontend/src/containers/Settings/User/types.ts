@@ -14,6 +14,10 @@ export const userTypes = {
     DELETE_AVATAR_REQUEST: 'DELETE_AVATAR_REQUEST',
     DELETE_AVATAR_SUCCESS: 'DELETE_AVATAR_SUCCESS',
     DELETE_AVATAR_FAILURE: 'DELETE_AVATAR_FAILURE',
+
+    GET_TEAM_REQUEST: 'GET_TEAM_REQUEST',
+    GET_TEAM_SUCCESS: 'GET_TEAM_SUCCESS',
+    GET_TEAM_FAILURE: 'GET_TEAM_FAILURE',
 }
 
 
@@ -31,6 +35,7 @@ export interface UpdateUserCommand {
 }
 
 export interface UserState {
+    users: User[];
     user: User;
     loading: boolean;
     error: string | null;

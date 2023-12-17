@@ -1,7 +1,7 @@
 import { useAppDispatch, useAppSelector } from "@/store";
 import { useEffect, useState } from "react";
-import { getActiveDuties, getDutyCategories } from "./actions";
-import { DutyCategoryState, DutyState } from "./types";
+import { getActiveDuties, getDutyCategories, getDutySizes } from "./actions";
+import { DutyCategoryState, DutySizeState, DutyState } from "./types";
 import Kanban from "./Kanban";
 import { Button } from "@/components/ui/button";
 import { CircleSlash, Plus } from "lucide-react";
@@ -11,6 +11,8 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { toast } from "@/components/ui/use-toast";
 import UpsertDutyCategory from "./UpsertDutyCategory";
 import useTitle from "@/hooks/use-title";
+import { Project } from "../Project/types";
+import { getProject } from "../Project/service";
 
 const Container = () => {
   useTitle("Görevler");
@@ -19,16 +21,31 @@ const Container = () => {
   const dutyCategoryState = useAppSelector<DutyCategoryState>(
     (state) => state.dutyCategoryState
   );
+  const dutySizeState = useAppSelector<DutySizeState>(state => state.dutySizeState);
   const [isOpenUpsertDuty, setIsOpenUpsertDuty] = useState<boolean>(false);
   const [dutyId, setDutyId] = useState<number>(0);
-  const [isOpenUpsertDutyCategory, setIsOpenUpsertDutyCategory] = useState<boolean>(false);
+  const [isOpenUpsertDutyCategory, setIsOpenUpsertDutyCategory] =
+    useState<boolean>(false);
   const [dutyCategoryId, setDutyCategoryId] = useState<number>(0);
   const { projectId } = useParams();
+  const [project, setProject] = useState<Project>();
 
   useEffect(() => {
+    if (dutyCategoryState.dutyCategories.length === 0) {
+      dispatch(getDutyCategories());
+    }
+    if (dutySizeState.dutySizes.length === 0) {
+      dispatch(getDutySizes());
+    }
+    if (projectId) {
+      getProject(Number(projectId)).then((data) => {
+        setProject(data);
+      });
+    } else {
+      setProject(undefined);
+    }
     dispatch(getActiveDuties(Number(projectId)));
-    dispatch(getDutyCategories());
-  }, []);
+  }, [projectId]);
 
   const openUpsertDuty = (id: number = 0) => {
     setDutyId(id);
@@ -68,7 +85,13 @@ const Container = () => {
         dutyState.duties.length > 0 &&
         dutyCategoryState.dutyCategories.length > 0
       ) {
-        return <Kanban openUpsertDuty={openUpsertDuty} openUpsertDutyCategory={openUpsertDutyCategory} projectId={projectId} />;
+        return (
+          <Kanban
+            openUpsertDuty={openUpsertDuty}
+            openUpsertDutyCategory={openUpsertDutyCategory}
+            projectId={projectId}
+          />
+        );
       } else {
         return (
           <Alert>
@@ -86,7 +109,15 @@ const Container = () => {
   return (
     <div className="px-2 py-4 md:px-20 mx-auto">
       <div className="flex justify-between my-2">
-        <h2 className="text-2xl font-semibold">Görevler</h2>
+        <div>
+          <h2 className="text-2xl font-semibold">
+            {project ? `${project.title} için Görevler` : "Tüm Görevler"}
+          </h2>
+          <p className="leading-7 my-2 dark:text-gray-500 text-gray-600">
+            Belirli bir projenin görevlerine gitmek için projeler ekranından
+            görevler ikonuna tıklayınız.
+          </p>
+        </div>
         <div className="flex justify-end gap-2">
           <Button
             onClick={() => {
@@ -112,11 +143,13 @@ const Container = () => {
         dutyId={dutyId}
         projectId={projectId}
       />
-      <UpsertDutyCategory
-        open={isOpenUpsertDutyCategory}
-        setOpen={setIsOpenUpsertDutyCategory}
-        dutyCategoryId={dutyCategoryId}
-      />
+      {isOpenUpsertDutyCategory && (
+        <UpsertDutyCategory
+          open={isOpenUpsertDutyCategory}
+          setOpen={setIsOpenUpsertDutyCategory}
+          dutyCategoryId={dutyCategoryId}
+        />
+      )}
     </div>
   );
 };

@@ -26,7 +26,7 @@ export const getCurrency = (id: number) => async (dispatch: Dispatch) => {
     } catch (error: unknown) {
         if (!(error instanceof AxiosError)) { throw error; }
         if (error.response) {
-            dispatch({ type: 'GET_CURRENCY_FAILURE', payload: error.response?.data.title });
+            dispatch({ type: 'GET_CURRENCY_FAILURE', payload: error.response?.data.detail });
         } else {
             dispatch({ type: 'GET_CURRENCY_FAILURE', payload: error.message });
         }

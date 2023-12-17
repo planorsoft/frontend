@@ -7,9 +7,15 @@ import {
   DialogHeader,
   Dialog,
 } from "@/components/ui/dialog";
-import { createCustomer, getCustomer, updateCustomer } from "./service";
+import {
+  createCustomer,
+  deleteCustomerImage,
+  getCustomer,
+  updateCustomer,
+  updateCustomerImage,
+} from "./service";
 import { Form } from "@/components/ui/form";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import InputString from "@/components/ui/input-string";
 import InputBoolean from "@/components/ui/input-boolean";
@@ -23,6 +29,9 @@ import { useAppSelector } from "@/store";
 import { CurrencyState } from "../Settings/Currency/types";
 import { InputSelect } from "@/components/ui/input-select";
 import { selectCurrencyByDefault } from "../Settings/Currency/selector";
+import { Input } from "@/components/ui/input";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { profileImageGenerator } from "@/lib/profile-image";
 
 interface UpsertProps extends React.HTMLAttributes<HTMLDivElement> {
   open: boolean;
@@ -37,6 +46,7 @@ const Upsert = ({ open, setOpen, customerId }: UpsertProps) => {
     (state) => state.currencyState
   );
   const defaultCurrency = selectCurrencyByDefault(currencyState);
+  const [imageUri, setImageUri] = useState<string>("");
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -54,6 +64,7 @@ const Upsert = ({ open, setOpen, customerId }: UpsertProps) => {
       governmentId: "",
       isPotantial: false,
       currencyCode: "",
+      contacts: [],
     },
   });
 
@@ -78,7 +89,11 @@ const Upsert = ({ open, setOpen, customerId }: UpsertProps) => {
         form.setValue("website", result?.website || "");
         form.setValue("governmentId", result?.governmentId || "");
         form.setValue("isPotantial", result?.isPotantial || false);
-        form.setValue("currencyCode", result?.currencyCode || defaultCurrency);
+        setImageUri(result?.imageUri || "");
+        form.setValue(
+          "currencyCode",
+          result?.currencyCode || defaultCurrency?.code || ""
+        );
       } catch (error) {
         if (!(error instanceof AxiosError)) {
           throw error;
@@ -99,16 +114,18 @@ const Upsert = ({ open, setOpen, customerId }: UpsertProps) => {
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     if (remove) return;
     setLoading(true);
-    console.log(customerId, values.id);
     try {
       if (customerId === 0) {
         await createCustomer(values);
+        toast({
+          title: "Müşteri oluşturuldu",
+        });
       } else {
         await updateCustomer(values.id, values);
+        toast({
+          title: "Müşteri güncellendi",
+        });
       }
-      toast({
-        title: "Müşteri oluşturuldu",
-      });
       setOpen(false);
       window.location.reload();
     } catch (error) {
@@ -127,7 +144,45 @@ const Upsert = ({ open, setOpen, customerId }: UpsertProps) => {
   const onDeleted = () => {
     setRemove(false);
     setOpen(false);
-  }
+  };
+
+  const handleUploadImage = async (file: File) => {
+    try {
+      const response = await updateCustomerImage(customerId, file);
+      setImageUri(response.data);
+      toast({
+        title: "Fotoğraf başarıyla yüklendi",
+      });
+    } catch (error) {
+      if (!(error instanceof AxiosError)) {
+        throw error;
+      }
+      toast({
+        title: "Hata oluştu",
+        description: error.response?.data.detail,
+        variant: "destructive",
+      });
+    }
+  };
+
+  const handleRemoveImage = async () => {
+    try {
+      await deleteCustomerImage(customerId);
+      setImageUri("");
+      toast({
+        title: "Fotoğraf başarıyla silindi",
+      });
+    } catch (error) {
+      if (!(error instanceof AxiosError)) {
+        throw error;
+      }
+      toast({
+        title: "Hata oluştu",
+        description: error.response?.data.detail,
+        variant: "destructive",
+      });
+    }
+  };
 
   return (
     <>
@@ -145,6 +200,50 @@ const Upsert = ({ open, setOpen, customerId }: UpsertProps) => {
                   onSubmit={form.handleSubmit(onSubmit)}
                   className="space-y-4"
                 >
+                  {customerId !== 0 && (
+                    <div className="grid grid-cols-12 gap-2">
+                      <div className="col-span-10">
+                        <h2 className="mb-1">Fotoğraf</h2>
+                        <div className="grid grid-cols-12 gap-2">
+                          <Input
+                            type="file"
+                            placeholder="Fotoğraf seç"
+                            accept="image/png, image/jpeg"
+                            className="col-span-10"
+                            onChange={(e) => {
+                              if (e.target.files) {
+                                handleUploadImage(e.target.files[0]);
+                              }
+                            }}
+                          />
+                          <Button
+                            className="col-span-2"
+                            variant="outline"
+                            type="button"
+                            disabled={imageUri === ""}
+                            onClick={() => {
+                              handleRemoveImage();
+                            }}
+                          >
+                            Sil
+                          </Button>
+                        </div>
+                      </div>
+                      <div className="col-span-2">
+                        <Avatar className="h-14 w-14 mx-auto">
+                          <AvatarImage
+                            src={
+                              imageUri ||
+                              profileImageGenerator(form.getValues().name)
+                            }
+                          />
+                          <AvatarFallback>
+                            <LoaderIcon className="w-8 h-8 animate-spin" />
+                          </AvatarFallback>
+                        </Avatar>
+                      </div>
+                    </div>
+                  )}
                   <InputString
                     control={form.control}
                     placeholder="İsim*"

@@ -44,6 +44,26 @@ export const dutyTypes = {
     DELETE_DUTY_CATEGORY_REQUEST: 'DELETE_DUTY_CATEGORY_REQUEST',
     DELETE_DUTY_CATEGORY_SUCCESS: 'DELETE_DUTY_CATEGORY_SUCCESS',
     DELETE_DUTY_CATEGORY_FAILURE: 'DELETE_DUTY_CATEGORY_FAILURE',
+
+    GET_DUTY_SIZES_REQUEST: 'GET_DUTY_SIZES_REQUEST',
+    GET_DUTY_SIZES_SUCCESS: 'GET_DUTY_SIZES_SUCCESS',
+    GET_DUTY_SIZES_FAILURE: 'GET_DUTY_SIZES_FAILURE',
+
+    GET_DUTY_SIZE_REQUEST: 'GET_DUTY_SIZE_REQUEST',
+    GET_DUTY_SIZE_SUCCESS: 'GET_DUTY_SIZE_SUCCESS',
+    GET_DUTY_SIZE_FAILURE: 'GET_DUTY_SIZE_FAILURE',
+
+    CREATE_DUTY_SIZE_REQUEST: 'CREATE_DUTY_SIZE_REQUEST',
+    CREATE_DUTY_SIZE_SUCCESS: 'CREATE_DUTY_SIZE_SUCCESS',
+    CREATE_DUTY_SIZE_FAILURE: 'CREATE_DUTY_SIZE_FAILURE',
+
+    UPDATE_DUTY_SIZE_REQUEST: 'UPDATE_DUTY_SIZE_REQUEST',
+    UPDATE_DUTY_SIZE_SUCCESS: 'UPDATE_DUTY_SIZE_SUCCESS',
+    UPDATE_DUTY_SIZE_FAILURE: 'UPDATE_DUTY_SIZE_FAILURE',
+
+    DELETE_DUTY_SIZE_REQUEST: 'DELETE_DUTY_SIZE_REQUEST',
+    DELETE_DUTY_SIZE_SUCCESS: 'DELETE_DUTY_SIZE_SUCCESS',
+    DELETE_DUTY_SIZE_FAILURE: 'DELETE_DUTY_SIZE_FAILURE',
 };
 
 export interface Duty {
@@ -60,6 +80,7 @@ export interface Duty {
     project?: Project;
     completed?: boolean;
     order?: number;
+    assignedTo?: string;
 }
 
 export interface DutyCategory {
@@ -89,7 +110,15 @@ export interface DutyState {
 
 export interface DutyCategoryState {
     dutyCategories: DutyCategory[];
-    dutyCategory: DutyCategory | object;
+    dutyCategory: DutyCategory;
+    loading: boolean;
+    error: string | null;
+    status: string | null;
+}
+
+export interface DutySizeState {
+    dutySizes: DutySize[];
+    dutySize: DutySize;
     loading: boolean;
     error: string | null;
     status: string | null;
@@ -100,10 +129,14 @@ export interface DutyAction {
     payload: Duty | Duty[] | string | number | null;
 }
 
-
 export interface DutyCategoryAction {
     type: string;
     payload: DutyCategory | DutyCategory[] | string | number | null;
+}
+
+export interface DutySizeAction {
+    type: string;
+    payload: DutySize | DutySize[] | string | number | null;
 }
 
 

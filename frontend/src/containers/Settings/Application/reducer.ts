@@ -20,7 +20,7 @@ export const applicationReducer = (state = applicationInitalState, action: Appli
         case 'CREATE_APPLICATION_REQUEST':
             return { ...state, loading: true };
         case 'CREATE_APPLICATION_SUCCESS':
-            return { ...state, loading: false, application: action.payload };
+            return { ...state, loading: false };
         case 'CREATE_APPLICATION_FAILURE':
             return { ...state, loading: false, error: action.payload };
         case 'UPDATE_APPLICATION_REQUEST':
