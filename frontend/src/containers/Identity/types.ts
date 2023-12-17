@@ -22,6 +22,7 @@ export const identityTypes = {
   SET_TOKEN: "SET_TOKEN",
   SET_TOKEN_FAILURE: "SET_TOKEN_FAILURE",
 
+  RESET_IDENTITY_ERROR: "RESET_IDENTITY_ERROR",
   RESET_MESSAGE: "RESET_MESSAGE"
 };
 
@@ -71,7 +72,6 @@ export interface ForgotConfirmPasswordData {
   token: string;
   password: string;
   tenant: string;
-  confirmPassword: string;
 }
 
 export interface SetTokenData {

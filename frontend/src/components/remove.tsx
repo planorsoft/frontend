@@ -8,6 +8,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
+import { deleteEvent } from "@/containers/Calendar/actions";
 import { deleteCustomer } from "@/containers/Customer/service";
 import { deleteDuty, deleteDutyCategory } from "@/containers/Duty/actions";
 import { deleteProject } from "@/containers/Project/service";
@@ -18,7 +19,7 @@ import { Dispatch, SetStateAction } from "react";
 interface RemoveProps extends React.HTMLAttributes<HTMLDivElement> {
   open?: boolean;
   setOpen: Dispatch<SetStateAction<boolean | undefined>>;
-  entity: "customer" | "project" | "duty" | "dutyCategory" | "currency";
+  entity: "customer" | "project" | "duty" | "dutyCategory" | "currency" | "event";
   entityId: number;
   onDeleted: () => void;
 }
@@ -52,6 +53,9 @@ const Remove = ({
         break;
       case "currency":
         dispatch(deleteCurrency(entityId));
+        break;
+      case "event":
+        dispatch(deleteEvent(entityId));
         break;
       default:
         console.error("Entity geçersiz");

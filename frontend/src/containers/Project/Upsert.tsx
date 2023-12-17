@@ -97,6 +97,7 @@ const Upsert = ({ open, setOpen, projectId, customerId }: UpsertProps) => {
         customerId: parseInt(values.customerId),
         price: parseInt(values.price),
       };
+
       if (projectId === 0) {
         await createProject(request);
         toast({

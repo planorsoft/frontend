@@ -22,6 +22,7 @@ import { InputServerSelect } from "@/components/ui/input-server-select";
 import Remove from "@/components/remove";
 import InputMarkdown from "@/components/ui/input-markdown";
 import { ApplicationState } from "../Settings/Application/types";
+import InputTextarea from "@/components/ui/input-textarea";
 
 const formSchema = z.object({
   id: z.number().optional(),
@@ -183,7 +184,7 @@ const UpsertDuty = ({ open, setOpen, dutyId, projectId }: UpsertDutyProps) => {
                   placeholder="Başlık*"
                   fieldName="title"
                 />
-                <InputMarkdown
+                <InputTextarea
                   control={form.control}
                   placeholder="Açıklama*"
                   fieldName="description"

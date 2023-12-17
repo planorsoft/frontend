@@ -46,19 +46,19 @@ interface ColumnDefs {
 const columnDefs: ColumnDefs = {
   customer: [
     {
-      accessorKey: "Id",
+      accessorKey: "id",
       header: "Id",
     },
     {
-      accessorKey: "ImageUri",
+      accessorKey: "imageUri",
       header: "Fotoğraf",
       cell: ({ row }) => {
-        const image = row.getValue("ImageUri");
+        const image = row.getValue("imageUri");
 
         return (
           <Avatar className="ml-2 h-7 w-7 max-[320px]:hidden">
             <AvatarImage
-              src={image || profileImageGenerator(row.getValue("Name"))}
+              src={image || profileImageGenerator(row.getValue("name"))}
             />
             <AvatarFallback>
               <Loader className="w-8 h-8 animate-spin" />
@@ -68,7 +68,7 @@ const columnDefs: ColumnDefs = {
       },
     },
     {
-      accessorKey: "Name",
+      accessorKey: "name",
       header: ({ column }) => {
         return (
           <Button
@@ -82,10 +82,10 @@ const columnDefs: ColumnDefs = {
       },
     },
     {
-      accessorKey: "IsCompany",
+      accessorKey: "isCompany",
       header: "Şirket",
       cell: ({ row }) => {
-        const isCompany = row.getValue("IsCompany");
+        const isCompany = row.getValue("isCompany");
 
         if (isCompany) {
           return (
@@ -103,28 +103,28 @@ const columnDefs: ColumnDefs = {
       },
     },
     {
-      accessorKey: "City",
+      accessorKey: "city",
       header: "Şehir",
     },
   ],
   project: [
     {
-      accessorKey: "Id",
+      accessorKey: "id",
       header: "Id",
     },
     {
-      accessorKey: "Title",
-      header: "Başlık",
+      accessorKey: "title",
+      header: "Başlık"
     },
     {
-      accessorKey: "Price",
+      accessorKey: "price",
       header: "Fiyat",
     },
     {
-      accessorKey: "IsCompleted",
+      accessorKey: "isCompleted",
       header: "Tamamlandı",
       cell: ({ row }) => {
-        const isCompleted = row.getValue("IsCompleted");
+        const isCompleted = row.getValue("isCompleted");
 
         if (isCompleted) {
           return (

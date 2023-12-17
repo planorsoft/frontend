@@ -6,7 +6,7 @@ import Legal from "./legal";
 import { useState } from "react";
 
 interface IdentityContainerProps extends React.HTMLAttributes<HTMLDivElement> {
-  type: "login" | "register" | "confirm";
+  type: "login" | "register" | "confirm" | "forgot-password" | "forgot-confirm-password";
 }
 
 function IdentityContainer({ children, type }: IdentityContainerProps) {
@@ -67,41 +67,44 @@ function IdentityContainer({ children, type }: IdentityContainerProps) {
                 {type === "register" && tenant && "Müşteri olarak kayıt ol"}
                 {type === "register" && !tenant && "Kayıt ol"}
                 {type === "confirm" && "Hesabını onayla"}
+                {type === "forgot-password" && "Şifremi unuttum"}
+                {type === "forgot-confirm-password" && "Şifreni güncelle"}
               </h1>
               <p className="text-sm text-muted-foreground">
-                {(type === "login" || type === "register") &&
+                {(type === "login" || type === "register" || type === "forgot-password") &&
                   "Lütfen bilgilerinizi giriniz."}
                 {type === "confirm" &&
                   "Mail adresine gönderdiğimiz kodu aşağıya girerek hesabını onaylayabilirsin."}
+                {type === "forgot-confirm-password" &&
+                  "Lütfen yeni şifreni gir."}
               </p>
             </div>
             <div className="grid gap-6">{children}</div>
-            {type === "login" ||
-              (type === "register" && (
-                <p className="text-center text-sm text-muted-foreground">
-                  Devam ederek
-                  <Button
-                    variant="ghost"
-                    className="underline p-1 m-1"
-                    onClick={() => {
-                      setUsageAggrementOpen(true);
-                    }}
-                  >
-                    Kullanım sözleşmesi
-                  </Button>
-                  ve
-                  <Button
-                    variant="ghost"
-                    className="underline p-1 m-1"
-                    onClick={() => {
-                      setPrivacyAggrementOpen(true);
-                    }}
-                  >
-                    Gizlilik sözleşmesini
-                  </Button>
-                  kabul etmiş sayılırsınız.
-                </p>
-              ))}
+            {type === "register" && (
+              <p className="text-center text-sm text-muted-foreground">
+                Devam ederek
+                <Button
+                  variant="ghost"
+                  className="underline p-1 m-1"
+                  onClick={() => {
+                    setUsageAggrementOpen(true);
+                  }}
+                >
+                  Kullanım sözleşmesi
+                </Button>
+                ve
+                <Button
+                  variant="ghost"
+                  className="underline p-1 m-1"
+                  onClick={() => {
+                    setPrivacyAggrementOpen(true);
+                  }}
+                >
+                  Gizlilik sözleşmesini
+                </Button>
+                kabul etmiş sayılırsınız.
+              </p>
+            )}
           </div>
         </div>
       </div>

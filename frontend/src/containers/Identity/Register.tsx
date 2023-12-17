@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { register } from "@/containers/Identity/actions";
+import { register, resetIdentityError } from "@/containers/Identity/actions";
 import { getTenant, setTenant } from "@/lib/tenant";
 import { useToast } from "@/components/ui/use-toast";
 import { useAppDispatch, useAppSelector } from "@/store";
@@ -79,6 +79,7 @@ function Register() {
   };
 
   useEffect(() => {
+    dispatch(resetIdentityError());
     const tenantFromUrl = getTenant();
     form.setValue("tenant", tenantFromUrl);
     if (tenantFromUrl) {

@@ -18,6 +18,7 @@ import { CurrencyState } from "@/containers/Settings/Currency/types";
 import { checkVersion } from "@/lib/config";
 import { UserState } from "@/containers/Settings/User/types";
 import { getTeam } from "@/containers/Settings/User/actions";
+import { setSidebarInStore } from "@/containers/Settings/Application/actions";
 
 const defaultSidebar = [
   {
@@ -124,6 +125,7 @@ export default function Page({ role, children }: PageProps) {
 
   const toggleSidebar = () => {
     setSidebarOpen(!sidebarOpen);
+    dispatch(setSidebarInStore(!sidebarOpen));
   };
 
   useEffect(() => {

@@ -16,6 +16,9 @@ export const applicationTypes = {
     DELETE_APPLICATION_FAILURE: 'DELETE_APPLICATION_FAILURE',
 
     SET_TITLE: 'SET_TITLE',
+
+    SET_SIDEBAR_OPEN: 'SET_SIDEBAR_OPEN',
+    SET_SIDEBAR_CLOSE: 'SET_SIDEBAR_CLOSE',
 }
 
 export interface Application {
@@ -30,6 +33,7 @@ export interface ApplicationState {
     loading: boolean;
     error: string | null;
     status: string | null;
+    sidebar: boolean;
 }
 
 export interface ApplicationAction {
