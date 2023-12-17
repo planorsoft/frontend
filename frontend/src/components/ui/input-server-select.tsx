@@ -46,8 +46,8 @@ export function InputServerSelect({
       setLoading(true);
       const response = await axios.get("/odata/projects?$select=Id,Title");
       const list = response.data.value.map((item) => ({
-        value: item.Id.toString(),
-        label: item.Title,
+        value: item.id.toString(),
+        label: item.title,
       }));
       setSelectList(list);
       setLoading(false);
@@ -68,8 +68,8 @@ export function InputServerSelect({
       setLoading(true);
       const response = await axios.get("/odata/customers?$select=Id,Name");
       const list = response.data.value.map((item) => ({
-        value: item.Id.toString(),
-        label: item.Name,
+        value: item.id.toString(),
+        label: item.name,
       }));
       setSelectList(list);
       setLoading(false);

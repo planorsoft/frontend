@@ -51,3 +51,11 @@ export const deleteApplication = (id: number) => async (dispatch: Dispatch) => {
 export const setTitle = (title: string) => (dispatch: Dispatch) => {
     dispatch({ type: 'SET_TITLE', payload: title });
 }
+
+export const setSidebarInStore = (open: boolean) => (dispatch: Dispatch) => {
+    if (open) {
+        dispatch({ type: 'SET_SIDEBAR_OPEN' });
+    } else {
+        dispatch({ type: 'SET_SIDEBAR_CLOSE' });
+    }
+}

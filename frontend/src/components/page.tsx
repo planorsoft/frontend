@@ -15,6 +15,7 @@ import {
 import { useAppDispatch, useAppSelector } from "@/store";
 import { getCurrencies } from "@/containers/Settings/Currency/actions";
 import { CurrencyState } from "@/containers/Settings/Currency/types";
+import { setSidebarInStore } from "@/containers/Settings/Application/actions";
 
 const defaultSidebar = [
   {
@@ -111,6 +112,7 @@ export default function Page({ role, children }: PageProps) {
 
   const toggleSidebar = () => {
     setSidebarOpen(!sidebarOpen);
+    dispatch(setSidebarInStore(!sidebarOpen));
   };
 
   useEffect(() => {

@@ -26,8 +26,8 @@ const formSchema = z.object({
   title: z.string().nonempty({ message: "Lütfen geçerli bir başlık giriniz" }),
   description: z.string(),
   isCompleted: z.boolean(),
-  customerId: z.string(),
-  price: z.number(),
+  customerId: z.string().nonempty({ message: "Lütfen geçerli bir müşteri seçiniz" }),
+  price: z.string(),
 });
 
 interface UpsertProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -49,7 +49,7 @@ const Upsert = ({ open, setOpen, projectId, customerId }: UpsertProps) => {
       description: "",
       isCompleted: false,
       customerId: "",
-      price: 0,
+      price: "0",
     },
   });
 
@@ -95,8 +95,9 @@ const Upsert = ({ open, setOpen, projectId, customerId }: UpsertProps) => {
         description: values.description,
         isCompleted: values.isCompleted,
         customerId: parseInt(values.customerId),
-        price: values.price,
+        price: parseInt(values.price),
       };
+
       if (projectId === 0) {
         await createProject(request);
       } else {

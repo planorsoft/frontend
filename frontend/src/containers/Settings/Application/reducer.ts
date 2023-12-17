@@ -5,7 +5,8 @@ const applicationInitalState: ApplicationState = {
     title: '',
     loading: false,
     error: null,
-    status: null
+    status: null,
+    sidebar: false,
 };
 
 export const applicationReducer = (state = applicationInitalState, action: ApplicationAction) => {
@@ -36,6 +37,10 @@ export const applicationReducer = (state = applicationInitalState, action: Appli
             return { ...state, loading: false, error: action.payload };
         case 'SET_TITLE':
             return { ...state, title: action.payload };
+        case 'SET_SIDEBAR_OPEN':
+            return { ...state, sidebar: true };
+        case 'SET_SIDEBAR_CLOSE':
+            return { ...state, sidebar: false };
         default:
             return state;
     }

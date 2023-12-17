@@ -22,6 +22,7 @@ import CurrencyList from "@/containers/Settings/Currency/List";
 import User from "@/containers/Settings/User/Detail";
 import useDevelopmentMessage from "./hooks/use-development-message";
 import CustomerPanel from "./containers/CustomerPanel";
+import Calendar from "./containers/Calendar";
 
 
 function UseMiddleware() {
@@ -50,7 +51,7 @@ function App() {
           <Route path="/dashboard" element={<Page><Dashboard /></Page>} />
         </Route>
         <Route path="/calendar" element={<ProtectedRoute route="/calendar" />}>
-          <Route path="/calendar" element={<Page>Takvim sayfası geliştirme aşamasındadır</Page>} />
+          <Route path="/calendar" element={<Page><Calendar /></Page>} />
         </Route>
         <Route path="/customers" element={<ProtectedRoute route="/customers" />}>
           <Route path="/customers" element={<Page><CustomerList type="real" /></Page>} />

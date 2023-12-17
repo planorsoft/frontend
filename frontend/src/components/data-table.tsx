@@ -35,11 +35,11 @@ interface ColumnDefs {
 const columnDefs: ColumnDefs = {
   customer: [
     {
-      accessorKey: "Id",
+      accessorKey: "id",
       header: "Id",
     },
     {
-      accessorKey: "Name",
+      accessorKey: "name",
       header: ({ column }) => {
         return (
           <Button
@@ -53,7 +53,7 @@ const columnDefs: ColumnDefs = {
       },
     },
     {
-      accessorKey: "IsCompany",
+      accessorKey: "isCompany",
       header: "Şirket",
       cell: ({ row }) => {
         const isCompany = row.getValue("IsCompany");
@@ -66,25 +66,25 @@ const columnDefs: ColumnDefs = {
       },
     },
     {
-      accessorKey: "City",
+      accessorKey: "city",
       header: "Şehir",
     },
   ],
   project: [
     {
-      accessorKey: "Id",
+      accessorKey: "id",
       header: "Id",
     },
     {
-      accessorKey: "Title",
+      accessorKey: "title",
       header: "Başlık"
     },
     {
-      accessorKey: "Price",
+      accessorKey: "price",
       header: "Fiyat",
     },
     {
-      accessorKey: "IsCompleted",
+      accessorKey: "isCompleted",
       header: "Tamamlandı",
       cell: ({ row }) => {
         const isCompleted = row.getValue("IsCompleted");

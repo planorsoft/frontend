@@ -34,6 +34,13 @@
     --ring: 222.2 24% 4.9%;
  
     --radius: 0.5rem;
+
+    --fc-border-color: rgb(226, 232, 240);
+    --fc-button-border-color: rgb(226, 232, 240);
+    --fc-button-bg-color: 0 0% 100%;
+    --fc-button-text-color: rgb(9, 11, 15);
+    --fc-neutral-bg-color: rgba(226, 232, 240);
+    --fc-neutral-bg-color: rgba(226, 232, 240, 0.8);
   }
  
   .dark {
@@ -60,9 +67,17 @@
  
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 0 0% 98%;
+
     --border: 240 3.7% 15.9%;
     --input: 240 3.7% 15.9%;
     --ring: 240 4.9% 83.9%;
+
+    --fc-border-color: rgb(39, 39, 42);
+    --fc-button-border-color: rgb(39, 39, 42);
+    --fc-button-bg-color: 222.2 24% 4.9%;
+    --fc-button-text-color: rgb(248, 250, 252);
+    --fc-neutral-bg-color: rgba(39, 39, 42);
+    --fc-list-event-hover-bg-color: rgba(39, 39, 42, 0.8);
   }
 }
 
@@ -99,6 +114,51 @@
 
   color: var(--baseText);
   background: var(--baseBg);
+}
+
+.fc-day-today {
+  background: var(--primary) !important;
+}
+
+.fc-daygrid-day-number {
+  margin: 0.2em;
+}
+
+.fc-day-today .fc-daygrid-day-number {
+  background-color: rgb(55, 136, 216) !important;
+  border-radius: 25% !important;
+  text-align: center;
+  width: 2em;
+  height: 2em;
+  margin: 0.2em;
+}
+
+.fc-view {
+  max-width: 100%;
+}
+
+.fc-scrollgrid {
+  cursor: pointer;
+  overflow-x: scroll;
+}
+
+.fc-event {
+  cursor: pointer;
+}
+
+.fc-list-empty {
+  background-color: transparent !important;
+}
+
+
+@media screen and (max-width: 767px) {
+  .fc-toolbar.fc-header-toolbar {
+    flex-direction: column;
+  }
+  .fc-toolbar-chunk {
+    text-align: center;
+    padding: 5px 0;
+  }
 }
 
 @layer base {

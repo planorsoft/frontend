@@ -10,6 +10,7 @@ import { dutyCategoryReducer, dutyReducer } from "@/containers/Duty/reducer";
 import { applicationReducer } from "@/containers/Settings/Application/reducer";
 import { currencyReducer } from "@/containers/Settings/Currency/reducer";
 import { userReducer } from "./containers/Settings/User/reducer";
+import { calendarReducer } from "./containers/Calendar/reducer";
 
 const rootReducer = combineReducers({
     identity: identityReducer,
@@ -18,6 +19,7 @@ const rootReducer = combineReducers({
     applicationState: applicationReducer,
     currencyState: currencyReducer,
     userState: userReducer,
+    calendarState: calendarReducer,
 });
 
 export const store = configureStore({

@@ -77,7 +77,6 @@ const List = () => {
             <TableCaption>Sisteminizde kullanılabilir dövizler</TableCaption>
             <TableHeader>
               <TableRow>
-                <TableHead>Id</TableHead>
                 <TableHead>Kod</TableHead>
                 <TableHead>Sembol</TableHead>
                 <TableHead>Kur / TRY</TableHead>
@@ -88,7 +87,6 @@ const List = () => {
             <TableBody>
               {currencyState.currencies.map((currency) => (
                 <TableRow key={currency.id}>
-                  <TableCell>{currency.id}</TableCell>
                   <TableCell>{currency.code}</TableCell>
                   <TableCell>{currency.symbol}</TableCell>
                   <TableCell>{currency.rate}</TableCell>
@@ -98,7 +96,7 @@ const List = () => {
                         <Check />
                       </div>
                     ) : (
-                      <div className="text-right font-medium">
+                      <div className="text-right font-medium text-muted-foreground">
                         <X />
                       </div>
                     )}

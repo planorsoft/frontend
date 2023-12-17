@@ -22,6 +22,7 @@ import { InputServerSelect } from "@/components/ui/input-server-select";
 import Remove from "@/components/remove";
 import InputMarkdown from "@/components/ui/input-markdown";
 import { ApplicationState } from "../Settings/Application/types";
+import InputTextarea from "@/components/ui/input-textarea";
 
 const formSchema = z.object({
   id: z.number().optional(),
@@ -64,9 +65,10 @@ const UpsertDuty = ({ open, setOpen, dutyId, projectId }: UpsertDutyProps) => {
   const loading = dutyState.loading;
   const error = dutyState.error;
   const duty = dutyState.duty;
-  const dutyCategoryState = useAppSelector<DutyCategoryState>((state) => state.dutyCategoryState);
+  const dutyCategoryState = useAppSelector<DutyCategoryState>(
+    (state) => state.dutyCategoryState
+  );
   const dutyCategories = dutyCategoryState.dutyCategories;
-  const applicationState = useAppSelector<ApplicationState>((state) => state.applicationState);
   const [remove, setRemove] = useState<boolean>();
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -83,10 +85,7 @@ const UpsertDuty = ({ open, setOpen, dutyId, projectId }: UpsertDutyProps) => {
 
   useEffect(() => {
     form.reset();
-  }, [open]);
-
-  useEffect(() => {
-    if (dutyId != 0) {
+    if (dutyId) {
       dispatch(getDuty(dutyId));
     }
   }, [dutyId]);
@@ -108,7 +107,7 @@ const UpsertDuty = ({ open, setOpen, dutyId, projectId }: UpsertDutyProps) => {
       form.setValue("description", duty.description || "");
       form.setValue("categoryId", duty.categoryId?.toString() || "");
       form.setValue("projectId", duty.projectId?.toString() || projectId || "");
-    } 
+    }
   }, [duty]);
 
   const onSubmit = (values: z.infer<typeof formSchema>) => {
@@ -154,7 +153,7 @@ const UpsertDuty = ({ open, setOpen, dutyId, projectId }: UpsertDutyProps) => {
                   placeholder="Başlık*"
                   fieldName="title"
                 />
-                <InputMarkdown
+                <InputTextarea
                   control={form.control}
                   placeholder="Açıklama*"
                   fieldName="description"

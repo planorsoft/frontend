@@ -1,4 +1,4 @@
-import { FormControl, FormField, FormItem, FormMessage } from "./form";
+import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "./form";
 import { Control } from "react-hook-form";
 import { Textarea } from "./textarea";
 
@@ -17,6 +17,7 @@ const InputTextarea = ({ control, placeholder, fieldName } : InputTextareaProps)
       name={fieldName}
       render={({ field }) => (
         <FormItem>
+          <FormLabel>{placeholder}</FormLabel>
           <FormControl>
             <Textarea placeholder={placeholder} {...field} />
           </FormControl>
