@@ -17,6 +17,7 @@ export function getTenant() {
     }
   }).catch((error) => {
     console.log(error);
+    replaceSubdomain('app');
   })
 
   return subdomain;
@@ -33,17 +34,14 @@ export function setTenant(tenant: string, redirect: string) {
 
 
 const replaceSubdomain = (subdomain: string) => {
-  console.log(subdomain)
   const host = window.location.href;
   const slashSplit = host.split('//');
   const dotSplit = host.split('.');
-  console.log(slashSplit, dotSplit);
 
   if (dotSplit.length < 2) {
     return;
   }
 
   const result = slashSplit[0] + `//${subdomain}.` + dotSplit[1];
-  console.log(result)
   window.location.assign(result);
 }
