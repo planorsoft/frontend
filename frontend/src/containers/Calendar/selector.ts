@@ -1,3 +1,4 @@
+import { DateTime } from "luxon";
 import { CalendarState, Event } from "./types";
 
 
@@ -7,14 +8,14 @@ export const selectEventById = (state: CalendarState, eventId: number) => {
 
 export const selectEventsByMonths = (state: CalendarState, month: number) => {
     return (state.events as unknown as Event[]).filter((event) => {
-        const eventDate = event.start;
+        const eventDate = DateTime.fromSeconds(event.start).toJSDate();
         return eventDate.getMonth() === month;
     });
 }
 
 export const selectEventsByWeeks = (state: CalendarState, week: number) => {
     return (state.events as unknown as Event[]).filter((event) => {
-        const eventDate = event.start;
+        const eventDate = DateTime.fromSeconds(event.start).toJSDate();
         return getWeek(eventDate) === week;
     });
 }

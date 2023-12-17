@@ -50,15 +50,15 @@ const columnDefs: ColumnDefs = {
       header: "Id",
     },
     {
-      accessorKey: "ImageUri",
+      accessorKey: "imageUri",
       header: "Fotoğraf",
       cell: ({ row }) => {
-        const image = row.getValue("ImageUri");
+        const image = row.getValue("imageUri");
 
         return (
           <Avatar className="ml-2 h-7 w-7 max-[320px]:hidden">
             <AvatarImage
-              src={image || profileImageGenerator(row.getValue("Name"))}
+              src={image || profileImageGenerator(row.getValue("name"))}
             />
             <AvatarFallback>
               <Loader className="w-8 h-8 animate-spin" />
@@ -85,7 +85,7 @@ const columnDefs: ColumnDefs = {
       accessorKey: "isCompany",
       header: "Şirket",
       cell: ({ row }) => {
-        const isCompany = row.getValue("IsCompany");
+        const isCompany = row.getValue("isCompany");
 
         if (isCompany) {
           return (
@@ -124,7 +124,7 @@ const columnDefs: ColumnDefs = {
       accessorKey: "isCompleted",
       header: "Tamamlandı",
       cell: ({ row }) => {
-        const isCompleted = row.getValue("IsCompleted");
+        const isCompleted = row.getValue("isCompleted");
 
         if (isCompleted) {
           return (

@@ -46,17 +46,18 @@ const Detail = ({ open, setOpen, setUpsertOpen, eventId }: DetailProps) => {
             <span className="text-slate-400">{start.toRelative()}</span>
           </DialogTitle>
           <p>{event?.description}</p>
-          {event?.location && isUrl(event.location) ? (
-            <a
-              href={event.location}
-              className="flex justify-start items-center my-3"
-            >
-              <ExternalLink className="mr-2 w-4 h-4" />
-              <span>{event?.location}</span>
-            </a>
-          ) : (
-            <p>Konum: {event?.location}</p>
-          )}
+          {event?.location &&
+            (isUrl(event.location) ? (
+              <a
+                href={event.location}
+                className="flex justify-start items-center my-3"
+              >
+                <ExternalLink className="mr-2 w-4 h-4" />
+                <span>{event?.location}</span>
+              </a>
+            ) : (
+              <p>Konum: {event?.location}</p>
+            ))}
           <div className="flex justify-end">
             <Button
               variant="default"
