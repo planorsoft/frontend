@@ -9,7 +9,7 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { deleteEvent } from "@/containers/Calendar/actions";
-import { deleteCustomer } from "@/containers/Customer/service";
+import { deleteCustomer } from "@/containers/Customer/actions";
 import { deleteDuty, deleteDutyCategory } from "@/containers/Duty/actions";
 import { deleteProject } from "@/containers/Project/service";
 import { deleteCurrency } from "@/containers/Settings/Currency/actions";
@@ -36,9 +36,7 @@ const Remove = ({
   const remove = () => {
     switch (entity) {
       case "customer":
-        deleteCustomer(entityId).then(() => {
-          window.location.reload();
-        });
+        dispatch(deleteCustomer(entityId));
         break;
       case "project":
         deleteProject(entityId).then(() => {

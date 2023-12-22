@@ -20,9 +20,7 @@ import Upsert from "@/containers/Settings/Currency/Upsert";
 
 const List = () => {
   const dispatch = useAppDispatch();
-  const currencyState = useAppSelector<CurrencyState>(
-    (state) => state.currencyState
-  );
+  const currencyState = useAppSelector<CurrencyState>((state) => state.currencyState);
   const [upsert, showUpsert] = useState<boolean>(false);
   const [id, setId] = useState<number>(0);
 

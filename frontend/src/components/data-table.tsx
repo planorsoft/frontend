@@ -47,7 +47,7 @@ const columnDefs: ColumnDefs = {
   customer: [
     {
       accessorKey: "id",
-      header: "Id",
+      header: "id",
     },
     {
       accessorKey: "imageUri",
@@ -110,7 +110,7 @@ const columnDefs: ColumnDefs = {
   project: [
     {
       accessorKey: "id",
-      header: "Id",
+      header: "id",
     },
     {
       accessorKey: "title",
@@ -251,7 +251,7 @@ function DataTable<T>({ url, entity, select, filter }: DataTableProps) {
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
                 {headerGroup.headers.map((header) => {
-                  if (header.id === "Id") return null;
+                  if (header.id === "id") return null;
                   return (
                     <TableHead key={header.id}>
                       {header.isPlaceholder
@@ -276,7 +276,7 @@ function DataTable<T>({ url, entity, select, filter }: DataTableProps) {
                     data-state={row.getIsSelected() && "selected"}
                   >
                     {row.getVisibleCells().map((cell) => {
-                      if (cell.column.id === "Id") return null;
+                      if (cell.column.id === "id") return null;
                       return (
                         <TableCell key={cell.id}>
                           {flexRender(
@@ -291,7 +291,7 @@ function DataTable<T>({ url, entity, select, filter }: DataTableProps) {
                         variant="outline"
                         size="icon"
                         onClick={() => {
-                          select(row.getValue("Id"));
+                          select(row.getValue("id"));
                         }}
                       >
                         <Pencil className="w-4 h-4" />
@@ -301,7 +301,7 @@ function DataTable<T>({ url, entity, select, filter }: DataTableProps) {
                           variant="outline"
                           size="icon"
                           onClick={() => {
-                            navigate(`/duties/${row.getValue("Id")}`);
+                            navigate(`/duties/${row.getValue("id")}`);
                           }}
                         >
                           <KanbanSquare className="w-4 h-4" />
@@ -313,7 +313,7 @@ function DataTable<T>({ url, entity, select, filter }: DataTableProps) {
                             variant="outline"
                             size="icon"
                             onClick={() => {
-                              select(row.getValue("Id"), "contact");
+                              select(row.getValue("id"), "contact");
                             }}
                           >
                             <UserCog className="w-4 h-4" />
@@ -322,7 +322,7 @@ function DataTable<T>({ url, entity, select, filter }: DataTableProps) {
                             variant="outline"
                             size="icon"
                             onClick={() => {
-                              navigate(`/projects/${row.getValue("Id")}`);
+                              navigate(`/projects/${row.getValue("id")}`);
                             }}
                           >
                             <Folder className="w-4 h-4" />

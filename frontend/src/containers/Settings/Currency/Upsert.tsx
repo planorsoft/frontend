@@ -42,7 +42,6 @@ const UpsertCurrency = ({ open, setOpen, currencyId }: UpsertCurrencyProps) => {
     (state) => state.currencyState
   );
   const loading = currencyState.loading;
-  const error = currencyState.error;
   const currency = selectCurrencyById(currencyState, currencyId);
 
   const [remove, setRemove] = useState<boolean>();
