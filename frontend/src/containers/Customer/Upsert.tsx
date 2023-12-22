@@ -159,6 +159,7 @@ const Upsert = ({ open, setOpen, customerId }: UpsertProps) => {
       default:
         break;
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [customerState.status]);
 
   const onDeleted = () => {

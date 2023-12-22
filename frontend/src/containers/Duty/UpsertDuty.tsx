@@ -23,15 +23,14 @@ import Remove from "@/components/remove";
 import InputMarkdown from "@/components/ui/input-markdown";
 import { ApplicationState } from "../Settings/Application/types";
 import InputTextarea from "@/components/ui/input-textarea";
+import { selectDefaultDutyCategory } from "./selector";
 
 const formSchema = z.object({
   id: z.number().optional(),
   title: z.string().nonempty({
     message: "Lütfen geçerli bir başlık giriniz.",
   }),
-  description: z.string().nonempty({
-    message: "Lütfen geçerli bir açıklama giriniz.",
-  }),
+  description: z.string().optional(),
   projectId: z
     .string()
     .min(1, {
@@ -63,7 +62,7 @@ interface UpsertDutyProps extends React.HTMLAttributes<HTMLDivElement> {
   open: boolean;
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
   dutyId: number;
-  projectId?: string;
+  projectId: number;
 }
 
 const UpsertDuty = ({ open, setOpen, dutyId, projectId }: UpsertDutyProps) => {
@@ -76,9 +75,10 @@ const UpsertDuty = ({ open, setOpen, dutyId, projectId }: UpsertDutyProps) => {
     (state) => state.dutyCategoryState
   );
   const dutyCategories = dutyCategoryState.dutyCategories;
+  const defaultDutyCategory = selectDefaultDutyCategory(dutyCategoryState);
   const dutySizeState = useAppSelector<DutySizeState>(
     (state) => state.dutySizeState
-  )
+  );
   const dutySizes = dutySizeState.dutySizes;
   const applicationState = useAppSelector<ApplicationState>(
     (state) => state.applicationState
@@ -92,7 +92,7 @@ const UpsertDuty = ({ open, setOpen, dutyId, projectId }: UpsertDutyProps) => {
       id: 0,
       title: "",
       description: "",
-      projectId: projectId || "",
+      projectId: projectId?.toString(),
       categoryId: "",
       sizeId: "",
     },
@@ -120,7 +120,7 @@ const UpsertDuty = ({ open, setOpen, dutyId, projectId }: UpsertDutyProps) => {
 
   useEffect(() => {
     if (duty) {
-      console.log(duty);
+      console.log();
       form.setValue("id", duty.id || 0);
       form.setValue("title", duty.title || "");
       form.setValue("description", duty.description || "");
@@ -128,23 +128,30 @@ const UpsertDuty = ({ open, setOpen, dutyId, projectId }: UpsertDutyProps) => {
       form.setValue("projectId", duty.projectId?.toString() || "");
       form.setValue("sizeId", duty.sizeId?.toString() || "");
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [duty]);
+
+  useEffect(() => {
+    if (form.getValues().categoryId === "" && defaultDutyCategory?.id) {
+      form.setValue("categoryId", defaultDutyCategory.id.toString());
+    }
+  }, [defaultDutyCategory]);
 
   const onSubmit = (values: z.infer<typeof formSchema>) => {
     if (remove) return;
     const request = {
-      id: values.id,
+      id: values.id || 0,
       title: values.title,
       description: values.description,
       categoryId: parseInt(values.categoryId),
       projectId: parseInt(values.projectId),
-      sizeId: parseInt(values.sizeId)
+      sizeId: parseInt(values.sizeId),
     };
 
-    if (values.id == 0) {
-      dispatch(createDuty(request));
-    } else {
+    if (values.id) {
       dispatch(updateDuty(values.id, request));
+    } else {
+      dispatch(createDuty(request));
     }
     setOpen(false);
   };
@@ -164,7 +171,8 @@ const UpsertDuty = ({ open, setOpen, dutyId, projectId }: UpsertDutyProps) => {
                 <p>Görev oluştur</p>
               ) : applicationState.application?.code ? (
                 <p>
-                  {applicationState.application?.code}-{dutyId}, Görevini düzenle
+                  {applicationState.application?.code}-{dutyId}, Görevini
+                  düzenle
                 </p>
               ) : (
                 <p>Görevi düzenle</p>
@@ -186,7 +194,7 @@ const UpsertDuty = ({ open, setOpen, dutyId, projectId }: UpsertDutyProps) => {
                 />
                 <InputTextarea
                   control={form.control}
-                  placeholder="Açıklama*"
+                  placeholder="Açıklama"
                   fieldName="description"
                 />
                 <InputSelect

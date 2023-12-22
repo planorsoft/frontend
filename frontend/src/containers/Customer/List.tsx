@@ -1,6 +1,15 @@
 import { Button } from "@/components/ui/button";
 import { CustomerState } from "@/containers/Customer/types";
-import { Check, Folder, Loader, Pencil, Plus, UserCog, X } from "lucide-react";
+import {
+  Check,
+  CircleSlash,
+  Folder,
+  Loader,
+  Pencil,
+  Plus,
+  UserCog,
+  X,
+} from "lucide-react";
 import { useEffect, useState } from "react";
 import Upsert from "@/containers/Customer/Upsert";
 import useTitle from "@/hooks/use-title";
@@ -19,6 +28,7 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { profileImageGenerator } from "@/lib/profile-image";
 import { useNavigate } from "react-router-dom";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
 interface ListProps extends React.HTMLAttributes<HTMLDivElement> {
   type: "real" | "potential";
@@ -73,7 +83,7 @@ const List = ({ type }: ListProps) => {
       </div>
       {loading ? (
         <Loader className="w-8 h-8 animate-spin mx-auto mt-10" />
-      ) : (
+      ) : customerState.customers.length > 0 ? (
         <>
           <Table>
             <TableCaption>
@@ -91,67 +101,66 @@ const List = ({ type }: ListProps) => {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {customerState.customers.length > 0 &&
-                customerState.customers.map((customer) => (
-                  <TableRow key={customer.id}>
-                    <TableCell>{customer.id}</TableCell>
-                    <TableCell>
-                      <Avatar className="ml-2 h-7 w-7 max-[320px]:hidden">
-                        <AvatarImage
-                          src={
-                            customer.imageUri ||
-                            profileImageGenerator(customer.name)
-                          }
-                        />
-                        <AvatarFallback>
-                          <Loader className="w-8 h-8 animate-spin" />
-                        </AvatarFallback>
-                      </Avatar>
-                    </TableCell>
-                    <TableCell>{customer.name}</TableCell>
-                    <TableCell>
-                      {customer.isCompany ? (
-                        <div className="text-right font-medium">
-                          <Check />
-                        </div>
-                      ) : (
-                        <div className="text-right font-medium">
-                          <X />
-                        </div>
-                      )}
-                    </TableCell>
-                    <TableCell>{customer.city}</TableCell>
-                    <TableCell className="flex gap-1">
-                      <>
-                        <Button
-                          variant="outline"
-                          size="icon"
-                          onClick={() => select(customer.id || 0)}
-                        >
-                          <Pencil className="w-4 h-4" />
-                        </Button>
-                        <Button
-                          variant="outline"
-                          size="icon"
-                          onClick={() => {
-                            select(customer.id || 0, "contact");
-                          }}
-                        >
-                          <UserCog className="w-4 h-4" />
-                        </Button>
-                        <Button
-                          variant="outline"
-                          size="icon"
-                          onClick={() => {
-                            navigate(`/projects/${customer.id}`);
-                          }}
-                        >
-                          <Folder className="w-4 h-4" />
-                        </Button>
-                      </>
-                    </TableCell>
-                  </TableRow>
-                ))}
+              {customerState.customers.map((customer) => (
+                <TableRow key={customer.id}>
+                  <TableCell>{customer.id}</TableCell>
+                  <TableCell>
+                    <Avatar className="ml-2 h-7 w-7 max-[320px]:hidden">
+                      <AvatarImage
+                        src={
+                          customer.imageUri ||
+                          profileImageGenerator(customer.name)
+                        }
+                      />
+                      <AvatarFallback>
+                        <Loader className="w-8 h-8 animate-spin" />
+                      </AvatarFallback>
+                    </Avatar>
+                  </TableCell>
+                  <TableCell>{customer.name}</TableCell>
+                  <TableCell>
+                    {customer.isCompany ? (
+                      <div className="text-right font-medium">
+                        <Check />
+                      </div>
+                    ) : (
+                      <div className="text-right font-medium">
+                        <X />
+                      </div>
+                    )}
+                  </TableCell>
+                  <TableCell>{customer.city}</TableCell>
+                  <TableCell className="flex gap-1">
+                    <>
+                      <Button
+                        variant="outline"
+                        size="icon"
+                        onClick={() => select(customer.id || 0)}
+                      >
+                        <Pencil className="w-4 h-4" />
+                      </Button>
+                      <Button
+                        variant="outline"
+                        size="icon"
+                        onClick={() => {
+                          select(customer.id || 0, "contact");
+                        }}
+                      >
+                        <UserCog className="w-4 h-4" />
+                      </Button>
+                      <Button
+                        variant="outline"
+                        size="icon"
+                        onClick={() => {
+                          navigate(`/projects/${customer.id}`);
+                        }}
+                      >
+                        <Folder className="w-4 h-4" />
+                      </Button>
+                    </>
+                  </TableCell>
+                </TableRow>
+              ))}
             </TableBody>
           </Table>
           <div className="flex items-center justify-end space-x-2 py-4">
@@ -177,8 +186,15 @@ const List = ({ type }: ListProps) => {
             </Button>
           </div>
         </>
+      ) : (
+        <Alert>
+          <CircleSlash className="h-4 w-4" />
+          <AlertTitle>Müşteri bulunamadı!</AlertTitle>
+          <AlertDescription>
+            Yukarıdaki butondan ilk müşterini oluşturabilirsin
+          </AlertDescription>
+        </Alert>
       )}
-
       {open && <Upsert open={open} setOpen={setOpen} customerId={id} />}
       {openContacts && (
         <UpsertContacts

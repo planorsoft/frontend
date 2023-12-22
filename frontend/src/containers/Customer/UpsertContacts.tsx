@@ -13,7 +13,7 @@ import { Button } from "@/components/ui/button";
 import InputString from "@/components/ui/input-string";
 import { toast } from "@/components/ui/use-toast";
 import Loader from "@/components/ui/loader";
-import { LoaderIcon, Plus, Trash2 } from "lucide-react";
+import { CircleSlash, ExternalLink, LoaderIcon, Plus, Trash2 } from "lucide-react";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Contact, CustomerState, customerTypes } from "./types";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -26,6 +26,8 @@ import {
   inviteContact,
   resetCustomerStatus,
 } from "./actions";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import InputPhone from "@/components/ui/input-phone";
 
 const formSchema = z.object({
   name: z
@@ -47,6 +49,7 @@ const formSchema = z.object({
     .nonempty({
       message: "Lütfen geçerli bir email adresi giriniz.",
     }),
+  phoneNumber: z.string().optional(),
 });
 
 interface UpsertContactsProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -70,6 +73,7 @@ const UpsertContacts = ({ open, setOpen, customerId }: UpsertContactsProps) => {
     defaultValues: {
       name: "",
       email: "",
+      phoneNumber: "",
     },
   });
 
@@ -133,6 +137,7 @@ const UpsertContacts = ({ open, setOpen, customerId }: UpsertContactsProps) => {
       ...values,
       username: values.email.split("@")[0],
     };
+    console.log(request);
     dispatch(createContact(customerId, request));
   };
 
@@ -182,6 +187,11 @@ const UpsertContacts = ({ open, setOpen, customerId }: UpsertContactsProps) => {
                         placeholder="Email*"
                         fieldName="email"
                       />
+                      <InputPhone
+                        control={form.control}
+                        placeholder="Telefon"
+                        fieldName="phoneNumber"
+                      />
                       {customerId === 0 ? (
                         <Button
                           disabled={loading}
@@ -227,7 +237,11 @@ const UpsertContacts = ({ open, setOpen, customerId }: UpsertContactsProps) => {
                               </AvatarFallback>
                             </Avatar>
                             <h4>{contact.name}</h4>
-                            <p className="text-gray-500">{contact.email}</p>
+                            <a href={`mailto:${contact.email}`} className="text-muted-foreground flex justify-start items-center">
+                              <ExternalLink className="mr-2 w-4 h-4" />
+                              {contact.email}
+                            </a>
+                            <p className="text-muted-foreground">{contact.phoneNumber || "؜"}</p>
                           </CardContent>
                           <CardFooter className="p-2 pt-0">
                             <div className="grid grid-cols-12 gap-1 w-full">
@@ -256,9 +270,14 @@ const UpsertContacts = ({ open, setOpen, customerId }: UpsertContactsProps) => {
                         </Card>
                       ))
                     ) : (
-                      <h4 className="text-center whitespace-nowrap text-muted-foreground">
-                        İletişim bulunamadı
-                      </h4>
+                      <Alert className="col-span-12 mt-5">
+                        <CircleSlash className="h-4 w-4" />
+                        <AlertTitle>İletişim bulunamadı!</AlertTitle>
+                        <AlertDescription>
+                          Yukarıdaki butondan ilk iletişim kişisini
+                          oluşturabilirsin
+                        </AlertDescription>
+                      </Alert>
                     )}
                   </div>
                 )}

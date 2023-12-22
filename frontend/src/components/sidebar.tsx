@@ -45,7 +45,7 @@ export function Sidebar({ sidebar, setSidebarOpen, className }: SidebarProps) {
   return (
     <div
       className={cn(
-        "pb-12 absolute w-full sm:w-fit h-screen left-0 bg-background top-10 border-t border-r z-50 sm:relative sm:top-0 sm:border-t-0",
+        "pb-12 absolute w-full sm:w-fit h-[calc(100vh-2.5rem)] left-0 bg-background top-10 border-t border-r z-50 sm:relative sm:top-0 sm:border-t-0",
         className
       )}
     >

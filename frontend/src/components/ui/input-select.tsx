@@ -51,7 +51,7 @@ export function InputSelect({
                   <SelectValue placeholder={placeholder} />
                 </SelectTrigger>
               </FormControl>
-              <SelectContent>
+              <SelectContent className="overflow-y-auto max-h-[10rem]">
                 {selectList.map((item, index) => (
                   <SelectItem key={index} value={item.value}>
                     {item.label}

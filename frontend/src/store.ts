@@ -7,6 +7,7 @@ import thunk from "redux-thunk";
 
 import { identityReducer } from "@/containers/Identity/reducer";
 import { customerReducer } from "./containers/Customer/reducer";
+import { projectReducer } from "./containers/Project/reducer";
 import { dutySizeReducer, dutyCategoryReducer, dutyReducer } from "@/containers/Duty/reducer";
 import { applicationReducer } from "@/containers/Settings/Application/reducer";
 import { currencyReducer } from "@/containers/Settings/Currency/reducer";
@@ -16,6 +17,7 @@ import { calendarReducer } from "./containers/Calendar/reducer";
 const rootReducer = combineReducers({
     identity: identityReducer,
     customerState: customerReducer,
+    projectState: projectReducer,
     dutyState: dutyReducer,
     dutyCategoryState: dutyCategoryReducer,
     dutySizeState: dutySizeReducer,

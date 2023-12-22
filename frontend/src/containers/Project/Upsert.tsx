@@ -7,38 +7,49 @@ import {
   DialogHeader,
   Dialog,
 } from "@/components/ui/dialog";
-import { createProject, getProject, updateProject } from "./service";
 import { Form } from "@/components/ui/form";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import InputString from "@/components/ui/input-string";
 import InputBoolean from "@/components/ui/input-boolean";
 import { toast } from "@/components/ui/use-toast";
-import { AxiosError } from "axios";
 import Loader from "@/components/ui/loader";
 import { LoaderIcon, Trash2 } from "lucide-react";
-import InputNumber from "@/components/ui/input-number";
 import Remove from "@/components/remove";
 import { InputServerSelect } from "@/components/ui/input-server-select";
+import { useAppDispatch, useAppSelector } from "@/store";
+import { ProjectState, projectTypes } from "./types";
+import {
+  createProject,
+  getProject,
+  resetProjectStatus,
+  updateProject,
+} from "./actions";
 
 const formSchema = z.object({
   id: z.number(),
   title: z.string().nonempty({ message: "Lütfen geçerli bir başlık giriniz" }),
   description: z.string(),
   isCompleted: z.boolean(),
-  customerId: z.string().nonempty({ message: "Lütfen geçerli bir müşteri seçiniz" }),
+  customerId: z
+    .string()
+    .nonempty({ message: "Lütfen geçerli bir müşteri seçiniz" }),
   price: z.string(),
 });
 
 interface UpsertProps extends React.HTMLAttributes<HTMLDivElement> {
   open: boolean;
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  projectId: number;
-  customerId: string | undefined;
+  projectId?: number;
 }
 
-const Upsert = ({ open, setOpen, projectId, customerId }: UpsertProps) => {
-  const [loading, setLoading] = useState(false);
+const Upsert = ({ open, setOpen, projectId }: UpsertProps) => {
+  const dispatch = useAppDispatch();
+  const projectState = useAppSelector<ProjectState>(
+    (state) => state.projectState
+  );
+  const loading = projectState.loading;
+  const project = projectState.project;
   const [remove, setRemove] = useState<boolean>();
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -54,75 +65,71 @@ const Upsert = ({ open, setOpen, projectId, customerId }: UpsertProps) => {
   });
 
   useEffect(() => {
-    getProjectRequest();
+    if (!projectId) return;
+    if (!project) {
+      dispatch(getProject(projectId));
+    } else if (project.id !== projectId) {
+      dispatch(getProject(projectId));
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [projectId]);
 
-  const getProjectRequest = async () => {
-    if (projectId != 0) {
-      setLoading(true);
-      try {
-        const result = await getProject(projectId);
-        form.setValue("id", result?.id);
-        form.setValue("title", result?.title);
-        form.setValue("description", result?.description);
-        form.setValue("isCompleted", result?.isCompleted);
-        form.setValue("customerId", result?.customerId.toString() || "");
-        form.setValue("price", result?.price.toString() || "0");
-      } catch (error) {
-        if (!(error instanceof AxiosError)) {
-          throw error;
-        }
-        toast({
-          title: "Hata oluştu",
-          description: error.response?.data.detail,
-          variant: "destructive",
-        });
-      }
-      setLoading(false);
+  useEffect(() => {
+    if (project) {
+      form.setValue("id", project.id || 0);
+      form.setValue("title", project.title || "");
+      form.setValue("description", project.description || "");
+      form.setValue("isCompleted", project.isCompleted || false);
+      form.setValue("customerId", project.customerId.toString() || "");
+      form.setValue("price", project.price.toString() || "0");
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [project]);
+
+  const onSubmit = (values: z.infer<typeof formSchema>) => {
+    if (remove) return;
+    const request = {
+      ...values,
+      price: Number(values.price),
+      customerId: Number(values.customerId),
+    };
+    if (values.id == 0) {
+      dispatch(createProject(request));
     } else {
-      form.reset();
-      form.setValue("customerId", customerId || "");
+      dispatch(updateProject(projectId, request));
     }
   };
 
-  const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    if (remove) return;
-    setLoading(true);
-    try {
-      const request = {
-        id: values.id,
-        title: values.title,
-        description: values.description,
-        isCompleted: values.isCompleted,
-        customerId: parseInt(values.customerId),
-        price: parseInt(values.price),
-      };
-
-      if (projectId === 0) {
-        await createProject(request);
+  useEffect(() => {
+    switch (projectState.status) {
+      case projectTypes.UPDATE_PROJECT_FAILURE ||
+        projectTypes.CREATE_PROJECT_FAILURE ||
+        null:
         toast({
-          title: "Proje oluşturuldu",
+          title: "Hata oluştu",
+          description: projectState.error,
+          variant: "destructive",
         });
-      } else {
-        await updateProject(values.id, request);
+        break;
+      case projectTypes.UPDATE_PROJECT_SUCCESS:
         toast({
           title: "Proje güncellendi",
         });
-      }
-      setOpen(false);
-      window.location.reload();
-    } catch (error) {
-      if (!(error instanceof AxiosError)) {
-        throw error;
-      }
-      toast({
-        title: "Hata oluştu",
-        description: error.response?.data.detail,
-        variant: "destructive",
-      });
+        setOpen(false);
+        dispatch(resetProjectStatus());
+        break;
+      case projectTypes.CREATE_PROJECT_SUCCESS:
+        toast({
+          title: "Proje oluşturuldu",
+        });
+        setOpen(false);
+        dispatch(resetProjectStatus());
+        break;
+      default:
+        break;
     }
-    setLoading(false);
-  };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [projectState.status]);
 
   const onDeleted = () => {
     setRemove(false);

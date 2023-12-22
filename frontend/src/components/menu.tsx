@@ -43,7 +43,7 @@ export function Menu({ toggleSidebar }: MenuProps) {
   }, []);
 
   return (
-    <Menubar className="rounded-none border-b border-none flex justify-between">
+    <Menubar className="rounded-none border-b border-none flex justify-between h-10">
       <div className="flex items-center gap-2">
         <div>
           <Button variant="ghost" size="icon" onClick={toggleSidebar}>

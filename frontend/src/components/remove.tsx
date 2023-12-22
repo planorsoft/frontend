@@ -11,7 +11,7 @@ import {
 import { deleteEvent } from "@/containers/Calendar/actions";
 import { deleteCustomer } from "@/containers/Customer/actions";
 import { deleteDuty, deleteDutyCategory } from "@/containers/Duty/actions";
-import { deleteProject } from "@/containers/Project/service";
+import { deleteProject } from "@/containers/Project/actions";
 import { deleteCurrency } from "@/containers/Settings/Currency/actions";
 import { useAppDispatch } from "@/store";
 import { Dispatch, SetStateAction } from "react";
@@ -39,9 +39,7 @@ const Remove = ({
         dispatch(deleteCustomer(entityId));
         break;
       case "project":
-        deleteProject(entityId).then(() => {
-          window.location.reload();
-        });
+        dispatch(deleteProject(entityId));
         break;
       case "duty":
         dispatch(deleteDuty(entityId));
