@@ -62,11 +62,6 @@ const List = ({ type }: ListProps) => {
     }
   };
 
-  const openUpsert = () => {
-    setId(0);
-    setOpen(true);
-  };
-
   const fetchPage = (page: number) => {
     dispatch(getCustomers(isPotential, page));
   };
@@ -77,7 +72,7 @@ const List = ({ type }: ListProps) => {
         <h2 className="text-xl md:text-2xl font-semibold">
           {type === "real" ? "Müşteriler" : "Potansiyel Müşteriler"}
         </h2>
-        <Button onClick={openUpsert}>
+        <Button onClick={() => { select(0) }}>
           <Plus size={16} /> Yeni Müşteri
         </Button>
       </div>

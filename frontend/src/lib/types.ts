@@ -9,3 +9,8 @@ export interface Pagination {
 export interface PaginatedList<T> extends Pagination {
     items: T[];
 }
+
+export interface SelectList {
+    value: string;
+    label: string;
+}

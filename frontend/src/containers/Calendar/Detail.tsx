@@ -6,7 +6,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { useAppDispatch, useAppSelector } from "@/store";
-import { ExternalLink, Loader, Pencil } from "lucide-react";
+import { ExternalLink, Info, MapPin, Pencil, Users } from "lucide-react";
 import { CalendarState } from "./types";
 import { selectEventById } from "./selector";
 import { DateTime } from "luxon";
@@ -41,23 +41,83 @@ const Detail = ({ open, setOpen, setUpsertOpen, eventId }: DetailProps) => {
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogContent className="w-screen m-2 md:w-6/12">
         <DialogHeader className="text-left">
-          <DialogTitle>
-            {event?.title},{" "}
-            <span className="text-slate-400">{start.toRelative()}</span>
+          <DialogTitle className="flex flex-col space-y-1.5 pb-3">
+            <p className="font-semibold leading-none tracking-tight">
+              {event?.title}
+            </p>
+            <p className="text-sm text-muted-foreground">
+              {start.toLocaleString(DateTime.DATETIME_SHORT)},{" "}
+              {start.toRelative()}
+            </p>
           </DialogTitle>
-          <p>{event?.description}</p>
-          {event?.location &&
-            (isUrl(event.location) ? (
-              <a
-                href={event.location}
-                className="flex justify-start items-center my-3"
-              >
-                <ExternalLink className="mr-2 w-4 h-4" />
-                <span>{event?.location}</span>
-              </a>
-            ) : (
-              <p>Konum: {event?.location}</p>
-            ))}
+          <div className="pt-0 grid gap-1">
+            {event?.description && (
+              <div className="my-3 flex items-start space-x-4 rounded-md transition-all">
+                <Info className="w-6 h-6 mt-px" />
+                <div className="space-y-2">
+                  <p className="text-sm font-medium leading-none">Açıklama:</p>
+                  <p className="text-sm text-muted-foreground">
+                    {event?.description}
+                  </p>
+                </div>
+              </div>
+            )}
+
+            {event?.location && (
+              <div className="my-3 flex items-start space-x-4 rounded-md transition-all">
+                {isUrl(event.location) ? (
+                  <ExternalLink className="w-6 h-6 mt-px" />
+                ) : (
+                  <MapPin className="w-6 h-6 mt-px" />
+                )}
+                <div className="space-y-2">
+                  <p className="text-sm font-medium leading-none">
+                    Konum | Link:
+                  </p>
+                  <div className="text-sm text-muted-foreground">
+                    {isUrl(event.location) ? (
+                      <a
+                        href={event.location}
+                        className="flex justify-start items-center my-3"
+                      >
+                        <ExternalLink className="mr-2 w-4 h-4" />
+                        <span>{event?.location}</span>
+                      </a>
+                    ) : (
+                      <p>Konum: {event?.location}</p>
+                    )}
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {event?.attendee && event.attendee.length > 0 && (
+              <div className="my-3 flex items-start space-x-4 rounded-md transition-all">
+                <Users className="w-6 h-6 mt-px" />
+                <div className="space-y-2">
+                  <p className="text-sm font-medium leading-none">
+                    Davetli kişiler:
+                  </p>
+                  <div className="text-sm text-muted-foreground">
+                    {event?.attendee.map((attendee, index) => {
+                      console.log(attendee);
+                      return (
+                        <div key={index}>
+                          <p className="text-sm text-muted-foreground">
+                            <a href={`mailto:${attendee.email}`} className="hover:underline">
+                              {attendee.email}
+                            </a>
+                            , {attendee.name}
+                          </p>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+
           <div className="flex justify-end">
             <Button
               variant="default"

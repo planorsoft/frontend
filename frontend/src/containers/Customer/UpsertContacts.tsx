@@ -78,6 +78,7 @@ const UpsertContacts = ({ open, setOpen, customerId }: UpsertContactsProps) => {
   });
 
   useEffect(() => {
+    form.reset();
     if (!customer) {
       dispatch(getCustomer(customerId));
     } else if (customer.id !== customerId) {

@@ -185,7 +185,7 @@ const Upsert = ({ open, setOpen, customerId }: UpsertProps) => {
             </DialogTitle>
             {customerState.loading ? (
               <Loader />
-            ) : customer ? (
+            ) : (
               <Form {...form}>
                 <form
                   onSubmit={form.handleSubmit(onSubmit)}
@@ -336,10 +336,6 @@ const Upsert = ({ open, setOpen, customerId }: UpsertProps) => {
                   )}
                 </form>
               </Form>
-            ) : (
-              <h4 className="text-center whitespace-nowrap text-muted-foreground">
-                İletişim bulunamadı
-              </h4>
             )}
           </DialogHeader>
         </DialogContent>

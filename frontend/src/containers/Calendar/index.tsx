@@ -15,6 +15,7 @@ import { selectEventsByMonths } from "./selector";
 import { EventImpl } from "@fullcalendar/core/internal";
 import { DateTime } from "luxon";
 import Detail from "./Detail";
+import { Loader } from "lucide-react";
 
 const Calendar = () => {
   const dispatch = useAppDispatch();
@@ -24,6 +25,7 @@ const Calendar = () => {
   const calendarState = useAppSelector<CalendarState>(
     (state) => state.calendarState
   );
+  const loading = calendarState.loading;
   const [upsert, showUpsert] = useState<boolean>(false);
   const [detail, showDetail] = useState<boolean>(false);
   const [id, setId] = useState<number>(0);
@@ -49,7 +51,7 @@ const Calendar = () => {
   const handleDetail = (id: number = 0) => {
     setId(id);
     showDetail(true);
-  }
+  };
 
   const dateClickHandler = (arg: { date: Date }) => {
     handleUpsert(0, arg.date);
@@ -66,11 +68,13 @@ const Calendar = () => {
     } else {
       calendarRef.current?.getApi().changeView("dayGridMonth");
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
-    const currentMonth = (calendarRef.current?.getApi()?.getDate()?.getMonth() || new Date().getMonth());
+    const currentMonth =
+      calendarRef.current?.getApi()?.getDate()?.getMonth() ||
+      new Date().getMonth();
     const eventByMonth = selectEventsByMonths(calendarState, currentMonth);
     if (eventByMonth.length === 0) {
       dispatch(getEventsByMonth(currentMonth));
@@ -122,18 +126,48 @@ const Calendar = () => {
       start: DateTime.fromSeconds(event.start).toJSDate(),
       end: event.end && DateTime.fromSeconds(event.end).toJSDate(),
       color: event.color,
+      attendeeLength: event.attendee?.length,
     })),
+    eventDidMount: function (arg) {
+      // add icon before event title
+      const icon = document.createElement("span");
+      if (arg.event.extendedProps.attendeeLength > 0) {
+        icon.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-globe w-4 h-4"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/></svg>`;
+      } else {
+        icon.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-lock w-4 h-4"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>`;
+      }
+
+      const title = arg.el.querySelector(".fc-event-title");
+      title?.classList.add("flex", "flex-row", "items-start", "gap-1");
+      if (title) {
+        title.prepend(icon);
+      }
+    },
   };
 
   return (
     <div className="overflow-x-auto">
-      <FullCalendar
-        ref={calendarRef as LegacyRef<FullCalendar>}
-        plugins={[dayGridPlugin, interactionPlugin, listPlugin]}
-        {...calendarOptions}
-      />
-      <Detail open={detail} setOpen={showDetail} setUpsertOpen={showUpsert} eventId={id} />
-      <Upsert open={upsert} setOpen={showUpsert} eventId={id} date={date} />
+      {loading ? (
+        <Loader className="w-8 h-8 animate-spin mx-auto mt-10" />
+      ) : (
+        <FullCalendar
+          ref={calendarRef as LegacyRef<FullCalendar>}
+          plugins={[dayGridPlugin, interactionPlugin, listPlugin]}
+          {...calendarOptions}
+        />
+      )}
+
+      {detail && (
+        <Detail
+          open={detail}
+          setOpen={showDetail}
+          setUpsertOpen={showUpsert}
+          eventId={id}
+        />
+      )}
+      {upsert && (
+        <Upsert open={upsert} setOpen={showUpsert} eventId={id} date={date} />
+      )}
     </div>
   );
 };
