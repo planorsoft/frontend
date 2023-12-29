@@ -17,12 +17,11 @@ import { updateDutyOrders } from "./actions";
 import { Button } from "@/components/ui/button";
 import { GripHorizontal, Loader, Pencil } from "lucide-react";
 import { selectDutyByProjectId, selectDutySizeById } from "./selector";
-import { useTheme } from "@/components/theme-provider";
 import { ApplicationState } from "../Settings/Application/types";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { selectUserByEmail } from "../Settings/User/selector";
-import { UserState } from "../Settings/User/types";
 import { profileImageGenerator } from "@/lib/profile-image";
+import { UserState } from "../Settings/Team/types";
+import { selectUserByEmail } from "../Settings/Team/selector";
 
 const mapDuties = (duties: Duty[], categories: DutyCategory[]) => {
   const result = {};

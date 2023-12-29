@@ -104,10 +104,13 @@ const Detail = ({ open, setOpen, setUpsertOpen, eventId }: DetailProps) => {
                       return (
                         <div key={index}>
                           <p className="text-sm text-muted-foreground">
-                            <a href={`mailto:${attendee.email}`} className="hover:underline">
+                            <a
+                              href={`mailto:${attendee.email}`}
+                              className="hover:underline"
+                            >
                               {attendee.email}
                             </a>
-                            , {attendee.name}
+                            {attendee.name && `, ${attendee.name}`}
                           </p>
                         </div>
                       );

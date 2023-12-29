@@ -24,7 +24,11 @@ import InputBoolean from "@/components/ui/input-boolean";
 
 const formSchema = z.object({
   id: z.number().optional(),
-  code: z.string().min(2).max(10).nonempty({ message: "Lütfen bir kod giriniz" }),
+  code: z
+    .string()
+    .min(2)
+    .max(10)
+    .nonempty({ message: "Lütfen bir kod giriniz" }),
   symbol: z.string().max(10).optional(),
   rate: z.string().min(0).nonempty({ message: "Lütfen bir oran giriniz" }),
   isDefault: z.boolean(),
@@ -62,7 +66,7 @@ const UpsertCurrency = ({ open, setOpen, currencyId }: UpsertCurrencyProps) => {
     if (currencyId == 0) {
       form.reset();
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currencyId]);
 
   useEffect(() => {
@@ -129,6 +133,7 @@ const UpsertCurrency = ({ open, setOpen, currencyId }: UpsertCurrencyProps) => {
       default:
         break;
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currencyState.status]);
 
   const onDeleted = () => {

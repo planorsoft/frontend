@@ -35,7 +35,7 @@ export interface Event {
 
 export interface Attendee {
     email: string;
-    name: string;
+    name?: string;
     avatarUri?: string;
     customer?: Customer;
 }

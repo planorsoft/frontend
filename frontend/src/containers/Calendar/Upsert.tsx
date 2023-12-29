@@ -71,16 +71,11 @@ const Upsert = ({ open, setOpen, eventId, date }: UpsertProps) => {
   });
 
   useEffect(() => {
-    if (date) {
-      form.setValue("start", new Date(date));
-    } else {
-      form.setValue("start", undefined);
-    }
-  }, [date]);
-
-  useEffect(() => {
     form.reset();
-    if (eventId === 0) return;
+    if (eventId === 0) {
+      form.setValue("start", date ? new Date(date) : undefined);
+      return;
+    }
     if (!event) {
       dispatch(getEvent(eventId));
     } else if (event.id !== eventId) {

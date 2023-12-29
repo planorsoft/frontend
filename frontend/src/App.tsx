@@ -20,6 +20,7 @@ import Reports from "@/containers/Reports/Reports";
 import Application from "@/containers/Settings/Application/Container";
 import CurrencyList from "@/containers/Settings/Currency/List";
 import User from "@/containers/Settings/User/Detail";
+import Team from "@/containers/Settings/Team";
 import useDevelopmentMessage from "./hooks/use-development-message";
 import CustomerPanel from "./containers/CustomerPanel";
 import Calendar from "./containers/Calendar";
@@ -75,7 +76,7 @@ function App() {
         </Route>
         <Route path="/settings" element={<ProtectedRoute route="/settings" />}>
           <Route path="/settings" element={<Page>Ayarlar sayfası geliştirme aşamasındadır</Page>} />
-          <Route path="/settings/team" element={<Page>Ekipler sayfası geliştirme aşamasındadır</Page>} />
+          <Route path="/settings/team" element={<Page><Team /></Page>} />
           <Route path="/settings/currency" element={<Page><CurrencyList /></Page>} />
           <Route path="/settings/application" element={<Page><Application /></Page>} />
           <Route path="/settings/users/me" element={<Page><User /></Page>} />

@@ -225,7 +225,7 @@ const Upsert = ({ open, setOpen, customerId }: UpsertProps) => {
                           <AvatarImage
                             src={
                               imageUri ||
-                              profileImageGenerator(customer.name || "HG")
+                              profileImageGenerator(customer?.name || "HG")
                             }
                           />
                           <AvatarFallback>

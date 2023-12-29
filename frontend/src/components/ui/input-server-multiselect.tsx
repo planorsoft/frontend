@@ -53,6 +53,15 @@ export function InputServerMultiSelect({
           ? `(${item.customer.name}) ${item.name}`
           : item.name,
       }));
+      // if list has same label, add 1 to the end of the label
+      const sameValueList = list.filter(
+        (item: SelectList) =>
+          list.filter((i: SelectList) => i.label === item.label).length > 1
+      );
+      sameValueList.forEach((item: SelectList) => {
+        const index = list.findIndex((i: SelectList) => i.value === item.value);
+        list[index].label = `${list[index].label} ${index + 1}`;
+      });
       if (decodedToken) {
         list = list.filter(
           (item: SelectList) => item.value !== decodedToken.email
@@ -97,7 +106,7 @@ export function InputServerMultiSelect({
                 <MultiSelect
                   selected={field.value}
                   options={selectList}
-                  className="overflow-y-auto max-h-[10rem]"
+                  className=""
                   {...field}
                 />
                 <FormMessage />

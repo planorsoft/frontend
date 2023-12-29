@@ -1,8 +1,6 @@
-import { userTypes, UserAction, UserState } from "./types";
+import { CurrentUserAction, CurrentUserState, currentUserTypes } from "./types";
 
-
-const userInitalState: UserState = {
-    users: [],
+const currentUserInitalState: CurrentUserState = {
     user: {
         name: '',
         email: '',
@@ -13,88 +11,94 @@ const userInitalState: UserState = {
     status: null,
 };
 
-export const userReducer = (state = userInitalState, action: UserAction) => {
+export const currentUserReducer = (state = currentUserInitalState, action: CurrentUserAction) => {
     switch (action.type) {
-        case userTypes.GET_MY_USER_REQUEST:
-            return { 
-                ...state, 
-                loading: true 
+        case currentUserTypes.GET_MY_USER_REQUEST:
+            return {
+                ...state,
+                loading: true
             };
-        case userTypes.GET_MY_USER_SUCCESS:
-            return { 
-                ...state, 
-                loading: false, 
-                user: action.payload 
+        case currentUserTypes.GET_MY_USER_SUCCESS:
+            return {
+                ...state,
+                loading: false,
+                user: action.payload
             };
-        case userTypes.GET_MY_USER_FAILURE:
-            return { 
-                ...state, 
-                loading: false, 
-                error: action.payload };
-        case userTypes.UPDATE_MY_USER_REQUEST:
-            return { 
-                ...state, 
-                loading: true 
+        case currentUserTypes.GET_MY_USER_FAILURE:
+            return {
+                ...state,
+                loading: false,
+                error: action.payload
             };
-        case userTypes.UPDATE_MY_USER_SUCCESS:
-            return { 
-                ...state, 
-                loading: false, 
-                user: { ...state.user, name: action.payload.name }, 
-                status: userTypes.UPDATE_MY_USER_SUCCESS };
-        case userTypes.UPDATE_MY_USER_FAILURE:
-            return { 
-                ...state, 
-                loading: false, 
-                error: action.payload, 
-                status: userTypes.UPDATE_MY_USER_FAILURE };
-        case userTypes.UPDATE_AVATAR_REQUEST:
-            return { 
-                ...state, 
-                loading: true 
+        case currentUserTypes.UPDATE_MY_USER_REQUEST:
+            return {
+                ...state,
+                loading: true
             };
-        case userTypes.UPDATE_AVATAR_SUCCESS:
-            return { 
-                ...state, 
-                loading: false, 
-                user: { ...state.user, avatarUri: action.payload }, status: userTypes.UPDATE_AVATAR_SUCCESS };
-        case userTypes.UPDATE_AVATAR_FAILURE:
-            return { 
-                ...state, 
-                loading: false, 
-                error: action.payload };
-        case userTypes.DELETE_AVATAR_REQUEST:
-            return { 
-                ...state, 
-                loading: true 
+        case currentUserTypes.UPDATE_MY_USER_SUCCESS:
+            return {
+                ...state,
+                loading: false,
+                user: { ...state.user, name: action.payload.name },
+                status: currentUserTypes.UPDATE_MY_USER_SUCCESS
             };
-        case userTypes.DELETE_AVATAR_SUCCESS:
-            return { 
-                ...state, 
-                loading: false, 
-                user: { ...state.user, avatarUri: null } };
-        case userTypes.DELETE_AVATAR_FAILURE:
-            return { 
-                ...state, 
-                loading: false, 
-                error: action.payload 
+        case currentUserTypes.UPDATE_MY_USER_FAILURE:
+            return {
+                ...state,
+                loading: false,
+                error: action.payload,
+                status: currentUserTypes.UPDATE_MY_USER_FAILURE
             };
-        case userTypes.GET_TEAM_REQUEST:
-            return { 
-                ...state, 
-                loading: true 
+        case currentUserTypes.UPDATE_AVATAR_REQUEST:
+            return {
+                ...state,
+                loading: true
             };
-        case userTypes.GET_TEAM_SUCCESS:
-            return { 
-                ...state, 
-                loading: false, 
-                users: action.payload 
+        case currentUserTypes.UPDATE_AVATAR_SUCCESS:
+            return {
+                ...state,
+                loading: false,
+                user: { ...state.user, avatarUri: action.payload }, status: currentUserTypes.UPDATE_AVATAR_SUCCESS
             };
-        case userTypes.GET_TEAM_FAILURE:
-            return { 
-                ...state, 
-                loading: false, 
-                error: action.payload 
+        case currentUserTypes.UPDATE_AVATAR_FAILURE:
+            return {
+                ...state,
+                loading: false,
+                error: action.payload
+            };
+        case currentUserTypes.DELETE_AVATAR_REQUEST:
+            return {
+                ...state,
+                loading: true
+            };
+        case currentUserTypes.DELETE_AVATAR_SUCCESS:
+            return {
+                ...state,
+                loading: false,
+                user: { ...state.user, avatarUri: null }
+            };
+        case currentUserTypes.DELETE_AVATAR_FAILURE:
+            return {
+                ...state,
+                loading: false,
+                error: action.payload
+            };
+        case currentUserTypes.GET_TEAM_REQUEST:
+            return {
+                ...state,
+                loading: true
+            };
+        case currentUserTypes.GET_TEAM_SUCCESS:
+            return {
+                ...state,
+                loading: false,
+                users: action.payload
+            };
+        case currentUserTypes.GET_TEAM_FAILURE:
+            return {
+                ...state,
+                loading: false,
+                error: action.payload
             };
         default:
             return state;
