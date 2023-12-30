@@ -119,6 +119,13 @@ export const userReducer = (state = userInitalState, action: UserAction) => {
         status: userTypes.DELETE_USER_FAILURE,
         error: action.payload,
       };
+    case userTypes.RESET_TEAM_STATUS:
+      return {
+        ...state,
+        loading: false,
+        status: null,
+        error: null,
+      };
     default:
       return state;
   }
