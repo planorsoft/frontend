@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { getProjectsSummary } from "../service";
+import { Folder, Loader } from "lucide-react";
 
 const ProjectSummary = () => {
   const [loading, setLoading] = useState(true);
@@ -23,22 +24,22 @@ const ProjectSummary = () => {
   }, []);
 
   return (
-    <div className="w-full border p-2">
-      <div className="text-lg font-bold">Projeler</div>
-      <hr className="my-2" />
-      <div className="flex justify-between gap-2">
-        <div className="text-center">
-            <p>Toplam</p>
-            <p>{projectSummary.totalCount}</p>
-        </div>
-        <div className="text-center">
-            <p>Tamamlanan</p>
-            <p>{projectSummary.completedCount}</p>
-        </div>
-        <div className="text-center">
-            <p>Aktif</p>
-            <p>{projectSummary.activeCount}</p>
-        </div>
+    <div className="rounded-xl border bg-card text-card-foreground shadow">
+      <div className="p-6 flex flex-row items-center justify-between space-y-0 pb-2">
+        <h3 className="tracking-tight text-xl font-medium">Projeler</h3>
+        <Folder className="h-4 w-4 text-muted-foreground" />
+      </div>
+      <div className="p-6 pt-0">
+        {loading ? (
+          <Loader className="w-8 h-8 animate-spin mx-auto mt-10" />
+        ) : (
+          <>
+            <div className="text-2xl font-bold">Toplam {projectSummary.totalCount} proje</div>
+            <p className="text-muted-foreground mt-3">
+              {projectSummary.activeCount} aktif, {projectSummary.completedCount} tamamlanmış proje
+            </p>
+          </>
+        )}
       </div>
     </div>
   );

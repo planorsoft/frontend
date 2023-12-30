@@ -11,6 +11,7 @@ import {
 import { deleteEvent } from "@/containers/Calendar/actions";
 import { deleteCustomer } from "@/containers/Customer/actions";
 import { deleteDuty, deleteDutyCategory } from "@/containers/Duty/actions";
+import { deleteFinance, deleteFinanceCategory } from "@/containers/Finance/actions";
 import { deleteProject } from "@/containers/Project/actions";
 import { deleteCurrency } from "@/containers/Settings/Currency/actions";
 import { deleteUser } from "@/containers/Settings/Team/actions";
@@ -27,7 +28,9 @@ interface RemoveProps extends React.HTMLAttributes<HTMLDivElement> {
     | "dutyCategory"
     | "currency"
     | "event"
-    | "user";
+    | "user"
+    | "finance"
+    | "financeCategory";
   entityId?: number;
   entityIdString?: string;
   onDeleted: () => void;
@@ -72,6 +75,14 @@ const Remove = ({
       case "user":
         if (entityIdString === undefined) return;
         dispatch(deleteUser(entityIdString));
+        break;
+      case "finance":
+        if (entityId === undefined) return;
+        dispatch(deleteFinance(entityId));
+        break;
+      case "financeCategory":
+        if (entityId === undefined) return;
+        dispatch(deleteFinanceCategory(entityId));
         break;
       default:
         console.error("Entity geçersiz");
