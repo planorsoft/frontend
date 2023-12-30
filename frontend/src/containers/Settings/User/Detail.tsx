@@ -1,7 +1,5 @@
 import { useAppDispatch, useAppSelector } from "@/store";
-import { UserState } from "./types";
 import { useEffect, useState } from "react";
-import { getMyUser, updateMyUser } from "./actions";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Loader, LoaderIcon, Pencil } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -14,6 +12,8 @@ import InputString from "@/components/ui/input-string";
 import InputPassword from "@/components/ui/input-password";
 import { profileImageGenerator } from "@/lib/profile-image";
 import { toast } from "@/components/ui/use-toast";
+import { CurrentUserState } from "./types";
+import { getCurrentUser, updateCurrentUser } from "./actions";
 
 const formSchema = z.object({
   name: z.string(),
@@ -25,7 +25,9 @@ const formSchema = z.object({
 const Detail = () => {
   const [openUpsertImage, setOpenUpsertImage] = useState<boolean>(false);
   const dispatch = useAppDispatch();
-  const userState = useAppSelector<UserState>((state) => state.userState);
+  const userState = useAppSelector<CurrentUserState>(
+    (state) => state.currentUserState
+  );
   const loading = userState.loading;
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -40,7 +42,7 @@ const Detail = () => {
 
   useEffect(() => {
     if (userState.user.email === "") {
-      dispatch(getMyUser());
+      dispatch(getCurrentUser());
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -69,14 +71,14 @@ const Detail = () => {
       toast({
         title: "Güncelleme başarısız.",
         description: userState.error,
-        variant: "destructive"
+        variant: "destructive",
       });
     }
   }, [userState.status]);
 
   const onSubmit = (values: z.infer<typeof formSchema>) => {
     if (openUpsertImage) return;
-    dispatch(updateMyUser(values));
+    dispatch(updateCurrentUser(values));
   };
 
   return (
@@ -117,7 +119,12 @@ const Detail = () => {
         </div>
         <div className="col-span-3 text-center">
           <Avatar className="h-36 w-36 mx-auto mb-2">
-            <AvatarImage src={userState.user.avatarUri || profileImageGenerator(userState.user.name)} />
+            <AvatarImage
+              src={
+                userState.user.avatarUri ||
+                profileImageGenerator(userState.user.name)
+              }
+            />
             <AvatarFallback>
               <Loader className="w-8 h-8 animate-spin" />
             </AvatarFallback>

@@ -14,14 +14,15 @@ import { LoaderIcon, Trash2 } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { CalendarState } from "./types";
+import { Attendee, CalendarState } from "./types";
 import { useAppDispatch, useAppSelector } from "@/store";
 import { selectEventById } from "./selector";
-import { createEvent, updateEvent } from "./actions";
+import { createEvent, getEvent, updateEvent } from "./actions";
 import InputDateTime from "@/components/ui/input-date-time";
 import InputTextarea from "@/components/ui/input-textarea";
 import Remove from "@/components/remove";
 import { DateTime } from "luxon";
+import { InputServerMultiSelect } from "@/components/ui/input-server-multiselect";
 
 const formSchema = z.object({
   id: z.number().optional(),
@@ -33,6 +34,7 @@ const formSchema = z.object({
   end: z.date().nullish(),
   location: z.string().optional(),
   color: z.string().optional(),
+  attendee: z.array(z.string()).optional(),
 });
 
 interface UpsertProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -62,19 +64,21 @@ const Upsert = ({ open, setOpen, eventId, date }: UpsertProps) => {
       end: undefined,
       location: "",
       color: "blue",
+      attendee: [],
     },
   });
 
   useEffect(() => {
-    if (date) {
-      form.setValue("start", new Date(date));
-    } else {
-      form.setValue("start", undefined);
-    }
-  }, [date]);
-
-  useEffect(() => {
     form.reset();
+    if (eventId === 0) {
+      form.setValue("start", date ? new Date(date) : undefined);
+      return;
+    }
+    if (!event) {
+      dispatch(getEvent(eventId));
+    } else if (event.id !== eventId) {
+      dispatch(getEvent(eventId));
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [eventId]);
 
@@ -93,6 +97,10 @@ const Upsert = ({ open, setOpen, eventId, date }: UpsertProps) => {
       );
       form.setValue("location", event.location || "");
       form.setValue("color", event.color || "blue");
+      form.setValue(
+        "attendee",
+        event.attendee?.map((attendee: Attendee) => attendee.email) || []
+      );
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [event]);
@@ -117,17 +125,13 @@ const Upsert = ({ open, setOpen, eventId, date }: UpsertProps) => {
     }
 
     const request = {
-      id: values.id,
-      title: values.title,
-      description: values.description,
+      ...values,
       start: values.start
         ? DateTime.fromJSDate(values.start).toUnixInteger()
         : DateTime.now().toUnixInteger(),
       end: values.end
         ? DateTime.fromJSDate(values.end).toUnixInteger()
         : undefined,
-      location: values.location,
-      color: values.color,
     };
 
     if (values.id == 0) {
@@ -183,6 +187,12 @@ const Upsert = ({ open, setOpen, eventId, date }: UpsertProps) => {
                   placeholder="Bitiş tarihi"
                   fieldName="end"
                   disabledDate={form.watch("start")}
+                />
+                <InputServerMultiSelect
+                  control={form.control}
+                  placeholder="Katılımcı"
+                  fieldName="attendee"
+                  entity="attendee"
                 />
                 <InputSelect
                   control={form.control}

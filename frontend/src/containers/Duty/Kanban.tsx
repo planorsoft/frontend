@@ -17,12 +17,11 @@ import { updateDutyOrders } from "./actions";
 import { Button } from "@/components/ui/button";
 import { GripHorizontal, Loader, Pencil } from "lucide-react";
 import { selectDutyByProjectId, selectDutySizeById } from "./selector";
-import { useTheme } from "@/components/theme-provider";
 import { ApplicationState } from "../Settings/Application/types";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { selectUserByEmail } from "../Settings/User/selector";
-import { UserState } from "../Settings/User/types";
 import { profileImageGenerator } from "@/lib/profile-image";
+import { UserState } from "../Settings/Team/types";
+import { selectUserByEmail } from "../Settings/Team/selector";
 
 const mapDuties = (duties: Duty[], categories: DutyCategory[]) => {
   const result = {};
@@ -52,7 +51,7 @@ const mapColumns = (columns: object) => {
 interface KanbanProps extends React.HTMLAttributes<HTMLDivElement> {
   openUpsertDuty: (id: number) => void;
   openUpsertDutyCategory: (id: number) => void;
-  projectId?: string;
+  projectId: number;
 }
 
 function Kanban({
@@ -119,14 +118,11 @@ function Kanban({
 
   return (
     <>
-      <div className="flex justify-start w-full gap-4 overflow-y-auto min-h-screen">
+      <div className="flex justify-start w-full gap-4 max-h-[calc(100vh-12rem)] overflow-x-auto overflow-y-auto">
         <DragDropContext onDragEnd={(result) => onDragEnd(result)}>
           {Object.entries(columns).map(([columnId, column], index) => {
             return (
-              <div
-                className="flex flex-col border rounded p-4 duties-center"
-                key={columnId}
-              >
+              <div className="border flex flex-col rounded p-4 h-max" key={columnId}>
                 <div className="flex justify-between items-center group h-10">
                   <h2>{column.name}</h2>
                   <div className="w-10 h-10 flex items-center justify-center">
@@ -188,27 +184,27 @@ function Kanban({
                                         </span>
                                       )}
                                       <div className="flex justify-center gap-2">
-                                      <p className="dark:text-gray-400 text-gray-700">
-                                        {
-                                          selectDutySizeById(
-                                            dutySizeState,
-                                            item.sizeId
-                                          )?.name
-                                        }
-                                      </p>
-                                      {user && (
-                                        <Avatar className="h-7 w-7 max-[320px]:hidden">
-                                          <AvatarImage
-                                            src={
-                                              user.avatarUri ||
-                                              profileImageGenerator(user.name)
-                                            }
-                                          />
-                                          <AvatarFallback>
-                                            <Loader className="w-8 h-8 animate-spin" />
-                                          </AvatarFallback>
-                                        </Avatar>
-                                      )}
+                                        <p className="dark:text-gray-400 text-gray-700">
+                                          {
+                                            selectDutySizeById(
+                                              dutySizeState,
+                                              item.sizeId
+                                            )?.name
+                                          }
+                                        </p>
+                                        {user && (
+                                          <Avatar className="h-7 w-7 max-[320px]:hidden">
+                                            <AvatarImage
+                                              src={
+                                                user.avatarUri ||
+                                                profileImageGenerator(user.name)
+                                              }
+                                            />
+                                            <AvatarFallback>
+                                              <Loader className="w-8 h-8 animate-spin" />
+                                            </AvatarFallback>
+                                          </Avatar>
+                                        )}
                                       </div>
                                     </div>
                                   </div>

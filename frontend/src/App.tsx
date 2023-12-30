@@ -20,9 +20,12 @@ import Reports from "@/containers/Reports/Reports";
 import Application from "@/containers/Settings/Application/Container";
 import CurrencyList from "@/containers/Settings/Currency/List";
 import User from "@/containers/Settings/User/Detail";
+import Team from "@/containers/Settings/Team";
 import useDevelopmentMessage from "./hooks/use-development-message";
-import CustomerPanel from "./containers/CustomerPanel";
-import Calendar from "./containers/Calendar";
+import CustomerPanel from "@/containers/CustomerPanel";
+import Calendar from "@/containers/Calendar";
+import Finance from "@/containers/Finance/List";
+import FinanceCategory from "@/containers/Finance/CategoryList";
 
 
 function UseMiddleware() {
@@ -64,7 +67,13 @@ function App() {
           <Route path="/projects/:customerId" element={<Page><ProjectList /></Page>} />
         </Route>
         <Route path="/finance" element={<ProtectedRoute route="/finance" />}>
-          <Route path="/finance" element={<Page>Finans sayfası geliştirme aşamasındadır</Page>} />
+          <Route path="/finance" element={<Page><Finance type="income" /></Page>} />
+        </Route>
+        <Route path="/finance/outcome" element={<ProtectedRoute route="/finance" />}>
+          <Route path="/finance/outcome" element={<Page><Finance type="outcome" /></Page>} />
+        </Route>
+        <Route path="/finance/categories" element={<ProtectedRoute route="/finance" />}>
+          <Route path="/finance/categories" element={<Page><FinanceCategory /></Page>} />
         </Route>
         <Route path="/reports" element={<ProtectedRoute route="/reports" />}>
           <Route path="/reports" element={<Page><Reports /></Page>} />
@@ -75,7 +84,7 @@ function App() {
         </Route>
         <Route path="/settings" element={<ProtectedRoute route="/settings" />}>
           <Route path="/settings" element={<Page>Ayarlar sayfası geliştirme aşamasındadır</Page>} />
-          <Route path="/settings/team" element={<Page>Ekipler sayfası geliştirme aşamasındadır</Page>} />
+          <Route path="/settings/team" element={<Page><Team /></Page>} />
           <Route path="/settings/currency" element={<Page><CurrencyList /></Page>} />
           <Route path="/settings/application" element={<Page><Application /></Page>} />
           <Route path="/settings/users/me" element={<Page><User /></Page>} />

@@ -57,6 +57,7 @@ const ProtectedRoute = ({ route } : ProtectedRouteProps) => {
   const dispatch = useAppDispatch();
 
   useEffect(() => {
+    console.log(decodedToken, routes);
     dispatch(setToken(token));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -66,13 +67,20 @@ const ProtectedRoute = ({ route } : ProtectedRouteProps) => {
       if (decodedToken.exp < Date.now() / 1000) {
         return <Navigate to="/login" />;
       }
-      if (routes.find((item) => item.path === route)?.roles.includes("Manager") && !decodedToken.roles.includes("Manager")) {
+      const selectedRoute = routes.find((item) => item.path === route);
+      if (!selectedRoute) {
+        return <Navigate to="/login" />;
+      }
+      // routes Manager içeriyor, Employee içermiyor, decodedToken Manager içermiyor ise
+      if ((selectedRoute.roles.includes("Manager") && !selectedRoute.roles.includes("Employee")) && !decodedToken.roles.includes("Manager")) {
         return <Forbidden />;
       }
-      if (routes.find((item) => item.path === route)?.roles.includes("Employee") && !(decodedToken.roles.includes("Employee") || decodedToken.roles.includes("Manager"))) {
+      // routes Employee içeriyor, decodedToken Employee veya Manager içermiyor ise
+      if (selectedRoute.roles.includes("Employee") && !(decodedToken.roles.includes("Employee") || decodedToken.roles.includes("Manager"))) {
         return <Forbidden />;
       }
-      if (routes.find((item) => item.path === route)?.roles.includes("Customer") && !decodedToken.roles.includes("Customer")) {
+      // routes Customer içeriyor, decodedToken Customer içermiyor ise
+      if (selectedRoute.roles.includes("Customer") && !decodedToken.roles.includes("Customer")) {
         return <Forbidden />;
       }
     }

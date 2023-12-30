@@ -69,7 +69,7 @@ export const dutyTypes = {
 export interface Duty {
     id: number;
     title: string;
-    description: string;
+    description?: string;
     sizeId?: number;
     size?: DutySize;
     priorityId?: number;

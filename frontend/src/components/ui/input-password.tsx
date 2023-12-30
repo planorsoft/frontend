@@ -17,6 +17,7 @@ interface InputPasswordProps extends React.HTMLAttributes<HTMLDivElement> {
   placeholder: string;
   fieldName: string;
   disabled?: boolean;
+  disableAutoComplete?: boolean;
 }
 
 const InputPassword = ({
@@ -24,6 +25,7 @@ const InputPassword = ({
   placeholder,
   fieldName,
   disabled,
+  disableAutoComplete
 }: InputPasswordProps) => {
   const [showPassword, setShowPassword] = useState<boolean>(false);
 
@@ -41,6 +43,7 @@ const InputPassword = ({
                 placeholder="********"
                 {...field}
                 disabled={disabled}
+                autoComplete={disableAutoComplete ? "new-password" : ""}
               />
               <Button
                 className="absolute right-0 top-0"

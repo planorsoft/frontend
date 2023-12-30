@@ -11,8 +11,8 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { toast } from "@/components/ui/use-toast";
 import UpsertDutyCategory from "./UpsertDutyCategory";
 import useTitle from "@/hooks/use-title";
-import { Project } from "../Project/types";
-import { getProject } from "../Project/service";
+import { ProjectState } from "../Project/types";
+import { getProject } from "../Project/actions";
 
 const Container = () => {
   useTitle("Görevler");
@@ -22,13 +22,14 @@ const Container = () => {
     (state) => state.dutyCategoryState
   );
   const dutySizeState = useAppSelector<DutySizeState>(state => state.dutySizeState);
+  const projectState = useAppSelector<ProjectState>((state) => state.projectState);
   const [isOpenUpsertDuty, setIsOpenUpsertDuty] = useState<boolean>(false);
   const [dutyId, setDutyId] = useState<number>(0);
-  const [isOpenUpsertDutyCategory, setIsOpenUpsertDutyCategory] =
-    useState<boolean>(false);
+  const [isOpenUpsertDutyCategory, setIsOpenUpsertDutyCategory] = useState<boolean>(false);
   const [dutyCategoryId, setDutyCategoryId] = useState<number>(0);
-  const { projectId } = useParams();
-  const [project, setProject] = useState<Project>();
+  const projectId = Number(useParams().projectId) || null;
+  const project = projectState.project;
+
 
   useEffect(() => {
     if (dutyCategoryState.dutyCategories.length === 0) {
@@ -37,14 +38,17 @@ const Container = () => {
     if (dutySizeState.dutySizes.length === 0) {
       dispatch(getDutySizes());
     }
-    if (projectId) {
-      getProject(Number(projectId)).then((data) => {
-        setProject(data);
-      });
-    } else {
-      setProject(undefined);
-    }
     dispatch(getActiveDuties(Number(projectId)));
+  }, []);
+
+  useEffect(() => {
+    if (projectId === null) return;
+    if (!project) {
+      dispatch(getProject(projectId));
+    } else if (project.id !== projectId) {
+      dispatch(getProject(projectId));
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [projectId]);
 
   const openUpsertDuty = (id: number = 0) => {
@@ -89,7 +93,7 @@ const Container = () => {
           <Kanban
             openUpsertDuty={openUpsertDuty}
             openUpsertDutyCategory={openUpsertDutyCategory}
-            projectId={projectId}
+            projectId={projectId || 0}
           />
         );
       } else {
@@ -136,13 +140,15 @@ const Container = () => {
           </Button>
         </div>
       </div>
-      <div>{renderBody()}</div>
-      <UpsertDuty
-        open={isOpenUpsertDuty}
-        setOpen={setIsOpenUpsertDuty}
-        dutyId={dutyId}
-        projectId={projectId}
-      />
+      <div className="shadow">{renderBody()}</div>
+      {isOpenUpsertDuty && (
+        <UpsertDuty
+          open={isOpenUpsertDuty}
+          setOpen={setIsOpenUpsertDuty}
+          dutyId={dutyId}
+          projectId={projectId}
+        />
+      )}
       {isOpenUpsertDutyCategory && (
         <UpsertDutyCategory
           open={isOpenUpsertDutyCategory}

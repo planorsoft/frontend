@@ -7,31 +7,32 @@ import {
   DialogHeader,
   Dialog,
 } from "@/components/ui/dialog";
-import {
-  createCustomer,
-  deleteCustomerImage,
-  getCustomer,
-  updateCustomer,
-  updateCustomerImage,
-} from "./service";
 import { Form } from "@/components/ui/form";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import InputString from "@/components/ui/input-string";
 import InputBoolean from "@/components/ui/input-boolean";
 import { toast } from "@/components/ui/use-toast";
-import { AxiosError } from "axios";
 import Loader from "@/components/ui/loader";
 import formSchema from "./formSchema";
 import { LoaderIcon, Trash2 } from "lucide-react";
 import Remove from "@/components/remove";
-import { useAppSelector } from "@/store";
+import { useAppDispatch, useAppSelector } from "@/store";
 import { CurrencyState } from "../Settings/Currency/types";
 import { InputSelect } from "@/components/ui/input-select";
 import { selectCurrencyByDefault } from "../Settings/Currency/selector";
 import { Input } from "@/components/ui/input";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { profileImageGenerator } from "@/lib/profile-image";
+import { CustomerState, customerTypes } from "./types";
+import {
+  createCustomer,
+  deleteCustomerImage,
+  getCustomer,
+  resetCustomerStatus,
+  updateCustomer,
+  updateCustomerImage,
+} from "./actions";
 
 interface UpsertProps extends React.HTMLAttributes<HTMLDivElement> {
   open: boolean;
@@ -40,12 +41,16 @@ interface UpsertProps extends React.HTMLAttributes<HTMLDivElement> {
 }
 
 const Upsert = ({ open, setOpen, customerId }: UpsertProps) => {
-  const [loading, setLoading] = useState(false);
+  const dispatch = useAppDispatch();
   const [remove, setRemove] = useState<boolean>();
   const currencyState = useAppSelector<CurrencyState>(
     (state) => state.currencyState
   );
   const defaultCurrency = selectCurrencyByDefault(currencyState);
+  const customerState = useAppSelector<CustomerState>(
+    (state) => state.customerState
+  );
+  const customer = customerState.customer;
   const [imageUri, setImageUri] = useState<string>("");
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -69,77 +74,93 @@ const Upsert = ({ open, setOpen, customerId }: UpsertProps) => {
   });
 
   useEffect(() => {
-    getCustomerRequest();
+    if (!customer) {
+      dispatch(getCustomer(customerId));
+    } else if (customer.id !== customerId) {
+      dispatch(getCustomer(customerId));
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [customerId]);
 
-  const getCustomerRequest = async () => {
-    if (customerId != 0) {
-      setLoading(true);
-      try {
-        const result = await getCustomer(customerId);
-        form.setValue("id", result?.id || 0);
-        form.setValue("name", result?.name || "");
-        form.setValue("isCompany", result?.isCompany || false);
-        form.setValue("address", result?.address || "");
-        form.setValue("city", result?.city || "");
-        form.setValue("district", result?.district || "");
-        form.setValue("postCode", result?.postCode || "");
-        form.setValue("country", result?.country || "");
-        form.setValue("phoneNumber", result?.phoneNumber || "");
-        form.setValue("website", result?.website || "");
-        form.setValue("governmentId", result?.governmentId || "");
-        form.setValue("isPotantial", result?.isPotantial || false);
-        setImageUri(result?.imageUri || "");
-        form.setValue(
-          "currencyCode",
-          result?.currencyCode || defaultCurrency?.code || ""
-        );
-      } catch (error) {
-        if (!(error instanceof AxiosError)) {
-          throw error;
-        }
-        toast({
-          title: "Hata oluştu",
-          description: error.response?.data.detail,
-          variant: "destructive",
-        });
-      }
-      setLoading(false);
+  useEffect(() => {
+    if (customer) {
+      form.setValue("id", customer.id || 0);
+      form.setValue("name", customer.name || "");
+      form.setValue("isCompany", customer.isCompany || false);
+      form.setValue("address", customer.address || "");
+      form.setValue("city", customer.city || "");
+      form.setValue("district", customer.district || "");
+      form.setValue("postCode", customer.postCode || "");
+      form.setValue("country", customer.country || "");
+      form.setValue("phoneNumber", customer.phoneNumber || "");
+      form.setValue("website", customer.website || "");
+      form.setValue("governmentId", customer.governmentId || "");
+      form.setValue("isPotantial", customer.isPotantial || false);
+      form.setValue("currencyCode", customer.currencyCode || "");
+      setImageUri(customer.imageUri || "");
+      form.setValue(
+        "currencyCode",
+        customer.currencyCode || defaultCurrency?.code || ""
+      );
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [customer]);
+
+  const onSubmit = (values: z.infer<typeof formSchema>) => {
+    if (remove) return;
+    if (values.id == 0) {
+      dispatch(createCustomer(values));
     } else {
-      form.reset();
-      form.setValue("currencyCode", defaultCurrency?.code || "");
+      dispatch(updateCustomer(customerId, values));
     }
   };
 
-  const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    if (remove) return;
-    setLoading(true);
-    try {
-      if (customerId === 0) {
-        await createCustomer(values);
+  useEffect(() => {
+    switch (customerState.status) {
+      case customerTypes.UPDATE_CUSTOMER_FAILURE ||
+        customerTypes.CREATE_CUSTOMER_FAILURE ||
+        customerTypes.UPDATE_CUSTOMER_IMAGE_FAILURE ||
+        customerTypes.DELETE_CUSTOMER_IMAGE_FAILURE ||
+        null:
         toast({
-          title: "Müşteri oluşturuldu",
+          title: "Hata oluştu",
+          description: customerState.error,
+          variant: "destructive",
         });
-      } else {
-        await updateCustomer(values.id, values);
+        break;
+      case customerTypes.UPDATE_CUSTOMER_SUCCESS:
         toast({
           title: "Müşteri güncellendi",
         });
-      }
-      setOpen(false);
-      window.location.reload();
-    } catch (error) {
-      if (!(error instanceof AxiosError)) {
-        throw error;
-      }
-      toast({
-        title: "Hata oluştu",
-        description: error.response?.data.detail,
-        variant: "destructive",
-      });
+        setOpen(false);
+        dispatch(resetCustomerStatus());
+        break;
+      case customerTypes.CREATE_CUSTOMER_SUCCESS:
+        toast({
+          title: "Müşteri oluşturuldu",
+        });
+        setOpen(false);
+        dispatch(resetCustomerStatus());
+        break;
+      case customerTypes.UPDATE_CUSTOMER_IMAGE_SUCCESS:
+        setImageUri(customer?.imageUri || "");
+        toast({
+          title: "Fotoğraf başarıyla yüklendi",
+        });
+        dispatch(resetCustomerStatus());
+        break;
+      case customerTypes.DELETE_CUSTOMER_IMAGE_SUCCESS:
+        setImageUri("");
+        toast({
+          title: "Fotoğraf başarıyla silindi",
+        });
+        dispatch(resetCustomerStatus());
+        break;
+      default:
+        break;
     }
-    setLoading(false);
-  };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [customerState.status]);
 
   const onDeleted = () => {
     setRemove(false);
@@ -147,41 +168,11 @@ const Upsert = ({ open, setOpen, customerId }: UpsertProps) => {
   };
 
   const handleUploadImage = async (file: File) => {
-    try {
-      const response = await updateCustomerImage(customerId, file);
-      setImageUri(response.data);
-      toast({
-        title: "Fotoğraf başarıyla yüklendi",
-      });
-    } catch (error) {
-      if (!(error instanceof AxiosError)) {
-        throw error;
-      }
-      toast({
-        title: "Hata oluştu",
-        description: error.response?.data.detail,
-        variant: "destructive",
-      });
-    }
+    dispatch(updateCustomerImage(customerId, file));
   };
 
   const handleRemoveImage = async () => {
-    try {
-      await deleteCustomerImage(customerId);
-      setImageUri("");
-      toast({
-        title: "Fotoğraf başarıyla silindi",
-      });
-    } catch (error) {
-      if (!(error instanceof AxiosError)) {
-        throw error;
-      }
-      toast({
-        title: "Hata oluştu",
-        description: error.response?.data.detail,
-        variant: "destructive",
-      });
-    }
+    dispatch(deleteCustomerImage(customerId));
   };
 
   return (
@@ -192,7 +183,7 @@ const Upsert = ({ open, setOpen, customerId }: UpsertProps) => {
             <DialogTitle>
               {customerId === 0 ? "Müşteri oluştur" : "Müşteri düzenle"}
             </DialogTitle>
-            {loading ? (
+            {customerState.loading ? (
               <Loader />
             ) : (
               <Form {...form}>
@@ -234,7 +225,7 @@ const Upsert = ({ open, setOpen, customerId }: UpsertProps) => {
                           <AvatarImage
                             src={
                               imageUri ||
-                              profileImageGenerator(form.getValues().name)
+                              profileImageGenerator(customer?.name || "HG")
                             }
                           />
                           <AvatarFallback>
@@ -309,8 +300,12 @@ const Upsert = ({ open, setOpen, customerId }: UpsertProps) => {
                     }))}
                   />
                   {customerId === 0 ? (
-                    <Button disabled={loading} type="submit" className="w-full">
-                      {loading && (
+                    <Button
+                      disabled={customerState.loading}
+                      type="submit"
+                      className="w-full"
+                    >
+                      {customerState.loading && (
                         <LoaderIcon className="mr-2 h-4 w-4 animate-spin" />
                       )}
                       Gönder
@@ -318,17 +313,17 @@ const Upsert = ({ open, setOpen, customerId }: UpsertProps) => {
                   ) : (
                     <div className="grid grid-cols-12 gap-2">
                       <Button
-                        disabled={loading}
+                        disabled={customerState.loading}
                         type="submit"
                         className="col-span-10"
                       >
-                        {loading && (
+                        {customerState.loading && (
                           <LoaderIcon className="mr-2 h-4 w-4 animate-spin" />
                         )}
                         Gönder
                       </Button>
                       <Button
-                        disabled={loading}
+                        disabled={customerState.loading}
                         onClick={() => {
                           setRemove(true);
                         }}

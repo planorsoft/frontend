@@ -13,11 +13,11 @@ import { useAppDispatch, useAppSelector } from "@/store";
 import { ApplicationState } from "@/containers/Settings/Application/types";
 import { useEffect } from "react";
 import { getCurrentApplication } from "@/containers/Settings/Application/actions";
-import { UserState } from "@/containers/Settings/User/types";
-import { getMyUser } from "@/containers/Settings/User/actions";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { profileImageGenerator } from "@/lib/profile-image";
 import jwtDecoder from "@/lib/jwtDecoder";
+import { CurrentUserState } from "@/containers/Settings/User/types";
+import { getCurrentUser } from "@/containers/Settings/User/actions";
 
 interface MenuProps extends React.HTMLAttributes<HTMLDivElement> {
   toggleSidebar: () => void;
@@ -30,20 +30,20 @@ export function Menu({ toggleSidebar }: MenuProps) {
   const applicationState = useAppSelector<ApplicationState>(
     (state) => state.applicationState
   );
-  const userState = useAppSelector<UserState>((state) => state.userState);
+  const currentUserState = useAppSelector<CurrentUserState>((state) => state.currentUserState);
   const decodedToken = jwtDecoder();
 
   useEffect(() => {
     if (Object.keys(applicationState.application).length <= 0) {
       dispatch(getCurrentApplication());
     }
-    if (userState.user.email === "") {
-      dispatch(getMyUser());
+    if (currentUserState.user.email === "") {
+      dispatch(getCurrentUser());
     }
   }, []);
 
   return (
-    <Menubar className="rounded-none border-b border-none flex justify-between">
+    <Menubar className="rounded-none border-b border-none flex justify-between h-10">
       <div className="flex items-center gap-2">
         <div>
           <Button variant="ghost" size="icon" onClick={toggleSidebar}>
@@ -63,22 +63,22 @@ export function Menu({ toggleSidebar }: MenuProps) {
       <div className="flex">
         <MenubarMenu>
           <MenubarTrigger className="items-center gap-2">
-            {userState.user.email === "" ? (
+            {currentUserState.user.email === "" ? (
               "Hesap"
             ) : (
               <>
                 <Avatar className="h-7 w-7 max-[320px]:hidden">
                   <AvatarImage
                     src={
-                      userState.user.avatarUri ||
-                      profileImageGenerator(userState.user.name)
+                      currentUserState.user.avatarUri ||
+                      profileImageGenerator(currentUserState.user.name)
                     }
                   />
                   <AvatarFallback>
                     <Loader className="w-8 h-8 animate-spin" />
                   </AvatarFallback>
                 </Avatar>
-                {userState.user.name}
+                {currentUserState.user.name}
               </>
             )}
           </MenubarTrigger>

@@ -60,6 +60,7 @@ export const createEvent = (data: Event) => async (dispatch: Dispatch) => {
         const result = await axios.post('/events', data);
         const response = data;
         response.id = result.data;
+        response.attendee = response.attendee?.map((item) => ({ email: item }));
         dispatch({ type: calendarTypes.CREATE_CALENDAR_EVENT_SUCCESS, payload: response });
     } catch (error: unknown) {
         if (!(error instanceof AxiosError)) { throw error; }

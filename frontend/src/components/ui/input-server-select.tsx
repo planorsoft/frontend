@@ -114,21 +114,15 @@ export function InputServerSelect({
             return (
               <FormItem>
                 <FormLabel>{placeholder}</FormLabel>
-                <Select
-                  onValueChange={field.onChange}
-                  value={id}
-                >
+                <Select onValueChange={field.onChange} value={id}>
                   <FormControl>
                     <SelectTrigger>
                       <SelectValue placeholder={placeholder} />
                     </SelectTrigger>
                   </FormControl>
-                  <SelectContent>
+                  <SelectContent className="overflow-y-auto max-h-[10rem]">
                     {selectList.map((item, index) => (
-                      <SelectItem
-                        key={index}
-                        value={item.value}
-                      >
+                      <SelectItem key={index} value={item.value}>
                         {item.label}
                       </SelectItem>
                     ))}

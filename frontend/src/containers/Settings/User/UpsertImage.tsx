@@ -10,11 +10,11 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { deleteAvatar, updateAvatar } from "./actions";
 import { Loader, Trash2 } from "lucide-react";
-import { UserState } from "./types";
 import { useRef } from "react";
 import { profileImageGenerator } from "@/lib/profile-image";
+import { CurrentUserState } from "./types";
+import { deleteCurrentUserAvatar, updateCurrentUserAvatar } from "./actions";
 
 interface UpsertImageProps extends React.HTMLAttributes<HTMLDivElement> {
   open: boolean;
@@ -24,7 +24,7 @@ interface UpsertImageProps extends React.HTMLAttributes<HTMLDivElement> {
 const UpsertImage = ({ open, setOpen }: UpsertImageProps) => {
   const ref = useRef(null);
   const dispatch = useAppDispatch();
-  const userState = useAppSelector<UserState>((state) => state.userState);
+  const currentUserState = useAppSelector<CurrentUserState>((state) => state.currentUserState);
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -45,7 +45,7 @@ const UpsertImage = ({ open, setOpen }: UpsertImageProps) => {
               onChange={(e) => {
                 console.log(e);
                 if (e.target.files) {
-                  dispatch(updateAvatar(e.target.files[0]));
+                  dispatch(updateCurrentUserAvatar(e.target.files[0]));
                 }
               }}
             />
@@ -54,8 +54,8 @@ const UpsertImage = ({ open, setOpen }: UpsertImageProps) => {
             <Avatar className="h-20 w-20 mx-auto mb-2">
               <AvatarImage
                 src={
-                  userState.user.avatarUri ||
-                  profileImageGenerator(userState.user.name)
+                  currentUserState.user.avatarUri ||
+                  profileImageGenerator(currentUserState.user.name)
                 }
               />
               <AvatarFallback>
@@ -68,10 +68,10 @@ const UpsertImage = ({ open, setOpen }: UpsertImageProps) => {
         <DialogFooter className="mt-3">
           <Button
             variant="destructive"
-            disabled={userState.user.avatarUri === null}
+            disabled={currentUserState.user.avatarUri === null}
             onClick={() => {
               ref.current.value = "";
-              dispatch(deleteAvatar());
+              dispatch(deleteCurrentUserAvatar());
             }}
           >
             <Trash2 className="w-4 h-4" />

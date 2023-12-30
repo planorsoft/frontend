@@ -1,4 +1,4 @@
-export const userTypes = {
+export const currentUserTypes = {
     GET_MY_USER_REQUEST: 'GET_MY_USER_REQUEST',
     GET_MY_USER_SUCCESS: 'GET_MY_USER_SUCCESS',
     GET_MY_USER_FAILURE: 'GET_MY_USER_FAILURE',
@@ -14,40 +14,36 @@ export const userTypes = {
     DELETE_AVATAR_REQUEST: 'DELETE_AVATAR_REQUEST',
     DELETE_AVATAR_SUCCESS: 'DELETE_AVATAR_SUCCESS',
     DELETE_AVATAR_FAILURE: 'DELETE_AVATAR_FAILURE',
-
-    GET_TEAM_REQUEST: 'GET_TEAM_REQUEST',
-    GET_TEAM_SUCCESS: 'GET_TEAM_SUCCESS',
-    GET_TEAM_FAILURE: 'GET_TEAM_FAILURE',
 }
 
 
-export interface User {
+export interface CurrentUser {
     name: string;
     email: string;
     avatarUri: string | null;
+    roleName?: string;
 }
 
-export interface UpdateUserCommand {
+export interface UpdateCurrentUserCommand {
     name: string;
     email: string;
     oldPassword?: string;
     newPassword?: string;
 }
 
-export interface UserState {
-    users: User[];
-    user: User;
+export interface CurrentUserState {
+    user: CurrentUser;
     loading: boolean;
     error: string | null;
     status: string | null;
 }
 
-export interface UserAction {
+export interface CurrentUserAction {
     type: string;
-    payload: User | string;
+    payload: CurrentUser | string;
 }
 
-export interface UserPayload {
+export interface CurrentUserPayload {
     name: string;
     email: string;
     imageUri?: string;
