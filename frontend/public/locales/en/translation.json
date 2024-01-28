@@ -1,0 +1,22 @@
+{
+    "common": {
+        "save": "Save",
+        "error-occured": "Error occured."
+    },
+    "settings": {
+        "language": {
+            "language": "Language",
+            "title": "Language settings",
+            "description": "You can update your language settings below.",
+            "en": "English",
+            "tr": "Turkish"
+        },
+        "application": {
+            "title": "Application settings",
+            "description": "You can update your application settings below.",
+            "not-found": "Application not found.",
+            "name": "Application",
+            "application-validation": "Please provide a valid application name."
+        }
+    }
+}

@@ -23,11 +23,9 @@ import {
   updateFinanceCategory,
 } from "./actions";
 import { FinanceState, financeTypes } from "./types";
+import { useTranslation } from "react-i18next";
 
-const formSchema = z.object({
-  id: z.number(),
-  name: z.string(),
-});
+
 
 interface UpsertCategoryProps extends React.HTMLAttributes<HTMLDivElement> {
   open: boolean;
@@ -35,7 +33,18 @@ interface UpsertCategoryProps extends React.HTMLAttributes<HTMLDivElement> {
   financeCategoryId: number;
 }
 
-const UpsertCategory = ({ open, setOpen, financeCategoryId }: UpsertCategoryProps) => {
+const UpsertCategory = ({
+  open,
+  setOpen,
+  financeCategoryId,
+}: UpsertCategoryProps) => {
+  const { t } = useTranslation();
+
+  const formSchema = z.object({
+    id: z.number(),
+    name: z.string().nonempty({ message: t("finance.category.model.name-validation") }),
+  });
+
   const dispatch = useAppDispatch();
   const [remove, setRemove] = useState<boolean>();
   const financeState = useAppSelector<FinanceState>(
@@ -93,21 +102,21 @@ const UpsertCategory = ({ open, setOpen, financeCategoryId }: UpsertCategoryProp
         financeTypes.CREATE_FINANCE_CATEGORY_FAILURE ||
         null:
         toast({
-          title: "Hata oluştu",
+          title: t("common.error-occured"),
           description: financeState.error,
           variant: "destructive",
         });
         break;
       case financeTypes.UPDATE_FINANCE_CATEGORY_SUCCESS:
         toast({
-          title: "Kategori güncellendi",
+          title: t("common.update-succeeded"),
         });
         setOpen(false);
         dispatch(resetFinanceStatus());
         break;
       case financeTypes.CREATE_FINANCE_CATEGORY_SUCCESS:
         toast({
-          title: "Kategori oluşturuldu",
+          title: t("common.create-succeeded"),
         });
         setOpen(false);
         dispatch(resetFinanceStatus());
@@ -129,7 +138,9 @@ const UpsertCategory = ({ open, setOpen, financeCategoryId }: UpsertCategoryProp
         <DialogContent className="overflow-y-scroll h-full w-screen m-2 md:w-6/12">
           <DialogHeader>
             <DialogTitle>
-              {financeCategoryId === 0 ? "Finans oluştur" : "Finans düzenle"}
+              {financeCategoryId === 0
+                ? t("finance.category.create")
+                : t("finance.category.edit")}
             </DialogTitle>
             {financeState.loading ? (
               <Loader />
@@ -141,7 +152,7 @@ const UpsertCategory = ({ open, setOpen, financeCategoryId }: UpsertCategoryProp
                 >
                   <InputString
                     control={form.control}
-                    placeholder="İsim"
+                    placeholder={t("finance.category.model.name")}
                     fieldName="name"
                   />
                   {financeCategoryId === 0 ? (
@@ -153,7 +164,7 @@ const UpsertCategory = ({ open, setOpen, financeCategoryId }: UpsertCategoryProp
                       {financeState.loading && (
                         <LoaderIcon className="mr-2 h-4 w-4 animate-spin" />
                       )}
-                      Gönder
+                      {t("common.save")}
                     </Button>
                   ) : (
                     <div className="grid grid-cols-12 gap-2">
@@ -165,7 +176,7 @@ const UpsertCategory = ({ open, setOpen, financeCategoryId }: UpsertCategoryProp
                         {financeState.loading && (
                           <LoaderIcon className="mr-2 h-4 w-4 animate-spin" />
                         )}
-                        Gönder
+                        {t("common.save")}
                       </Button>
                       <Button
                         disabled={financeState.loading}

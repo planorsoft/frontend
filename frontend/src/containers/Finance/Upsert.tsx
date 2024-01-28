@@ -29,16 +29,7 @@ import {
 import { DateTime } from "luxon";
 import InputNumber from "@/components/ui/input-number";
 import { InputServerSelect } from "@/components/ui/input-server-select";
-
-const formSchema = z.object({
-  id: z.number(),
-  description: z.string(),
-  amount: z.string().nonempty({ message: "Miktar giriniz" }),
-  date: z.date().nullish(),
-  categoryId: z.string().nonempty({ message: "Kategori seçiniz" }),
-  customerId: z.string(),
-  projectId: z.string(),
-});
+import { useTranslation } from "react-i18next";
 
 interface UpsertProps extends React.HTMLAttributes<HTMLDivElement> {
   open: boolean;
@@ -47,6 +38,18 @@ interface UpsertProps extends React.HTMLAttributes<HTMLDivElement> {
 }
 
 const Upsert = ({ open, setOpen, financeId }: UpsertProps) => {
+  const { t } = useTranslation();
+
+  const formSchema = z.object({
+    id: z.number(),
+    description: z.string(),
+    amount: z.string().nonempty({ message: t("finance.model.amount.validation") }),
+    date: z.date().nullish(),
+    categoryId: z.string().nonempty({ message: t("finance.model.category.validation") }),
+    customerId: z.string(),
+    projectId: z.string(),
+  });
+
   const dispatch = useAppDispatch();
   const [remove, setRemove] = useState<boolean>();
   const financeState = useAppSelector<FinanceState>(
@@ -96,7 +99,7 @@ const Upsert = ({ open, setOpen, financeId }: UpsertProps) => {
 
   useEffect(() => {
     if (finance) {
-        console.log(finance);
+      console.log(finance);
       form.setValue("id", finance.id || 0);
       form.setValue("description", finance.description || "");
       form.setValue("amount", finance.amount?.toString() || "");
@@ -139,21 +142,21 @@ const Upsert = ({ open, setOpen, financeId }: UpsertProps) => {
         financeTypes.CREATE_FINANCE_FAILURE ||
         null:
         toast({
-          title: "Hata oluştu",
+          title: t("common.error-occured"),
           description: financeState.error,
           variant: "destructive",
         });
         break;
       case financeTypes.UPDATE_FINANCE_SUCCESS:
         toast({
-          title: "Finans güncellendi",
+          title: t("common.update-succeeded"),
         });
         setOpen(false);
         dispatch(resetFinanceStatus());
         break;
       case financeTypes.CREATE_FINANCE_SUCCESS:
         toast({
-          title: "Finans oluşturuldu",
+          title: t("common.create-succeeded"),
         });
         setOpen(false);
         dispatch(resetFinanceStatus());
@@ -175,7 +178,7 @@ const Upsert = ({ open, setOpen, financeId }: UpsertProps) => {
         <DialogContent className="overflow-y-scroll h-full w-screen m-2 md:w-6/12">
           <DialogHeader>
             <DialogTitle>
-              {financeId === 0 ? "Finans oluştur" : "Finans düzenle"}
+              {financeId === 0 ? t("finance.create") : t("finance.edit")}
             </DialogTitle>
             {financeState.loading ? (
               <Loader />
@@ -187,7 +190,7 @@ const Upsert = ({ open, setOpen, financeId }: UpsertProps) => {
                 >
                   <InputSelect
                     control={form.control}
-                    placeholder="Kategori"
+                    placeholder={t("finance.model.category")}
                     fieldName="categoryId"
                     selectList={financeCategories.map(
                       (category: FinanceCategory) => ({
@@ -198,28 +201,22 @@ const Upsert = ({ open, setOpen, financeId }: UpsertProps) => {
                   />
                   <InputString
                     control={form.control}
-                    placeholder="Açıklama"
+                    placeholder={t("finance.model.description")}
                     fieldName="description"
                   />
                   <InputNumber
                     control={form.control}
-                    placeholder="Miktar"
+                    placeholder={t("finance.model.amount")}
                     fieldName="amount"
                   />
                   <InputDateTime
                     control={form.control}
-                    placeholder="Tarih"
+                    placeholder={t("finance.model.date")}
                     fieldName="date"
                   />
                   <InputServerSelect
                     control={form.control}
-                    placeholder="Finans"
-                    fieldName="customerId"
-                    entity="customer"
-                  />
-                  <InputServerSelect
-                    control={form.control}
-                    placeholder="Proje"
+                    placeholder={t("finance.model.project")}
                     fieldName="projectId"
                     entity="project"
                   />
@@ -232,7 +229,7 @@ const Upsert = ({ open, setOpen, financeId }: UpsertProps) => {
                       {financeState.loading && (
                         <LoaderIcon className="mr-2 h-4 w-4 animate-spin" />
                       )}
-                      Gönder
+                      {t("common.save")}
                     </Button>
                   ) : (
                     <div className="grid grid-cols-12 gap-2">
@@ -244,7 +241,7 @@ const Upsert = ({ open, setOpen, financeId }: UpsertProps) => {
                         {financeState.loading && (
                           <LoaderIcon className="mr-2 h-4 w-4 animate-spin" />
                         )}
-                        Gönder
+                        {t("common.save")}
                       </Button>
                       <Button
                         disabled={financeState.loading}

@@ -13,6 +13,7 @@ import {
   Currency,
   FileCheck,
   FileX,
+  Languages,
 } from "lucide-react";
 import { useAppDispatch, useAppSelector } from "@/store";
 import { getCurrencies } from "@/containers/Settings/Currency/actions";
@@ -75,13 +76,6 @@ const defaultSidebar = [
       },
     ],
   },
-  /*
-  {
-    name: "Raporlar",
-    icon: FileText,
-    to: "/reports",
-  },
-  */
   {
     name: "Ayarlar",
     icon: Settings,
@@ -102,6 +96,11 @@ const defaultSidebar = [
         icon: Currency,
         to: "/settings/currency",
       },
+      {
+        name: "Dil",
+        icon: Languages,
+        to: "/settings/language"
+      }
     ],
   },
 ];
