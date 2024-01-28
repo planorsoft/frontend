@@ -19,6 +19,7 @@ import { UserState, userTypes } from "./types";
 import { createUser, getUser, resetTeamStatus, updateUser } from "./actions";
 import InputPassword from "@/components/ui/input-password";
 import jwtDecoder from "@/lib/jwtDecoder";
+import { useTranslation } from "react-i18next";
 
 const formSchema = z.object({
   name: z.string(),
@@ -35,6 +36,8 @@ interface UpsertProps extends React.HTMLAttributes<HTMLDivElement> {
 }
 
 const Upsert = ({ open, setOpen, userEmail }: UpsertProps) => {
+  const { t } = useTranslation();
+
   const dispatch = useAppDispatch();
   const userState = useAppSelector<UserState>((state) => state.userState);
   const user = userState.user;
@@ -96,7 +99,7 @@ const Upsert = ({ open, setOpen, userEmail }: UpsertProps) => {
     switch (userState.status) {
       case userTypes.UPDATE_USER_FAILURE || userTypes.CREATE_USER_FAILURE:
         toast({
-          title: "Hata oluştu",
+          title: t("common.error-occured"),
           description: userState.error,
           variant: "destructive",
         });
@@ -104,14 +107,14 @@ const Upsert = ({ open, setOpen, userEmail }: UpsertProps) => {
         break;
       case userTypes.UPDATE_USER_SUCCESS:
         toast({
-          title: "Kullanıcı güncellendi",
+          title: t("common.update-succeeded"),
         });
         setOpen(false);
         dispatch(resetTeamStatus());
         break;
       case userTypes.CREATE_USER_SUCCESS:
         toast({
-          title: "Kullanıcı oluşturuldu",
+          title: t("common.create-succeeded"),
         });
         setOpen(false);
         dispatch(resetTeamStatus());
@@ -142,30 +145,30 @@ const Upsert = ({ open, setOpen, userEmail }: UpsertProps) => {
         <DialogHeader>
           <DialogTitle>
             {userEmail === "" ? (
-              <p>Kullanıcı oluştur</p>
+              <p>{t("settings.team.create")}</p>
             ) : (
-              <p>Kullanıcı düzenle</p>
+              <p>{t("settings.team.edit")}</p>
             )}
           </DialogTitle>
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4" autoComplete="off">
               <InputString
                 control={form.control}
-                placeholder="Email"
+                placeholder={t("settings.team.model.mail")}
                 fieldName="email"
                 disabled={!!userEmail}
                 disableAutoComplete
               />
               <InputString
                 control={form.control}
-                placeholder="İsim"
+                placeholder={t("settings.team.model.name")}
                 fieldName="name"
                 disableAutoComplete
               />
               {userEmail === "" ? (
                 <InputPassword
                   control={form.control}
-                  placeholder="Parola"
+                  placeholder={t("settings.team.model.password")}
                   fieldName="password"
                   disableAutoComplete
                 />
@@ -173,13 +176,13 @@ const Upsert = ({ open, setOpen, userEmail }: UpsertProps) => {
                 <>
                   <InputPassword
                     control={form.control}
-                    placeholder="Eski Parola"
+                    placeholder={t("settings.team.model.old-password")}
                     fieldName="oldPassword"
                     disableAutoComplete
                   />
                   <InputPassword
                     control={form.control}
-                    placeholder="Yeni Parola"
+                    placeholder={t("settings.team.model.new-password")}
                     fieldName="newPassword"
                     disableAutoComplete
                   />
@@ -190,7 +193,7 @@ const Upsert = ({ open, setOpen, userEmail }: UpsertProps) => {
                   {loading && (
                     <LoaderIcon className="mr-2 h-4 w-4 animate-spin" />
                   )}
-                  Gönder
+                  {t("common.save")}
                 </Button>
               ) : (
                 <div className="grid grid-cols-12 gap-2">
@@ -202,7 +205,7 @@ const Upsert = ({ open, setOpen, userEmail }: UpsertProps) => {
                     {loading && (
                       <LoaderIcon className="mr-2 h-4 w-4 animate-spin" />
                     )}
-                    Gönder
+                    {t("common.save")}
                   </Button>
                   <Button
                     disabled={loading}
@@ -224,7 +227,7 @@ const Upsert = ({ open, setOpen, userEmail }: UpsertProps) => {
         <Remove
           open={remove}
           setOpen={setRemove}
-          entity="currency"
+          entity="user"
           entityIdString={userEmail}
           onDeleted={onDeleted}
         />

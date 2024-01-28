@@ -9,9 +9,6 @@ const formSchema = z.object({
     })
     .max(64, {
       message: "Lütfen geçerli bir isim giriniz.",
-    })
-    .nonempty({
-      message: "Lütfen geçerli bir isim giriniz.",
     }),
   isCompany: z.boolean(),
   address: z
@@ -78,9 +75,6 @@ const formSchema = z.object({
           message: "Lütfen geçerli bir isim giriniz.",
         })
         .max(64, {
-          message: "Lütfen geçerli bir isim giriniz.",
-        })
-        .nonempty({
           message: "Lütfen geçerli bir isim giriniz.",
         }),
       email: z

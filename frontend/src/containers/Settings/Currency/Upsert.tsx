@@ -21,18 +21,8 @@ import Remove from "@/components/remove";
 import { selectCurrencyById } from "./selector";
 import InputNumber from "@/components/ui/input-number";
 import InputBoolean from "@/components/ui/input-boolean";
+import { useTranslation } from "react-i18next";
 
-const formSchema = z.object({
-  id: z.number().optional(),
-  code: z
-    .string()
-    .min(2)
-    .max(10)
-    .nonempty({ message: "Lütfen bir kod giriniz" }),
-  symbol: z.string().max(10).optional(),
-  rate: z.string().min(0).nonempty({ message: "Lütfen bir oran giriniz" }),
-  isDefault: z.boolean(),
-});
 
 interface UpsertCurrencyProps extends React.HTMLAttributes<HTMLDivElement> {
   open: boolean;
@@ -41,6 +31,20 @@ interface UpsertCurrencyProps extends React.HTMLAttributes<HTMLDivElement> {
 }
 
 const UpsertCurrency = ({ open, setOpen, currencyId }: UpsertCurrencyProps) => {
+  const { t } = useTranslation();
+
+  const formSchema = z.object({
+    id: z.number().optional(),
+    code: z
+      .string()
+      .min(2)
+      .max(10)
+      .nonempty({ message: t("settings.currency.model.code-validation") }),
+    symbol: z.string().max(10).optional(),
+    rate: z.string().min(0).nonempty({ message: t("settings.currency.model.rate-validation") }),
+    isDefault: z.boolean(),
+  });
+
   const dispatch = useAppDispatch();
   const currencyState = useAppSelector<CurrencyState>(
     (state) => state.currencyState
@@ -106,26 +110,26 @@ const UpsertCurrency = ({ open, setOpen, currencyId }: UpsertCurrencyProps) => {
     switch (currencyState.status) {
       case "UPDATE_CURRENCY_SUCCESS":
         toast({
-          title: "Döviz güncellendi",
+          title: t("common.update-succeeded"),
         });
         setOpen(false);
         break;
       case "CREATE_CURRENCY_SUCCESS":
         toast({
-          title: "Döviz oluşturuldu",
+          title: t("common.create-succeeded"),
         });
         setOpen(false);
         break;
       case "UPDATE_CURRENCY_FAILURE":
         toast({
-          title: "Hata oluştu",
+          title: t("common.error-occured"),
           description: currencyState.error,
           variant: "destructive",
         });
         break;
       case "CREATE_CURRENCY_FAILURE":
         toast({
-          title: "Hata oluştu",
+          title: t("common.error-occured"),
           description: currencyState.error,
           variant: "destructive",
         });
@@ -146,7 +150,7 @@ const UpsertCurrency = ({ open, setOpen, currencyId }: UpsertCurrencyProps) => {
       <DialogContent className="w-screen m-2 md:w-6/12">
         <DialogHeader>
           <DialogTitle>
-            {currencyId === 0 ? <p>Kur oluştur</p> : <p>Kur düzenle</p>}
+            {currencyId === 0 ? <p>{t("settings.currency.create")}</p> : <p>{t("settings.currency.edit")}</p>}
           </DialogTitle>
           {loading ? (
             <Loader />
@@ -158,22 +162,22 @@ const UpsertCurrency = ({ open, setOpen, currencyId }: UpsertCurrencyProps) => {
               >
                 <InputString
                   control={form.control}
-                  placeholder="Kod*"
+                  placeholder={`${t("settings.currency.model.code")}*`}
                   fieldName="code"
                 />
                 <InputString
                   control={form.control}
-                  placeholder="Sembol"
+                  placeholder={t("settings.currency.model.symbol")}
                   fieldName="symbol"
                 />
                 <InputNumber
                   control={form.control}
-                  placeholder="Kur*"
+                  placeholder={`${t("settings.currency.model.rate")}*`}
                   fieldName="rate"
                 />
                 <InputBoolean
                   control={form.control}
-                  placeholder="Varsayılan olarak ayarla"
+                  placeholder={t("settings.currency.model.set-default")}
                   fieldName="isDefault"
                 />
 
@@ -182,7 +186,7 @@ const UpsertCurrency = ({ open, setOpen, currencyId }: UpsertCurrencyProps) => {
                     {loading && (
                       <LoaderIcon className="mr-2 h-4 w-4 animate-spin" />
                     )}
-                    Gönder
+                    {t("common.save")}
                   </Button>
                 ) : (
                   <div className="grid grid-cols-12 gap-2">
@@ -194,7 +198,7 @@ const UpsertCurrency = ({ open, setOpen, currencyId }: UpsertCurrencyProps) => {
                       {loading && (
                         <LoaderIcon className="mr-2 h-4 w-4 animate-spin" />
                       )}
-                      Gönder
+                      {t("common.save")}
                     </Button>
                     <Button
                       disabled={loading}

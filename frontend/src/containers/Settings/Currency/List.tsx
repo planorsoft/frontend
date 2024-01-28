@@ -17,8 +17,13 @@ import {
 import { Button } from "@/components/ui/button";
 import { Check, Pencil, Plus, X } from "lucide-react";
 import Upsert from "@/containers/Settings/Currency/Upsert";
+import { useTranslation } from "react-i18next";
+import useTitle from "@/hooks/use-title";
 
 const List = () => {
+  const { t } = useTranslation();
+
+  useTitle(t("settings.currency.title"));
   const dispatch = useAppDispatch();
   const currencyState = useAppSelector<CurrencyState>((state) => state.currencyState);
   const [upsert, showUpsert] = useState<boolean>(false);
@@ -34,7 +39,7 @@ const List = () => {
   useEffect(() => {
     if (currencyState.error) {
       toast({
-        title: "Hata oluştu",
+        title: t("common.error-occured"),
         description: currencyState.error,
         variant: "destructive",
       });
@@ -52,34 +57,34 @@ const List = () => {
         <Loader />
       ) : currencyState.currencies.length == 0 ? (
         <Alert>
-          <AlertTitle>Döviz bulunamadı</AlertTitle>
+          <AlertTitle>{t("settings.currency.not-found")}</AlertTitle>
           <AlertDescription>
-            Döviz ayarlarınızı aşağıdan oluşturabilirsiniz.
+            {t("settings.currency.description")}
           </AlertDescription>
         </Alert>
       ) : (
         <>
           <div className="flex justify-between my-2">
-            <h2 className="text-2xl font-semibold">Dövizler</h2>
+            <h2 className="text-2xl font-semibold">{t("settings.currency.title")}</h2>
             <div className="flex justify-end gap-2">
               <Button
                 onClick={() => {
                   handleUpsert(0);
                 }}
               >
-                <Plus className="w-4 h-4" /> Kur
+                <Plus className="w-4 h-4" /> {t("settings.currency.create")}
               </Button>
             </div>
           </div>
           <Table>
-            <TableCaption>Sisteminizde kullanılabilir dövizler</TableCaption>
+            <TableCaption>{t("settings.currency.footer")}</TableCaption>
             <TableHeader>
               <TableRow>
-                <TableHead>Kod</TableHead>
-                <TableHead>Sembol</TableHead>
-                <TableHead>Kur / TRY</TableHead>
-                <TableHead>Varsayılan</TableHead>
-                <TableHead>Aksiyon</TableHead>
+                <TableHead>{t("settings.currency.model.code")}</TableHead>
+                <TableHead>{t("settings.currency.model.symbol")}</TableHead>
+                <TableHead>{t("settings.currency.model.rate")}</TableHead>
+                <TableHead>{t("common.default")}</TableHead>
+                <TableHead>{t("common.action")}</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>

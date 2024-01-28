@@ -11,6 +11,10 @@ export function getTenant() {
     return "";
   }
 
+  if (subdomain === "") {
+    return "";
+  }
+
   getTenantByName(subdomain).then((tenant) => {
     if (tenant === null) {
       replaceSubdomain('app');

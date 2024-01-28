@@ -18,14 +18,18 @@ import UpsertUser from "./Upsert";
 import { UserState } from "./types";
 import { getTeam } from "./actions";
 import jwtDecoder from "@/lib/jwtDecoder";
+import { useTranslation } from "react-i18next";
+import useTitle from "@/hooks/use-title";
 
 const List = () => {
+  const { t } = useTranslation();
+
+  useTitle(t("settings.team.title"));
   const dispatch = useAppDispatch();
   const userState = useAppSelector<UserState>((state) => state.userState);
   const [upsert, showUpsert] = useState<boolean>(false);
   const [id, setId] = useState<string>("");
-  const decodedToken = jwtDecoder()
-
+  const decodedToken = jwtDecoder();
 
   useEffect(() => {
     if (userState.users.length === 0) {
@@ -37,7 +41,7 @@ const List = () => {
   useEffect(() => {
     if (userState.error) {
       toast({
-        title: "Hata oluştu",
+        title: t("common.error-occured"),
         description: userState.error,
         variant: "destructive",
       });
@@ -55,21 +59,21 @@ const List = () => {
         return (
           <div className="flex flex-row items-center gap-1">
             <Shield className="w-4 h-4" />
-            <span>Yönetici</span>
+            <span>{t("settings.team.roles.manager")}</span>
           </div>
         );
       case "Employee":
         return (
           <div className="flex flex-row items-center gap-1">
             <Contact className="w-4 h-4" />
-            <span>Çalışan</span>
+            <span>{t("settings.team.roles.employee")}</span>
           </div>
         );
       default:
         return (
           <div className="flex flex-row items-center gap-1">
             <span>?</span>
-            <span>Rol bulunmuyor</span>
+            <span>{t("settings.team.roles.not-found")}</span>
           </div>
         );
     }
@@ -81,33 +85,33 @@ const List = () => {
         <Loader />
       ) : userState.users.length == 0 ? (
         <Alert>
-          <AlertTitle>Kullanıcı bulunamadı</AlertTitle>
+          <AlertTitle>{t("settings.team.roles.not-found")}</AlertTitle>
           <AlertDescription>
-            Takımınıza yukarıdan kullanıcı ekleyebilirsiniz.
+            {t("settings.team.description")}
           </AlertDescription>
         </Alert>
       ) : (
         <>
           <div className="flex justify-between my-2">
-            <h2 className="text-2xl font-semibold">Kullanıcılar</h2>
+            <h2 className="text-2xl font-semibold">{t("settings.team.title")}</h2>
             <div className="flex justify-end gap-2">
               <Button
                 onClick={() => {
                   handleUpsert("");
                 }}
               >
-                <Plus className="w-4 h-4" /> Kullanıcı
+                <Plus className="w-4 h-4" /> {t("settings.team.create")}
               </Button>
             </div>
           </div>
           <Table>
-            <TableCaption>Takımınızdaki kullanıcılar</TableCaption>
+            <TableCaption>{t("settings.team.footer")}</TableCaption>
             <TableHeader>
               <TableRow>
-                <TableHead>Mail</TableHead>
-                <TableHead>İsim</TableHead>
-                <TableHead>Rol</TableHead>
-                <TableHead>Aksiyon</TableHead>
+                <TableHead>{t("settings.team.model.mail")}</TableHead>
+                <TableHead>{t("settings.team.model.name")}</TableHead>
+                <TableHead>{t("settings.team.model.role")}</TableHead>
+                <TableHead>{t("common.action")}</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -121,7 +125,10 @@ const List = () => {
                       variant="outline"
                       size="icon"
                       onClick={() => handleUpsert(user.email)}
-                      disabled={decodedToken.roles.includes("Employee") && decodedToken.email !== user.email}
+                      disabled={
+                        decodedToken.roles.includes("Employee") &&
+                        decodedToken.email !== user.email
+                      }
                     >
                       <Pencil className="w-4 h-4" />
                     </Button>

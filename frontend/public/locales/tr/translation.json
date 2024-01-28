@@ -1,0 +1,103 @@
+{
+    "common": {
+        "save": "Kaydet",
+        "default": "Varsayılan",
+        "action": "Aksiyon",
+        "error-occured": "Hata oluştu.",
+        "update-succeeded": "Başarıyla güncellendi.",
+        "create-succeeded": "Başarıyla oluşturuldu.",
+        "next-page": "Sonraki",
+        "previous-page": "Önceki"
+    },
+    "finance": {
+        "title": "Finans",
+        "income": "Gelir",
+        "expense": "Gider",
+        "create": "İşlem oluştur",
+        "edit": "İşlem düzenle",
+        "not-found": "Finans bulunumadı.",
+        "not-found-description": "Yukarıdaki butondan ilk verini oluşturabilirsin.",
+        "model": {
+            "id": "Id",
+            "category": "Kategori",
+            "category.validation": "Lütfen geçerli bir kategori giriniz.",
+            "description": "Açıklama",
+            "amount": "Miktar",
+            "amount.validation": "Lütfen geçerli bir miktar giriniz.",
+            "date": "Tarih",
+            "project": "Proje"
+        },
+        "category": {
+            "title": "Finans Kategorileri",
+            "create": "Kategori oluştur",
+            "edit": "Kategori düzenle",
+            "not-found": "Finans kategorisi bulunamadı",
+            "not-found-description": "Yukarıdaki butondan ilk verini oluşturabilirsin",
+            "model": {
+                "id": "Id",
+                "name": "İsim",
+                "name-validation": "Lütfen geçerli bir isim giriniz."
+            }
+        }
+    },
+    "settings": {
+        "title": "Ayarlar",
+        "language": {
+            "title": "Dil Ayarları",
+            "description": "Dil ayarlarınızı aşağıdan güncelleyebilirsiniz.",
+            "model": {
+                "language": "Dil",
+                "en": "İngilizce",
+                "tr": "Türkçe"
+            }
+        },
+        "application": {
+            "title": "Uygulama Ayarları",
+            "description": "Uygulama ayarlarınızı aşağıdan güncelleyebilirsiniz.",
+            "not-found": "Uygulama bulunamadı.",
+            "model": {
+                "name": "Uygulama",
+                "name-validation": "Lütfen geçerli bir isim giriniz."
+            }
+        },
+        "currency": {
+            "title": "Dövizler",
+            "description": "Para birimi ayarlarınızı aşağıdan güncelleyebilirsiniz.",
+            "not-found": "Para birimi bulunamadı.",
+            "name": "Döviz",
+            "currency-validation": "Lütfen geçerli bir isim giriniz.",
+            "create": "Döviz Ekle",
+            "edit": "Döviz Düzenle",
+            "footer": "Sisteminizde kullanılabilir dövizler.",
+            "model": {
+                "code": "Kod",
+                "code-validation": "Lütfen geçerli bir kod giriniz.",
+                "symbol": "Sembol",
+                "rate": "Kur / TRY",
+                "rate-validation": "Lütfen geçerli bir oran giriniz.",
+                "set-default": "Varsayılan olarak ayarla"
+            }
+        },
+        "team": {
+            "title": "Takım",
+            "description": "Takımınızı aşağıdan güncelleyebilirsiniz.",
+            "not-found": "Kullanıcı bulunamadı.",
+            "create": "Kullanıcı Ekle",
+            "edit": "Kullanıcı Düzenle",
+            "footer": "Takımınızdaki kullanıcılar.",
+            "roles": {
+                "manager": "Yönetici",
+                "employee": "Çalışan",
+                "not-found": "Rol bulunamadı"
+            },
+            "model": {
+                "mail": "Mail",
+                "name": "İsim",
+                "role": "Rol",
+                "password": "Parola",
+                "old-password": "Eski Parola",
+                "new-password": "Yeni Parola"
+            }
+        }
+    }
+}

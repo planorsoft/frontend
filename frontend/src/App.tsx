@@ -21,6 +21,7 @@ import Application from "@/containers/Settings/Application/Container";
 import CurrencyList from "@/containers/Settings/Currency/List";
 import User from "@/containers/Settings/User/Detail";
 import Team from "@/containers/Settings/Team";
+import Language from "@/containers/Settings/Language";
 import useDevelopmentMessage from "./hooks/use-development-message";
 import CustomerPanel from "@/containers/CustomerPanel";
 import Calendar from "@/containers/Calendar";
@@ -88,6 +89,7 @@ function App() {
           <Route path="/settings/currency" element={<Page><CurrencyList /></Page>} />
           <Route path="/settings/application" element={<Page><Application /></Page>} />
           <Route path="/settings/users/me" element={<Page><User /></Page>} />
+          <Route path="/settings/language" element={<Page><Language /></Page>} />
         </Route>
         <Route path="/customer-panel" element={<ProtectedRoute route="/customer-panel" />}>
           <Route path="/customer-panel" element={<Page role="Customer"><CustomerPanel /></Page>} />

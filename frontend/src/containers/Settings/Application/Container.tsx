@@ -16,14 +16,18 @@ import { Form } from "@/components/ui/form";
 import InputString from "@/components/ui/input-string";
 import { Button } from "@/components/ui/button";
 import useTitle from "@/hooks/use-title";
+import { useTranslation } from "react-i18next";
 
-const formSchema = z.object({
-  id: z.number(),
-  name: z.string().nonempty({ message: "Lütfen geçerli bir isim giriniz" }),
-});
 
 const Container = () => {
-  useTitle("Uygulama ayarları");
+  const { t } = useTranslation();
+
+  const formSchema = z.object({
+    id: z.number(),
+    name: z.string().nonempty({ message: t("settings.application.model.name-validation") }),
+  });
+
+  useTitle(t("settings.application.title"));
   const dispatch = useAppDispatch();
   const applicationState = useAppSelector<ApplicationState>(
     (state) => state.applicationState
@@ -46,7 +50,7 @@ const Container = () => {
   useEffect(() => {
     if (applicationState.error) {
       toast({
-        title: "Hata oluştu",
+        title: t("common.error-occured"),
         description: applicationState.error,
         variant: "destructive",
       });
@@ -77,18 +81,18 @@ const Container = () => {
         ) : (
           <>
             <div className="flex justify-between my-2">
-              <h2 className="text-xl md:text-2xl font-semibold">Uygulama ayarları</h2>
+              <h2 className="text-xl md:text-2xl font-semibold">{t("settings.application.title")}</h2>
             </div>
             {Object.keys(applicationState.application).length == 0 ? (
               <Alert>
-                <AlertTitle>Uygulama bulunamadı</AlertTitle>
+                <AlertTitle>{t("settings.application.not-found")}</AlertTitle>
                 <AlertDescription>
-                  Uygulama ayarlarınızı aşağıdan oluşturabilirsiniz.
+                  {t("settings.application.description")}
                 </AlertDescription>
               </Alert>
             ) : (
               <p className="leading-7">
-                Uygulama ayarlarınızı aşağıdan güncelleyebilirsiniz.
+                {t("settings.application.description")}
               </p>
             )}
             <div className="mt-3">
@@ -99,11 +103,11 @@ const Container = () => {
                 >
                   <InputString
                     control={form.control}
-                    placeholder="Uygulama ismi*"
+                    placeholder={`${t("settings.application.model.name")}*`}
                     fieldName="name"
                   />
                   <Button type="submit" className="col-span-10">
-                    Gönder
+                    {t("common.save")}
                   </Button>
                 </form>
               </Form>

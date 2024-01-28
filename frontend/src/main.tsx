@@ -4,7 +4,7 @@ import { ThemeProvider } from "@/components/theme-provider";
 import { Provider } from "react-redux";
 import store from "./store";
 import { Toaster } from "@/components/ui/toaster";
-import "@/constants/localization.ts"
+import "@/constants/i18n.ts"
 
 import "@/assets/index.css";
 

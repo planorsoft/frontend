@@ -1,11 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Finance, FinanceState } from "@/containers/Finance/types";
-import {
-  CircleSlash,
-  Loader,
-  Pencil,
-  Plus,
-} from "lucide-react";
+import { CircleSlash, Loader, Pencil, Plus } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "@/store";
 import { getFinances } from "./actions";
@@ -21,12 +16,15 @@ import {
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import Upsert from "./Upsert";
 import { selectIncomes, selectOutcomes } from "./selector";
+import { useTranslation } from "react-i18next";
 
 interface ListProps extends React.HTMLAttributes<HTMLDivElement> {
   type: "income" | "outcome";
 }
 
 const List = ({ type }: ListProps) => {
+  const { t } = useTranslation();
+
   const isIncome = type === "income";
   const [open, setOpen] = useState<boolean>(false);
   const [id, setId] = useState<number>(0);
@@ -35,7 +33,9 @@ const List = ({ type }: ListProps) => {
     (state) => state.financeState
   );
   const loading = financeState.loading;
-  const finances = isIncome ? selectIncomes(financeState) : selectOutcomes(financeState);
+  const finances = isIncome
+    ? selectIncomes(financeState)
+    : selectOutcomes(financeState);
 
   useEffect(() => {
     if (financeState.finances) {
@@ -56,14 +56,14 @@ const List = ({ type }: ListProps) => {
     <div className="px-2 py-4 md:px-20 mx-auto">
       <div className="flex justify-between my-2">
         <h2 className="text-xl md:text-2xl font-semibold">
-          {type === "income" ? "Gelirler" : "Giderler"}
+          {type === "income" ? t("finance.income") : t("finance.expense")}
         </h2>
         <Button
           onClick={() => {
             select(0);
           }}
         >
-          <Plus size={16} /> Yeni Finans
+          <Plus size={16} /> {t("finance.create")}
         </Button>
       </div>
       {loading ? (
@@ -72,17 +72,17 @@ const List = ({ type }: ListProps) => {
         <>
           <Table>
             <TableCaption>
-              {type === "income" ? "Gelirler" : "Giderler"}
+              {type === "income" ? t("finance.income") : t("finance.expense")}
             </TableCaption>
             <TableHeader>
               <TableRow>
-                <TableHead>Id</TableHead>
-                <TableHead>Kategori</TableHead>
-                <TableHead>Aksiyon</TableHead>
+                <TableHead>{t("finance.model.id")}</TableHead>
+                <TableHead>{t("finance.model.category")}</TableHead>
+                <TableHead>{t("common.action")}</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
-              {finances.map((finance : Finance) => (
+              {finances.map((finance: Finance) => (
                 <TableRow key={finance.id}>
                   <TableCell>{finance.id}</TableCell>
                   <TableCell>{finance.categoryName}</TableCell>
@@ -109,7 +109,7 @@ const List = ({ type }: ListProps) => {
               }}
               disabled={!financeState.pagination.hasPreviousPage}
             >
-              Önceki
+              {t("common.next-page")}
             </Button>
             <Button
               variant="outline"
@@ -119,16 +119,16 @@ const List = ({ type }: ListProps) => {
               }}
               disabled={!financeState.pagination.hasNextPage}
             >
-              Sonraki
+              {t("common.previous-page")}
             </Button>
           </div>
         </>
       ) : (
         <Alert>
           <CircleSlash className="h-4 w-4" />
-          <AlertTitle>Finans bulunamadı!</AlertTitle>
+          <AlertTitle>{t("finance.not-found")}</AlertTitle>
           <AlertDescription>
-            Yukarıdaki butondan ilk verini oluşturabilirsin
+            {t("finance.not-found-description")}
           </AlertDescription>
         </Alert>
       )}

@@ -1,8 +1,10 @@
 import { useEffect, useState } from "react";
 import { getProjectsSummary } from "../service";
 import { Folder, Loader } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 const ProjectSummary = () => {
+  const { t } = useTranslation();
   const [loading, setLoading] = useState(true);
   const [projectSummary, setProjectSummary] = useState({
     activeCount: 0,
@@ -26,7 +28,7 @@ const ProjectSummary = () => {
   return (
     <div className="rounded-xl border bg-card text-card-foreground shadow">
       <div className="p-6 flex flex-row items-center justify-between space-y-0 pb-2">
-        <h3 className="tracking-tight text-xl font-medium">Projeler</h3>
+        <h3 className="tracking-tight text-xl font-medium">{t("Welcome to React")}</h3>
         <Folder className="h-4 w-4 text-muted-foreground" />
       </div>
       <div className="p-6 pt-0">
