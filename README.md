@@ -1,4 +1,8 @@
-# frontend
+# Planor Frontend
+
+<div align="center">
+    <img src="https://planorsoft.com/logo.svg" width="200px" height="200px">
+</div>
 
 Frontend application for planorsoft. React, Redux and Shadcn UI used for project. Every component is abstracted into its own folder into containers. in components folder, there are reusable components that are used in multiple places. constants folder responsible for storing constants. hooks folder contains custom hooks.
 
