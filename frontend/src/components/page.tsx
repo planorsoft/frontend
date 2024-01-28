@@ -11,6 +11,8 @@ import {
   Landmark,
   Settings,
   Currency,
+  FileCheck,
+  FileX,
 } from "lucide-react";
 import { useAppDispatch, useAppSelector } from "@/store";
 import { getCurrencies } from "@/containers/Settings/Currency/actions";
@@ -55,6 +57,23 @@ const defaultSidebar = [
     name: "Finans",
     icon: Landmark,
     to: "/finance",
+    child: [
+      {
+        name: "Gelir",
+        icon: FileCheck,
+        to: "/finance",
+      },
+      {
+        name: "Gider",
+        icon: FileX,
+        to: "/finance/outcome",
+      },
+      {
+        name: "Kategori",
+        icon: Folder,
+        to: "/finance/categories",
+      },
+    ],
   },
   /*
   {

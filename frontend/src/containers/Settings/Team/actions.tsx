@@ -79,3 +79,7 @@ export const deleteUser = (email: string) => async (dispatch: Dispatch) => {
         }
     }
 }
+
+export const resetTeamStatus = () => (dispatch: Dispatch) => {
+    dispatch({ type: 'RESET_TEAM_STATUS' });
+}

@@ -14,6 +14,7 @@ import { currencyReducer } from "@/containers/Settings/Currency/reducer";
 import { currentUserReducer } from "./containers/Settings/User/reducer";
 import { userReducer } from "./containers/Settings/Team/reducer";
 import { calendarReducer } from "./containers/Calendar/reducer";
+import { financeReducer } from "./containers/Finance/reducer";
 
 const rootReducer = combineReducers({
     identity: identityReducer,
@@ -27,6 +28,7 @@ const rootReducer = combineReducers({
     currentUserState: currentUserReducer,
     userState: userReducer,
     calendarState: calendarReducer,
+    financeState: financeReducer,
 });
 
 export const store = configureStore({

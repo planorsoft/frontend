@@ -4,13 +4,20 @@ import { cn } from "@/lib/utils";
 import { getTenant } from "@/lib/tenant";
 import Legal from "./legal";
 import { useState } from "react";
+import { useTheme } from "@/components/theme-provider";
 
 interface IdentityContainerProps extends React.HTMLAttributes<HTMLDivElement> {
-  type: "login" | "register" | "confirm" | "forgot-password" | "forgot-confirm-password";
+  type:
+    | "login"
+    | "register"
+    | "confirm"
+    | "forgot-password"
+    | "forgot-confirm-password";
 }
 
 function IdentityContainer({ children, type }: IdentityContainerProps) {
   const tenant = getTenant();
+  const theme = useTheme();
 
   const [usageAggrementOpen, setUsageAggrementOpen] = useState(false);
   const [privacyAggrementOpen, setPrivacyAggrementOpen] = useState(false);
@@ -40,10 +47,14 @@ function IdentityContainer({ children, type }: IdentityContainerProps) {
             Giriş yap
           </Link>
         )}
-        <div className="relative hidden h-full flex-col bg-muted p-10 text-white dark:border-r lg:flex">
-          <div className="absolute inset-0 bg-zinc-900" />
+        <div className="relative hidden h-full flex-col bg-muted p-10 dark:text-white text-dark dark:border-r lg:flex">
+          <div className="absolute inset-0 dark:bg-zinc-900 bg-zinc-100" />
           <div className="relative z-20 flex items-center text-lg font-medium">
-            <img src="logo.png" alt="Planor Logo" className="w-6 h-6 mr-2" />
+            {theme.theme === "dark" ? (
+              <img src="logo.png" alt="Planor Logo" className="w-6 h-6 mr-2" />
+            ) : (
+              <img src="logo-color.png" alt="Planor Logo" className="w-6 h-6 mr-2" />
+            )}
             {tenant ? tenant : "Planor"}
           </div>
           <div className="relative z-20 mt-auto">
@@ -71,7 +82,9 @@ function IdentityContainer({ children, type }: IdentityContainerProps) {
                 {type === "forgot-confirm-password" && "Şifreni güncelle"}
               </h1>
               <p className="text-sm text-muted-foreground">
-                {(type === "login" || type === "register" || type === "forgot-password") &&
+                {(type === "login" ||
+                  type === "register" ||
+                  type === "forgot-password") &&
                   "Lütfen bilgilerinizi giriniz."}
                 {type === "confirm" &&
                   "Mail adresine gönderdiğimiz kodu aşağıya girerek hesabını onaylayabilirsin."}

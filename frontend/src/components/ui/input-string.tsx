@@ -1,5 +1,11 @@
 import React from "react";
-import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "./form";
+import {
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "./form";
 import { Input } from "./input";
 import { Control } from "react-hook-form";
 
@@ -9,9 +15,16 @@ interface InputStringProps extends React.HTMLAttributes<HTMLDivElement> {
   placeholder: string;
   fieldName: string;
   disabled?: boolean;
+  disableAutoComplete?: boolean;
 }
 
-const InputString = ({ control, placeholder, fieldName, disabled } : InputStringProps) => {
+const InputString = ({
+  control,
+  placeholder,
+  fieldName,
+  disabled,
+  disableAutoComplete,
+}: InputStringProps) => {
   return (
     <FormField
       control={control}
@@ -20,7 +33,12 @@ const InputString = ({ control, placeholder, fieldName, disabled } : InputString
         <FormItem>
           <FormLabel>{placeholder}</FormLabel>
           <FormControl>
-            <Input placeholder={placeholder} {...field} disabled={disabled} />
+            <Input
+              placeholder={placeholder}
+              {...field}
+              disabled={disabled}
+              autoComplete={disableAutoComplete ? "new-password" : ""}
+            />
           </FormControl>
           <FormMessage />
         </FormItem>

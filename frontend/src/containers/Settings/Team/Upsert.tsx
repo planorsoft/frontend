@@ -16,13 +16,16 @@ import {
 } from "@/components/ui/dialog";
 import Remove from "@/components/remove";
 import { UserState, userTypes } from "./types";
-import { createUser, getUser, updateUser } from "./actions";
+import { createUser, getUser, resetTeamStatus, updateUser } from "./actions";
 import InputPassword from "@/components/ui/input-password";
+import jwtDecoder from "@/lib/jwtDecoder";
 
 const formSchema = z.object({
   name: z.string(),
   email: z.string().email(),
   password: z.string(),
+  oldPassword: z.string(),
+  newPassword: z.string(),
 });
 
 interface UpsertProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -37,6 +40,9 @@ const Upsert = ({ open, setOpen, userEmail }: UpsertProps) => {
   const user = userState.user;
   const loading = userState.loading;
   const [remove, setRemove] = useState<boolean>();
+  const decodedToken = jwtDecoder()
+  const isManager = decodedToken?.roles.includes("Manager");
+  const isHimself = decodedToken?.email == userEmail;
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -44,6 +50,8 @@ const Upsert = ({ open, setOpen, userEmail }: UpsertProps) => {
       name: "",
       email: "",
       password: "",
+      oldPassword: "",
+      newPassword: "",
     },
   });
 
@@ -55,8 +63,14 @@ const Upsert = ({ open, setOpen, userEmail }: UpsertProps) => {
   }, []);
 
   useEffect(() => {
-    if (!userEmail) {
+    if (userEmail === "") {
       form.reset();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [userEmail]);
+
+  useEffect(() => {
+    if (!userEmail) {
       return;
     }
     if (!user) {
@@ -68,13 +82,15 @@ const Upsert = ({ open, setOpen, userEmail }: UpsertProps) => {
   }, [userEmail]);
 
   useEffect(() => {
-    if (userState.user.email !== "") {
+    if (userState.user.email !== "" && userEmail !== "") {
       form.setValue("name", userState.user.name);
       form.setValue("email", userState.user.email);
       form.setValue("password", "");
-    }
+      form.setValue("oldPassword", "");
+      form.setValue("newPassword", "");
+    } 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [userState.user]);
+  }, [userState.user, userEmail]);
 
   useEffect(() => {
     switch (userState.status) {
@@ -84,18 +100,21 @@ const Upsert = ({ open, setOpen, userEmail }: UpsertProps) => {
           description: userState.error,
           variant: "destructive",
         });
+        dispatch(resetTeamStatus());
         break;
       case userTypes.UPDATE_USER_SUCCESS:
         toast({
           title: "Kullanıcı güncellendi",
         });
         setOpen(false);
+        dispatch(resetTeamStatus());
         break;
       case userTypes.CREATE_USER_SUCCESS:
         toast({
           title: "Kullanıcı oluşturuldu",
         });
         setOpen(false);
+        dispatch(resetTeamStatus());
         break;
       default:
         break;
@@ -129,23 +148,43 @@ const Upsert = ({ open, setOpen, userEmail }: UpsertProps) => {
             )}
           </DialogTitle>
           <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4" autoComplete="off">
               <InputString
                 control={form.control}
                 placeholder="Email"
                 fieldName="email"
-                disabled={!(!userEmail)}
+                disabled={!!userEmail}
+                disableAutoComplete
               />
               <InputString
                 control={form.control}
                 placeholder="İsim"
                 fieldName="name"
+                disableAutoComplete
               />
-              <InputPassword
-                control={form.control}
-                placeholder="Parola"
-                fieldName="password"
-              />
+              {userEmail === "" ? (
+                <InputPassword
+                  control={form.control}
+                  placeholder="Parola"
+                  fieldName="password"
+                  disableAutoComplete
+                />
+              ) : (
+                <>
+                  <InputPassword
+                    control={form.control}
+                    placeholder="Eski Parola"
+                    fieldName="oldPassword"
+                    disableAutoComplete
+                  />
+                  <InputPassword
+                    control={form.control}
+                    placeholder="Yeni Parola"
+                    fieldName="newPassword"
+                    disableAutoComplete
+                  />
+                </>
+              )}
               {userEmail === "" ? (
                 <Button disabled={loading} type="submit" className="w-full">
                   {loading && (
@@ -158,7 +197,7 @@ const Upsert = ({ open, setOpen, userEmail }: UpsertProps) => {
                   <Button
                     disabled={loading}
                     type="submit"
-                    className="col-span-10"
+                    className={(isManager && !isHimself) ? "col-span-10" : "col-span-12"}
                   >
                     {loading && (
                       <LoaderIcon className="mr-2 h-4 w-4 animate-spin" />
@@ -171,7 +210,7 @@ const Upsert = ({ open, setOpen, userEmail }: UpsertProps) => {
                       setRemove(true);
                     }}
                     variant="destructive"
-                    className="col-span-2"
+                    className={(isManager && !isHimself) ? "col-span-2" : "hidden"}
                   >
                     <Trash2 className="w-4 h-4" />
                   </Button>
@@ -181,7 +220,7 @@ const Upsert = ({ open, setOpen, userEmail }: UpsertProps) => {
           </Form>
         </DialogHeader>
       </DialogContent>
-      {remove && userEmail && (
+      {isManager && remove && userEmail && (
         <Remove
           open={remove}
           setOpen={setRemove}
