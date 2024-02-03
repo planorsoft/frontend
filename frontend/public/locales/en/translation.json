@@ -1,22 +1,111 @@
 {
     "common": {
         "save": "Save",
-        "error-occured": "Error occured."
+        "default": "Default",
+        "action": "Action",
+        "error-occured": "An error occurred.",
+        "update-succeeded": "Successfully updated.",
+        "create-succeeded": "Successfully created.",
+        "next-page": "Next",
+        "previous-page": "Previous"
+    },
+    "finance": {
+        "title": "Finance",
+        "income": "Income",
+        "expense": "Expense",
+        "create": "Create Transaction",
+        "edit": "Edit Transaction",
+        "not-found": "Finance not found.",
+        "not-found-description": "You can create your first record from the button above.",
+        "model": {
+            "id": "Id",
+            "category": "Category",
+            "category.validation": "Please enter a valid category.",
+            "description": "Description",
+            "amount": "Amount",
+            "amount.validation": "Please enter a valid amount.",
+            "date": "Date",
+            "project": "Project"
+        },
+        "category": {
+            "title": "Finance Categories",
+            "create": "Create Category",
+            "edit": "Edit Category",
+            "not-found": "Finance category not found",
+            "not-found-description": "You can create your first record from the button above",
+            "model": {
+                "id": "Id",
+                "name": "Name",
+                "name-validation": "Please enter a valid name."
+            }
+        }
     },
     "settings": {
+        "title": "Settings",
         "language": {
-            "language": "Language",
-            "title": "Language settings",
+            "title": "Language Settings",
             "description": "You can update your language settings below.",
-            "en": "English",
-            "tr": "Turkish"
+            "model": {
+                "language": "Language",
+                "en": "English",
+                "tr": "Turkish"
+            }
+        },
+        "model":{
+            "mail":"Email",
+            "name":"Name",
+            "role":"Role",
+            "password":"Password",
+            "old-password":"Old Password",
+            "new-password":"New Password"
         },
         "application": {
-            "title": "Application settings",
+            "title": "Application Settings",
             "description": "You can update your application settings below.",
             "not-found": "Application not found.",
-            "name": "Application",
-            "application-validation": "Please provide a valid application name."
+            "model": {
+                "name": "Application",
+                "name-validation": "Please enter a valid name."
+            }
+        },
+        "currency": {
+            "title": "Currencies",
+            "description": "You can update your currency settings below.",
+            "not-found": "Currency not found.",
+            "name": "Currency",
+            "currency-validation": "Please enter a valid name.",
+            "create": "Add Currency",
+            "edit": "Edit Currency",
+            "footer": "Currencies available in your system.",
+            "model": {
+                "code": "Code",
+                "code-validation": "Please enter a valid code.",
+                "symbol": "Symbol",
+                "rate": "Rate / TRY",
+                "rate-validation": "Please enter a valid rate.",
+                "set-default": "Set as Default"
+            }
+        },
+        "team": {
+            "title": "Team",
+            "description": "You can update your team below.",
+            "not-found": "User not found.",
+            "create": "Add User",
+            "edit": "Edit User",
+            "footer": "Users in your team.",
+            "roles": {
+                "manager": "Manager",
+                "employee": "Employee",
+                "not-found": "Role not found"
+            },
+            "model": {
+                "mail": "Email",
+                "name": "Name",
+                "role": "Role",
+                "password": "Password",
+                "old-password": "Old Password",
+                "new-password": "New Password"
+            }
         }
     }
 }
