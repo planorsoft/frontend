@@ -23,9 +23,9 @@ export async function useHealthCheck() {
         
         if(error.code === "ERR_NETWORK") {
           toast({
-            title: "İnternet bağlantısı yok",
+            title: "Sunucuya erişilemiyor",
             description:
-              "Lütfen internet bağlantınızı kontrol edin.",
+              "Lütfen internet bağlantınızı kontrol edin, eğer sorun devam ediyorsa planorsoft@gmail.com adresinden yaşadığınız sorunu bildirebilirsiniz.",
             variant: "destructive",
           });
           return;
@@ -39,7 +39,7 @@ export async function useHealthCheck() {
           toast({
             title: "Sunucuya erişelimiyor",
             description:
-              "Lütfen daha sonra tekrar deneyin, geliştiricilerimiz sorun üzerinde çalışıyor, yaşadığınız kötü tecrübe için özür dileriz.",
+              "Lütfen internet bağlantınızı kontrol edin, eğer sorun devam ediyorsa planorsoft@gmail.com adresinden yaşadığınız sorunu bildirebilirsiniz.",
             variant: "destructive",
           });
           return;
