@@ -10,13 +10,6 @@ export default defineConfig({
       "@": path.resolve(__dirname, "./src"),
     }
   },
-  build: {
-    rollupOptions: {
-      external: [
-        /^node:.*/,
-      ]
-    }
-  },
   server: {
     port: 3030
   }
