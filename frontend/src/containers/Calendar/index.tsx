@@ -149,6 +149,7 @@ const Calendar = () => {
   };
 
   return (
+    <div className="px-2 py-4 md:px-20 mx-auto">
     <div className="overflow-x-auto">
       {loading && <Loader className="w-8 h-8 animate-spin mx-auto mt-10" />}
       <div className={loading ? "hidden" : ""}>
@@ -169,6 +170,7 @@ const Calendar = () => {
       {upsert && (
         <Upsert open={upsert} setOpen={showUpsert} eventId={id} date={date} />
       )}
+    </div>
     </div>
   );
 };
