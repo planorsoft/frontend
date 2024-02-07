@@ -8,6 +8,7 @@ import Loader from "./loader";
 import { Attendee } from "@/containers/Calendar/types";
 import { MultiSelect } from "./mutliselect";
 import jwtDecoder from "@/lib/jwtDecoder";
+import { getTenant } from "@/lib/tenant";
 
 interface SelectList {
   value: string;
@@ -37,7 +38,7 @@ export function InputServerMultiSelect({
     try {
       setLoading(true);
       const response = await axios.get(
-        "/odata/users?$select=Name,Email&$expand=Customer($select=Name)"
+        `/odata/users?tenant=${getTenant()}?$select=Name,Email&$expand=Customer($select=Name)`
       );
       const orderByCustomerName = response.data.value.sort(
         (a: Attendee, b: Attendee) => {
