@@ -46,6 +46,7 @@ export const financeTypes = {
 
 
 export interface Finance {
+    type: string;
     id: number | null;
     categoryId: number;
     categoryName?: string;

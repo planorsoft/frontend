@@ -28,7 +28,7 @@ const ProjectSummary = () => {
   return (
     <div className="rounded-xl border bg-card text-card-foreground shadow">
       <div className="p-6 flex flex-row items-center justify-between space-y-0 pb-2">
-        <h3 className="tracking-tight text-xl font-medium">{t("Projelerimiz")}</h3>
+        <h3 className="tracking-tight text-xl font-medium">{t("Müşterilerimiz")}</h3>
         <Folder className="h-4 w-4 text-muted-foreground" />
       </div>
       <div className="p-6 pt-0">

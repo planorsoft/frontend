@@ -50,6 +50,7 @@ const List = ({ type }: ListProps) => {
 
   const fetchPage = (page: number) => {
     dispatch(getFinances(isIncome, page));
+    
   };
 
   return (
