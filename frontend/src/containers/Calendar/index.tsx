@@ -16,8 +16,10 @@ import { EventImpl } from "@fullcalendar/core/internal";
 import { DateTime } from "luxon";
 import Detail from "./Detail";
 import { Loader } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 const Calendar = () => {
+  const { t } = useTranslation();
   const dispatch = useAppDispatch();
   const applicationState = useAppSelector<ApplicationState>(
     (state) => state.applicationState
@@ -98,11 +100,11 @@ const Calendar = () => {
   const calendarOptions: CalendarOptions = {
     initialView: "dayGridMonth",
     buttonText: {
-      today: "Bugün",
-      month: "Ay",
-      week: "Hafta",
-      day: "Gün",
-      list: "Liste",
+      today: `${t("calendar.today")}`,
+      month: `${t("calendar.month")}`,
+      week: `${t("calendar.week")}`,
+      day: `${t("calendar.day")}`,
+      list: `${t("calendar.list")}`
     },
     firstDay: 1,
     stickyFooterScrollbar: true,
@@ -112,7 +114,7 @@ const Calendar = () => {
     eventClick: eventClickHandler,
     customButtons: {
       addEventButton: {
-        text: "+ Yeni Etkinlik",
+        text: `${t("calendar.addEvent")}`,
         click: function () {
           handleUpsert();
         },

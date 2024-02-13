@@ -24,6 +24,7 @@ import InputMarkdown from "@/components/ui/input-markdown";
 import { ApplicationState } from "../Settings/Application/types";
 import InputTextarea from "@/components/ui/input-textarea";
 import { selectDefaultDutyCategory } from "./selector";
+import { useTranslation } from "react-i18next";
 
 const formSchema = z.object({
   id: z.number().optional(),
@@ -67,6 +68,7 @@ interface UpsertDutyProps extends React.HTMLAttributes<HTMLDivElement> {
 
 const UpsertDuty = ({ open, setOpen, dutyId, projectId }: UpsertDutyProps) => {
   const dispatch = useAppDispatch();
+  const { t } = useTranslation();
   const dutyState = useAppSelector<DutyState>((state) => state.dutyState);
   const loading = dutyState.loading;
   const error = dutyState.error;
@@ -168,14 +170,13 @@ const UpsertDuty = ({ open, setOpen, dutyId, projectId }: UpsertDutyProps) => {
           <DialogTitle>
             <div className="flex justify-start">
               {dutyId === 0 ? (
-                <p>Görev oluştur</p>
+                `${t("task.create")}`
               ) : applicationState.application?.code ? (
                 <p>
-                  {applicationState.application?.code}-{dutyId}, Görevini
-                  düzenle
+                  {applicationState.application?.code}-{dutyId}, `${t("task.edit")}`
                 </p>
               ) : (
-                <p>Görevi düzenle</p>
+                `${t("task.edit")}`
               )}
             </div>
           </DialogTitle>
@@ -189,17 +190,17 @@ const UpsertDuty = ({ open, setOpen, dutyId, projectId }: UpsertDutyProps) => {
               >
                 <InputString
                   control={form.control}
-                  placeholder="Başlık*"
+                  placeholder= {t("project.title")}
                   fieldName="title"
                 />
                 <InputTextarea
                   control={form.control}
-                  placeholder="Açıklama"
+                  placeholder={t("project.model.description")}
                   fieldName="description"
                 />
                 <InputSelect
                   control={form.control}
-                  placeholder="Kategori"
+                  placeholder={t("finance.model.category")}
                   fieldName="categoryId"
                   selectList={dutyCategories.map((x) => ({
                     value: x.id.toString(),
@@ -208,7 +209,7 @@ const UpsertDuty = ({ open, setOpen, dutyId, projectId }: UpsertDutyProps) => {
                 />
                 <InputSelect
                   control={form.control}
-                  placeholder="Büyüklük"
+                  placeholder={t("task.size")}
                   fieldName="sizeId"
                   selectList={dutySizes.map((x) => ({
                     value: x.id.toString(),
@@ -217,7 +218,7 @@ const UpsertDuty = ({ open, setOpen, dutyId, projectId }: UpsertDutyProps) => {
                 />
                 <InputServerSelect
                   control={form.control}
-                  placeholder="Proje"
+                  placeholder={t("task.project")}
                   fieldName="projectId"
                   entity="project"
                 />
@@ -227,7 +228,7 @@ const UpsertDuty = ({ open, setOpen, dutyId, projectId }: UpsertDutyProps) => {
                     {loading && (
                       <LoaderIcon className="mr-2 h-4 w-4 animate-spin" />
                     )}
-                    Gönder
+                    {t("common.submit")}
                   </Button>
                 ) : (
                   <div className="grid grid-cols-12 gap-2">
@@ -239,7 +240,7 @@ const UpsertDuty = ({ open, setOpen, dutyId, projectId }: UpsertDutyProps) => {
                       {loading && (
                         <LoaderIcon className="mr-2 h-4 w-4 animate-spin" />
                       )}
-                      Gönder
+                      {t("common.submit")}
                     </Button>
                     <Button
                       disabled={loading}

@@ -14,6 +14,7 @@ import {
   FileCheck,
   FileX,
   Languages,
+  LayoutGrid,
 } from "lucide-react";
 import { useAppDispatch, useAppSelector } from "@/store";
 import { getCurrencies } from "@/containers/Settings/Currency/actions";
@@ -22,82 +23,90 @@ import { checkVersion } from "@/lib/config";
 import { setSidebarInStore } from "@/containers/Settings/Application/actions";
 import { UserState } from "@/containers/Settings/Team/types";
 import { getTeam } from "@/containers/Settings/Team/actions";
+import { useTranslation } from "react-i18next";
 
+interface PageProps extends React.HTMLAttributes<HTMLDivElement> {
+  role?: string;
+}
+
+export default function Page({ role, children }: PageProps) {
+const { t } = useTranslation();
 const defaultSidebar = [
+  
   {
-    name: "Ana sayfa",
+    name: `${t("sidebar.home")}`,
     icon: LayoutDashboard,
     to: "/dashboard",
   },
   {
-    name: "Takvim",
+    name: `${t("sidebar.calendar")}`,
     icon: CalendarDays,
     to: "/calendar",
   },
   {
-    name: "Müşteriler",
+    name: `${t("sidebar.customer")}`,
     icon: Users,
     to: "/customers",
   },
   {
-    name: "Potansiyel müşteriler",
+    name: `${t("sidebar.potentialCustomer")}`,
     icon: UserPlus,
     to: "/customers/potential",
   },
   {
-    name: "Projeler",
+    name: `${t("sidebar.project")}`,
     icon: Folder,
     to: "/projects",
   },
   {
-    name: "Görevler",
+    name: `${t("sidebar.task")}`,
     icon: KanbanSquare,
     to: "/duties",
   },
   {
-    name: "Finans",
+    name: `${t("sidebar.finance")}`,
     icon: Landmark,
     to: "/finance",
     child: [
       {
-        name: "Gelir",
+        name: `${t("finance.income")}`,
         icon: FileCheck,
         to: "/finance",
       },
       {
-        name: "Gider",
+        name: `${t("finance.expense")}`,
         icon: FileX,
         to: "/finance/outcome",
       },
       {
-        name: "Kategori",
+        name: `${t("finance.model.category")}`,
         icon: Folder,
         to: "/finance/categories",
       },
     ],
   },
   {
-    name: "Ayarlar",
+    name: `${t("sidebar.settings")}`,
     icon: Settings,
     to: "/settings",
     child: [
       {
-        name: "Ekip",
+        name: `${t("settings.team.title")}`,
         icon: Users,
         to: "/settings/team",
       },
       {
-        name: "Uygulama",
-        icon: Users,
+        name: `${t("settings.application.title")}`,
+        icon: LayoutGrid,
         to: "/settings/application",
       },
       {
-        name: "Döviz",
+        name: `${t("settings.currency.title")}`,
         icon: Currency,
         to: "/settings/currency",
       },
       {
-        name: "Dil",
+        name: `${t("settings.language.title")}`,
         icon: Languages,
         to: "/settings/language"
       }
@@ -107,17 +116,13 @@ const defaultSidebar = [
 
 const customerSidebar = [
   {
-    name: "Ana sayfa",
+    name: `${t("sidebar.home")}`,
     icon: LayoutDashboard,
     to: "/customer-panel",
   },
 ];
 
-interface PageProps extends React.HTMLAttributes<HTMLDivElement> {
-  role?: string;
-}
 
-export default function Page({ role, children }: PageProps) {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [sidebar, setSidebar] = useState(defaultSidebar);
   const currencyState = useAppSelector<CurrencyState>(

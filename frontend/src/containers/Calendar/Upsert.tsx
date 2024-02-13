@@ -23,6 +23,7 @@ import InputTextarea from "@/components/ui/input-textarea";
 import Remove from "@/components/remove";
 import { DateTime } from "luxon";
 import { InputServerMultiSelect } from "@/components/ui/input-server-multiselect";
+import { useTranslation } from "react-i18next";
 
 const formSchema = z.object({
   id: z.number().optional(),
@@ -45,6 +46,7 @@ interface UpsertProps extends React.HTMLAttributes<HTMLDivElement> {
 }
 
 const Upsert = ({ open, setOpen, eventId, date }: UpsertProps) => {
+  const { t } = useTranslation();
   const dispatch = useAppDispatch();
   const calendarState = useAppSelector<CalendarState>(
     (state) => state.calendarState
@@ -110,7 +112,7 @@ const Upsert = ({ open, setOpen, eventId, date }: UpsertProps) => {
     if (!values.start) {
       form.setError("start", {
         type: "manual",
-        message: "Lütfen geçerli bir başlangıç tarihi giriniz.",
+        message: `${t("calendar.start_date_required")}`,
       });
       return;
     }
@@ -118,7 +120,7 @@ const Upsert = ({ open, setOpen, eventId, date }: UpsertProps) => {
       if (values.start > values.end) {
         form.setError("end", {
           type: "manual",
-          message: "Bitiş tarihi başlangıç tarihinden büyük olamaz.",
+          message: `${t("calendar.end_date_must_be_after_start_date")}`,
         });
         return;
       }
@@ -152,7 +154,7 @@ const Upsert = ({ open, setOpen, eventId, date }: UpsertProps) => {
       <DialogContent className="w-screen m-2 md:w-6/12">
         <DialogHeader>
           <DialogTitle>
-            {eventId === 0 ? "Etkinlik oluştur" : "Etkinlik düzenle"}
+            {eventId === 0 ? `${t("calendar.addEvent")}` : `${t("calendar.editEvent")}`}
           </DialogTitle>
           {loading ? (
             <Loader />
@@ -164,33 +166,33 @@ const Upsert = ({ open, setOpen, eventId, date }: UpsertProps) => {
               >
                 <InputString
                   control={form.control}
-                  placeholder="Başlık*"
+                  placeholder= {t("calendar.title")}
                   fieldName="title"
                 />
                 <InputTextarea
                   control={form.control}
-                  placeholder="Açıklama"
+                  placeholder= {t("calendar.description")}
                   fieldName="description"
                 />
                 <InputString
                   control={form.control}
-                  placeholder="Konum | Link"
+                  placeholder= {t("calendar.location-link")}
                   fieldName="location"
                 />
                 <InputDateTime
                   control={form.control}
-                  placeholder="Başlangıç tarihi*"
+                  placeholder= {t("calendar.start-date")}
                   fieldName="start"
                 />
                 <InputDateTime
                   control={form.control}
-                  placeholder="Bitiş tarihi"
+                  placeholder= {t("calendar.end-date")}
                   fieldName="end"
                   disabledDate={form.watch("start")}
                 />
                 <InputServerMultiSelect
                   control={form.control}
-                  placeholder="Katılımcı"
+                  placeholder= {t("calendar.attendee")}
                   fieldName="attendee"
                   entity="attendee"
                 />
@@ -199,12 +201,12 @@ const Upsert = ({ open, setOpen, eventId, date }: UpsertProps) => {
                   placeholder="Renk"
                   fieldName="color"
                   selectList={[
-                    { label: "Turuncu", value: "orange" },
-                    { label: "Mavi", value: "blue" },
-                    { label: "Yeşil", value: "green" },
-                    { label: "Sarı", value: "yellow" },
-                    { label: "Kırmızı", value: "red" },
-                    { label: "Mor", value: "purple" },
+                    { label: `${t("calendar.orange")}`, value: "orange" },
+                    { label: `${t("calendar.blue")}`, value: "blue" },
+                    { label: `${t("calendar.green")}`, value: "green" },
+                    { label: `${t("calendar.yelllow")}`, value: "yellow" },
+                    { label: `${t("calendar.red")}`, value: "red" },
+                    { label: `${t("calendar.purple")}`, value: "purple" },
                   ]}
                 />
 
@@ -217,7 +219,7 @@ const Upsert = ({ open, setOpen, eventId, date }: UpsertProps) => {
                     {loading && (
                       <LoaderIcon className="mr-2 h-4 w-4 animate-spin" />
                     )}
-                    Gönder
+                    {t("common.submit")}
                   </Button>
                   <Button
                     disabled={loading}

@@ -7,7 +7,76 @@
         "update-succeeded": "Successfully updated.",
         "create-succeeded": "Successfully created.",
         "next-page": "Next",
-        "previous-page": "Previous"
+        "previous-page": "Previous",
+        "submit": "Submit",
+        "delete": "Delete"
+    },
+
+    "calendar": {
+        "description": "Description",
+        "location-link:": "Location - Link",
+        "location": "Location",
+        "attendees": "Attendees",
+        "today": "Today",
+        "month": "Month",
+        "week": "Week",
+        "day": "Day",
+        "addEvent": "Add Event",
+        "editEvent": "Edit Event",
+        "start-date": "Start Date",
+        "end-date": "End Date",
+        "orange": "Orange",
+        "green": "Green",
+        "blue": "Blue",
+        "red": "Red",
+        "yellow": "Yellow",
+        "purple": "Purple",
+        "title": "Topic",
+        "attendee": "Attendee",
+        "start-date-required": "Start date is required.",
+        "end-date-must-be-after-start-date": "End date must be after start date."
+        
+    },
+
+    "customer": {
+        "title": "Customer",
+        "create": "Create Customer",
+        "edit": "Edit Customer",
+        "photo": "Photo",
+        "name" : "Name",
+        "company" : "Company",
+        "city" : "City",
+        "potential" : "Potential",
+        "district" : "District",
+        "postCode" : "Post Code",
+        "country" : "Country",
+        "phoneNumber" : "Phone Number",
+        "governmentId" : "Government Id",
+        "currency" : "Currency",
+        "contact" : "Contact",
+        "email" : "Email",
+        "invite" : "Invite",
+        "action" : "Action",
+        "previous" : "Previous",
+        "next" : "Next",
+        "contact-not-found": "Customer Contact not found.",
+        "contact-not-found-description": "You can create your first contact from the button above.",
+        "not-found": "Customer not found.",
+        "not-found-description": "You can create your first customer from the button above."
+    },
+    "task":{
+        "title": "Tasks",
+        "description": "To go to the tasks of a specific project, click on the tasks icon from the projects screen.",
+        "create": "Create Task",
+        "edit": "Edit Task",
+        "project": "Project",
+        "size": "Size",
+        "not-found": "Task not found!",
+        "not-found-description": "You can create your first task from the button above.",
+        "model":{
+            "category": "Category",
+            "task": "Task"
+        }
     },
     "finance": {
         "title": "Finance",
@@ -40,10 +109,43 @@
             }
         }
     },
+    "project": {
+        "title": "Project",
+        "create": "Create Project",
+        "edit": "Edit Project",
+        "update": "Update Project",
+        "not-found": "Project not found.",
+        "not-found-description": "You can create your first project from the button above.",
+        
+        "model": {
+            "title": "Title",
+            "description": "Description",
+            "isItComp": "Is it completed?",
+            "customer": "Customer",
+            "price": "Price"
+        },
+        "model2":{
+            "id": "Id",
+            "title": "Title",
+            "price": "Price",
+            "completed": "Completed",
+            "action":"Action"
+        }
+    },
+    "sidebar": {
+        "home": "Home",
+        "calendar": "Calendar",
+        "customer": "Customer",
+        "potentialCustomer": "Potential Customer",
+        "project": "Project",
+        "task": "Tasks",
+        "finance": "Finance",
+        "settings": "Settings"
+    },
     "settings": {
         "title": "Settings",
         "language": {
-            "title": "Language Settings",
+            "title": "Language",
             "description": "You can update your language settings below.",
             "model": {
                 "language": "Language",
@@ -60,7 +162,7 @@
             "new-password":"New Password"
         },
         "application": {
-            "title": "Application Settings",
+            "title": "Application",
             "description": "You can update your application settings below.",
             "not-found": "Application not found.",
             "model": {

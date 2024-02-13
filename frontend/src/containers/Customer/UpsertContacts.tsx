@@ -33,21 +33,21 @@ const formSchema = z.object({
   name: z
     .string()
     .min(2, {
-      message: "Lütfen geçerli bir isim giriniz.",
+      message: "Please enter a valid name.",
     })
     .max(64, {
-      message: "Lütfen geçerli bir isim giriniz.",
+      message: "Please enter a valid name.",
     })
     .nonempty({
-      message: "Lütfen geçerli bir isim giriniz.",
+      message: "Please enter a valid name.",
     }),
   email: z
     .string()
     .email({
-      message: "Lütfen geçerli bir email adresi giriniz.",
+      message: "Please enter a valid email address.",
     })
     .nonempty({
-      message: "Lütfen geçerli bir email adresi giriniz.",
+      message: "Please enter a valid email address.",
     }),
   phoneNumber: z.string().optional(),
 });
@@ -101,7 +101,7 @@ const UpsertContacts = ({ open, setOpen, customerId }: UpsertContactsProps) => {
         customerTypes.INVITE_CUSTOMER_CONTACT_FAILURE ||
         null:
         toast({
-          title: "Hata oluştu",
+          title: "An error occurred",
           description: customerState.error,
           variant: "destructive",
         });
@@ -109,7 +109,7 @@ const UpsertContacts = ({ open, setOpen, customerId }: UpsertContactsProps) => {
       case customerTypes.CREATE_CUSTOMER_CONTACT_SUCCESS:
         setContacts(customerState.customer?.contacts || []);
         toast({
-          title: "Başarıyla oluşturuldu",
+          title: "Successfully created",
         });
         setCreate(false);
         dispatch(resetCustomerStatus());
@@ -117,14 +117,14 @@ const UpsertContacts = ({ open, setOpen, customerId }: UpsertContactsProps) => {
       case customerTypes.DELETE_CUSTOMER_CONTACT_SUCCESS:
         setContacts(customerState.customer?.contacts || []);
         toast({
-          title: "Başarıyla silindi",
+          title: "Successfully deleted",
         });
         setCreate(false);
         dispatch(resetCustomerStatus());
         break;
       case customerTypes.INVITE_CUSTOMER_CONTACT_SUCCESS:
         toast({
-          title: "Başarıyla davetiye gönderildi",
+          title: "Invitation sent successfully",
         });
         dispatch(resetCustomerStatus());
         break;
@@ -157,14 +157,14 @@ const UpsertContacts = ({ open, setOpen, customerId }: UpsertContactsProps) => {
           <DialogHeader>
             <DialogTitle>
               <div className="flex justify-between items-center mr-5">
-                <h2>Müşteri iletişimleri</h2>
+                <h2>{t("customer.contact")}</h2>
                 <Button
                   variant={create ? "default" : "outline"}
                   className="flex items-center gap-2"
                   onClick={() => setCreate(!create)}
                 >
                   <Plus className="h-4 w-4" />
-                  Oluştur
+                  {t("common.create")}
                 </Button>
               </div>
             </DialogTitle>
@@ -180,17 +180,17 @@ const UpsertContacts = ({ open, setOpen, customerId }: UpsertContactsProps) => {
                     >
                       <InputString
                         control={form.control}
-                        placeholder="İsim*"
+                        placeholder={`${t("customer.name")} *`}
                         fieldName="name"
                       />
                       <InputString
                         control={form.control}
-                        placeholder="Email*"
+                        placeholder={`${t("customer.email")}`}
                         fieldName="email"
                       />
                       <InputPhone
                         control={form.control}
-                        placeholder="Telefon"
+                        placeholder={`${t("customer.phoneNumber")}`}
                         fieldName="phoneNumber"
                       />
                       {customerId === 0 ? (
@@ -202,7 +202,7 @@ const UpsertContacts = ({ open, setOpen, customerId }: UpsertContactsProps) => {
                           {loading && (
                             <LoaderIcon className="mr-2 h-4 w-4 animate-spin" />
                           )}
-                          Gönder
+                          {`${t("common.save")}`}
                         </Button>
                       ) : (
                         <div className="grid grid-cols-12 gap-2">
@@ -214,7 +214,7 @@ const UpsertContacts = ({ open, setOpen, customerId }: UpsertContactsProps) => {
                             {loading && (
                               <LoaderIcon className="mr-2 h-4 w-4 animate-spin" />
                             )}
-                            Gönder
+                            {`${t("common.submit")}`}
                           </Button>
                         </div>
                       )}
@@ -253,7 +253,7 @@ const UpsertContacts = ({ open, setOpen, customerId }: UpsertContactsProps) => {
                                 variant="outline"
                                 className="col-span-10 truncate"
                               >
-                                Davetiye gönder
+                                {`${t("customer.invite")}`}
                               </Button>
                               <Button
                                 onClick={() => {
@@ -273,10 +273,9 @@ const UpsertContacts = ({ open, setOpen, customerId }: UpsertContactsProps) => {
                     ) : (
                       <Alert className="col-span-12 mt-5">
                         <CircleSlash className="h-4 w-4" />
-                        <AlertTitle>İletişim bulunamadı!</AlertTitle>
+                        <AlertTitle>{`${t("customer.contact-not-found")}`}</AlertTitle>
                         <AlertDescription>
-                          Yukarıdaki butondan ilk iletişim kişisini
-                          oluşturabilirsin
+                        {`${t("customer.contact-not-found-description")}`}
                         </AlertDescription>
                       </Alert>
                     )}

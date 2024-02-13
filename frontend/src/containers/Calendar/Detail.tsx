@@ -11,6 +11,7 @@ import { CalendarState } from "./types";
 import { selectEventById } from "./selector";
 import { DateTime } from "luxon";
 import { Button } from "@/components/ui/button";
+import { useTranslation } from "react-i18next";
 
 interface DetailProps extends React.HTMLAttributes<HTMLDivElement> {
   open: boolean;
@@ -20,6 +21,7 @@ interface DetailProps extends React.HTMLAttributes<HTMLDivElement> {
 }
 
 const Detail = ({ open, setOpen, setUpsertOpen, eventId }: DetailProps) => {
+  const { t } = useTranslation();
   const dispatch = useAppDispatch();
   const calendarState = useAppSelector<CalendarState>(
     (state) => state.calendarState
@@ -55,7 +57,7 @@ const Detail = ({ open, setOpen, setUpsertOpen, eventId }: DetailProps) => {
               <div className="my-3 flex items-start space-x-4 rounded-md transition-all">
                 <Info className="w-6 h-6 mt-px" />
                 <div className="space-y-2">
-                  <p className="text-sm font-medium leading-none">Açıklama:</p>
+                  <p className="text-sm font-medium leading-none">{t("calendar.description")}:</p>
                   <p className="text-sm text-muted-foreground">
                     {event?.description}
                   </p>
@@ -72,7 +74,7 @@ const Detail = ({ open, setOpen, setUpsertOpen, eventId }: DetailProps) => {
                 )}
                 <div className="space-y-2">
                   <p className="text-sm font-medium leading-none">
-                    Konum | Link:
+                  {t("calendar.location-link")}:
                   </p>
                   <div className="text-sm text-muted-foreground">
                     {isUrl(event.location) ? (
@@ -84,7 +86,7 @@ const Detail = ({ open, setOpen, setUpsertOpen, eventId }: DetailProps) => {
                         <span>{event?.location}</span>
                       </a>
                     ) : (
-                      <p>Konum: {event?.location}</p>
+                      <p>{t("calendar.location")}: {event?.location}</p>
                     )}
                   </div>
                 </div>

@@ -13,8 +13,10 @@ import UpsertDutyCategory from "./UpsertDutyCategory";
 import useTitle from "@/hooks/use-title";
 import { ProjectState } from "../Project/types";
 import { getProject } from "../Project/actions";
+import { useTranslation } from "react-i18next";
 
 const Container = () => {
+  const { t } = useTranslation();
   useTitle("Görevler");
   const dispatch = useAppDispatch();
   const dutyState = useAppSelector<DutyState>((state) => state.dutyState);
@@ -100,9 +102,9 @@ const Container = () => {
         return (
           <Alert>
             <CircleSlash className="h-4 w-4" />
-            <AlertTitle>Görev bulunamadı!</AlertTitle>
+            <AlertTitle>{t("task.not-found")}</AlertTitle>
             <AlertDescription>
-              Yukarıdaki butondan ilk görevini oluşturabilirsin
+            {t("task.not-found-description")}
             </AlertDescription>
           </Alert>
         );
@@ -115,11 +117,10 @@ const Container = () => {
       <div className="flex justify-between my-2">
         <div>
           <h2 className="text-2xl font-semibold">
-            {project ? `${project.title} için Görevler` : "Tüm Görevler"}
+            {project ? `${project.title} için Görevler` : `${t("task.title")}`}
           </h2>
           <p className="leading-7 my-2 dark:text-gray-500 text-gray-600">
-            Belirli bir projenin görevlerine gitmek için projeler ekranından
-            görevler ikonuna tıklayınız.
+          {t("task.description")}
           </p>
         </div>
         <div className="flex justify-end gap-2">
@@ -129,14 +130,14 @@ const Container = () => {
             }}
             variant="outline"
           >
-            <Plus size={16} /> Kategori
+            <Plus size={16} /> {t("task.model.category")}
           </Button>
           <Button
             onClick={() => {
               openUpsertDuty(0);
             }}
           >
-            <Plus size={16} /> Görev
+            <Plus size={16} /> {t("task.model.task")}
           </Button>
         </div>
       </div>
