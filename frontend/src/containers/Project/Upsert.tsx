@@ -25,15 +25,16 @@ import {
   resetProjectStatus,
   updateProject,
 } from "./actions";
+import { useTranslation } from "react-i18next";
 
 const formSchema = z.object({
   id: z.number(),
-  title: z.string().nonempty({ message: "Lütfen geçerli bir başlık giriniz" }),
+  title: z.string().nonempty({ message: "Please enter a valid title" }),
   description: z.string(),
   isCompleted: z.boolean(),
   customerId: z
     .string()
-    .nonempty({ message: "Lütfen geçerli bir müşteri seçiniz" }),
+    .nonempty({ message: "Please select a valid customer" }),
   price: z.string(),
 });
 
@@ -45,6 +46,7 @@ interface UpsertProps extends React.HTMLAttributes<HTMLDivElement> {
 
 const Upsert = ({ open, setOpen, projectId }: UpsertProps) => {
   const dispatch = useAppDispatch();
+  const { t } = useTranslation();
   const projectState = useAppSelector<ProjectState>(
     (state) => state.projectState
   );
@@ -106,21 +108,21 @@ const Upsert = ({ open, setOpen, projectId }: UpsertProps) => {
         projectTypes.CREATE_PROJECT_FAILURE ||
         null:
         toast({
-          title: "Hata oluştu",
+          title: "An error occurred",
           description: projectState.error,
           variant: "destructive",
         });
         break;
       case projectTypes.UPDATE_PROJECT_SUCCESS:
         toast({
-          title: "Proje güncellendi",
+          title: "Project updated",
         });
         setOpen(false);
         dispatch(resetProjectStatus());
         break;
       case projectTypes.CREATE_PROJECT_SUCCESS:
         toast({
-          title: "Proje oluşturuldu",
+          title: "Project created",
         });
         setOpen(false);
         dispatch(resetProjectStatus());
@@ -142,7 +144,7 @@ const Upsert = ({ open, setOpen, projectId }: UpsertProps) => {
         <DialogContent className="w-screen m-2 md:w-6/12">
           <DialogHeader>
             <DialogTitle>
-              {projectId === 0 ? "Proje oluştur" : "Proje düzenle"}
+              {projectId === 0 ? `${t("project.create")}` : `${t("project.update")}`}
             </DialogTitle>
             {loading ? (
               <Loader />
@@ -154,28 +156,28 @@ const Upsert = ({ open, setOpen, projectId }: UpsertProps) => {
                 >
                   <InputString
                     control={form.control}
-                    placeholder="Başlık*"
+                    placeholder={t("project.model.title")}
                     fieldName="title"
                   />
                   <InputString
                     control={form.control}
-                    placeholder="Açıklama"
+                    placeholder={t("project.model.description")}
                     fieldName="description"
                   />
                   <InputBoolean
                     control={form.control}
-                    placeholder="Tamamlandı mı?"
+                    placeholder={t("project.model.isItComp")}
                     fieldName="isCompleted"
                   />
                   <InputServerSelect
                     control={form.control}
-                    placeholder="Müşteri"
+                    placeholder={t("project.model.customer")}
                     fieldName="customerId"
                     entity="customer"
                   />
                   <InputString
                     control={form.control}
-                    placeholder="Fiyat"
+                    placeholder={t("project.model.price")}
                     fieldName="price"
                   />
                   {projectId === 0 ? (
@@ -183,7 +185,7 @@ const Upsert = ({ open, setOpen, projectId }: UpsertProps) => {
                       {loading && (
                         <LoaderIcon className="mr-2 h-4 w-4 animate-spin" />
                       )}
-                      Gönder
+                      {t("common.submit")}
                     </Button>
                   ) : (
                     <div className="grid grid-cols-12 gap-2">
@@ -195,7 +197,7 @@ const Upsert = ({ open, setOpen, projectId }: UpsertProps) => {
                         {loading && (
                           <LoaderIcon className="mr-2 h-4 w-4 animate-spin" />
                         )}
-                        Gönder
+                        {t("common.submit")}
                       </Button>
                       <Button
                         disabled={loading}

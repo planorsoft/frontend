@@ -29,13 +29,15 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { profileImageGenerator } from "@/lib/profile-image";
 import { useNavigate } from "react-router-dom";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { useTranslation } from "react-i18next";
 
 interface ListProps extends React.HTMLAttributes<HTMLDivElement> {
   type: "real" | "potential";
 }
 
 const List = ({ type }: ListProps) => {
-  useTitle("Müşteriler");
+  useTitle("Customers");
+  const { t } = useTranslation();
   const isPotential = type === "real";
   const [open, setOpen] = useState<boolean>(false);
   const [openContacts, setOpenContacts] = useState<boolean>(false);
@@ -70,10 +72,10 @@ const List = ({ type }: ListProps) => {
     <div className="px-2 py-4 md:px-20 mx-auto">
       <div className="flex justify-between my-2">
         <h2 className="text-xl md:text-2xl font-semibold">
-          {type === "real" ? "Müşteriler" : "Potansiyel Müşteriler"}
+          {type === "real" ? "Customers" : "Potential Customers"}
         </h2>
         <Button onClick={() => { select(0) }}>
-          <Plus size={16} /> Yeni Müşteri
+          <Plus size={16} /> {t("customer.create")}
         </Button>
       </div>
       {loading ? (
@@ -82,17 +84,17 @@ const List = ({ type }: ListProps) => {
         <>
           <Table>
             <TableCaption>
-              {type == "real" && "Gerçek müşteriler"}
-              {type == "potential" && "Potansiyel müşteriler"}
+              {type == "real" && "Real Customers"}
+              {type == "potential" && "Potential Customers"}
             </TableCaption>
             <TableHeader>
               <TableRow>
                 <TableHead>Id</TableHead>
-                <TableHead>Fotoğraf</TableHead>
-                <TableHead>İsim</TableHead>
-                <TableHead>Şirket</TableHead>
-                <TableHead>Şehir</TableHead>
-                <TableHead>Aksiyon</TableHead>
+                <TableHead>{t("customer.photo")}</TableHead>
+                <TableHead>{t("customer.name")}</TableHead>
+                <TableHead>{t("customer.company")}</TableHead>
+                <TableHead>{t("customer.city")}</TableHead>
+                <TableHead>{t("customer.action")}</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -167,7 +169,7 @@ const List = ({ type }: ListProps) => {
               }}
               disabled={!customerState.pagination.hasPreviousPage}
             >
-              Önceki
+              {t("customer.previous")}
             </Button>
             <Button
               variant="outline"
@@ -177,16 +179,16 @@ const List = ({ type }: ListProps) => {
               }}
               disabled={!customerState.pagination.hasNextPage}
             >
-              Sonraki
+              {t("customer.next")}
             </Button>
           </div>
         </>
       ) : (
         <Alert>
           <CircleSlash className="h-4 w-4" />
-          <AlertTitle>Müşteri bulunamadı!</AlertTitle>
+          <AlertTitle>{t("customer.not-found")}</AlertTitle>
           <AlertDescription>
-            Yukarıdaki butondan ilk müşterini oluşturabilirsin
+          {t("customer.not-found-description")}
           </AlertDescription>
         </Alert>
       )}

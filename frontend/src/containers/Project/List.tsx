@@ -27,9 +27,11 @@ import { getProjects } from "./actions";
 import { CustomerState } from "../Customer/types";
 import { getCustomer } from "../Customer/actions";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { useTranslation } from "react-i18next";
 
 const List = () => {
-  useTitle("Projeler");
+  useTitle("Projects");
+  const { t } = useTranslation();
   const customerId = Number(useParams().customerId) || undefined;
   const [open, setOpen] = useState<boolean>(false);
   const [id, setId] = useState<number | undefined>(0);
@@ -78,9 +80,9 @@ const List = () => {
   return (
     <div className="px-2 py-4 md:px-20 mx-auto">
       <div className="flex justify-between my-2">
-        <h2 className="text-2xl font-semibold">Projeler</h2>
+        <h2 className="text-2xl font-semibold">{t("project.title")}</h2>
         <Button onClick={openUpsert}>
-          <Plus size={16} /> Yeni Proje
+          <Plus size={16} /> {t("project.create")}
         </Button>
       </div>
       {loading ? (
@@ -88,14 +90,14 @@ const List = () => {
       ) : projectState.projects.length > 0 ? (
         <>
           <Table>
-            <TableCaption>{customerId && "Gerçek müşteriler"}</TableCaption>
+            <TableCaption>{customerId && "Real Customers"}</TableCaption>
             <TableHeader>
               <TableRow>
-                <TableHead>Id</TableHead>
-                <TableHead>Başlık</TableHead>
-                <TableHead>Fiyat</TableHead>
-                <TableHead>Tamamlandı</TableHead>
-                <TableHead>Aksiyon</TableHead>
+                <TableHead>{t("project.model2.id")}</TableHead>
+                <TableHead>{t("project.model2.title")}</TableHead>
+                <TableHead>{t("project.model2.price")}</TableHead>
+                <TableHead>{t("project.model2.completed")}</TableHead>
+                <TableHead>{t("project.model2.action")}</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -150,7 +152,7 @@ const List = () => {
               }}
               disabled={!projectState.pagination.hasPreviousPage}
             >
-              Önceki
+              {t("common.previous-page")}
             </Button>
             <Button
               variant="outline"
@@ -160,16 +162,16 @@ const List = () => {
               }}
               disabled={!projectState.pagination.hasNextPage}
             >
-              Sonraki
+              {t("common.next-page")}
             </Button>
           </div>
         </>
       ) : (
         <Alert>
           <CircleSlash className="h-4 w-4" />
-          <AlertTitle>Proje bulunamadı!</AlertTitle>
+          <AlertTitle>{t("project.cnot-found")}</AlertTitle>
           <AlertDescription>
-            Yukarıdaki butondan ilk projeni oluşturabilirsin
+          {t("project.not-found-description")}
           </AlertDescription>
         </Alert>
       )}

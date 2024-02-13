@@ -22,6 +22,7 @@ import {
 import { useAppDispatch, useAppSelector } from "@/store";
 import { DutyCategoryState } from "./types";
 import Remove from "@/components/remove";
+import { useTranslation } from "react-i18next";
 
 const formSchema = z.object({
   id: z.number().optional(),
@@ -42,6 +43,7 @@ const UpsertDutyCategory = ({
   dutyCategoryId,
 }: UpsertDutyCategoryProps) => {
   const dispatch = useAppDispatch();
+  const { t } = useTranslation();
   const dutyCategoryState = useAppSelector<DutyCategoryState>(
     (state) => state.dutyCategoryState
   );
@@ -107,9 +109,9 @@ const UpsertDutyCategory = ({
         <DialogHeader>
           <DialogTitle>
             {dutyCategoryId === 0 ? (
-              <p>Kategori oluştur</p>
+              `${t("finance.category.create")}`
             ) : (
-              <p>Kategori düzenle</p>
+              `${t("finance.category.edit")}`
             )}
           </DialogTitle>
           {loading ? (
@@ -122,7 +124,7 @@ const UpsertDutyCategory = ({
               >
                 <InputString
                   control={form.control}
-                  placeholder="Başlık*"
+                  placeholder={t("project.model.title")}
                   fieldName="title"
                 />
 
@@ -131,7 +133,7 @@ const UpsertDutyCategory = ({
                     {loading && (
                       <LoaderIcon className="mr-2 h-4 w-4 animate-spin" />
                     )}
-                    Gönder
+                    {t("common.submit")}
                   </Button>
                 ) : (
                   <div className="grid grid-cols-12 gap-2">
@@ -143,7 +145,7 @@ const UpsertDutyCategory = ({
                       {loading && (
                         <LoaderIcon className="mr-2 h-4 w-4 animate-spin" />
                       )}
-                      Gönder
+                      {t("common.submit")}
                     </Button>
                     <Button
                       disabled={loading}

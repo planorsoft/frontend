@@ -33,6 +33,7 @@ import {
   updateCustomer,
   updateCustomerImage,
 } from "./actions";
+import { useTranslation } from "react-i18next";
 
 interface UpsertProps extends React.HTMLAttributes<HTMLDivElement> {
   open: boolean;
@@ -41,6 +42,7 @@ interface UpsertProps extends React.HTMLAttributes<HTMLDivElement> {
 }
 
 const Upsert = ({ open, setOpen, customerId }: UpsertProps) => {
+  const { t } = useTranslation();
   const dispatch = useAppDispatch();
   const [remove, setRemove] = useState<boolean>();
   const currencyState = useAppSelector<CurrencyState>(
@@ -123,21 +125,21 @@ const Upsert = ({ open, setOpen, customerId }: UpsertProps) => {
         customerTypes.DELETE_CUSTOMER_IMAGE_FAILURE ||
         null:
         toast({
-          title: "Hata oluştu",
+          title: "An error occurred",
           description: customerState.error,
           variant: "destructive",
         });
         break;
       case customerTypes.UPDATE_CUSTOMER_SUCCESS:
         toast({
-          title: "Müşteri güncellendi",
+          title: "Customer updated",
         });
         setOpen(false);
         dispatch(resetCustomerStatus());
         break;
       case customerTypes.CREATE_CUSTOMER_SUCCESS:
         toast({
-          title: "Müşteri oluşturuldu",
+          title: "Customer created",
         });
         setOpen(false);
         dispatch(resetCustomerStatus());
@@ -145,14 +147,14 @@ const Upsert = ({ open, setOpen, customerId }: UpsertProps) => {
       case customerTypes.UPDATE_CUSTOMER_IMAGE_SUCCESS:
         setImageUri(customer?.imageUri || "");
         toast({
-          title: "Fotoğraf başarıyla yüklendi",
+          title: "Photo uploaded successfully",
         });
         dispatch(resetCustomerStatus());
         break;
       case customerTypes.DELETE_CUSTOMER_IMAGE_SUCCESS:
         setImageUri("");
         toast({
-          title: "Fotoğraf başarıyla silindi",
+          title: "Photo deleted successfully",
         });
         dispatch(resetCustomerStatus());
         break;
@@ -181,7 +183,7 @@ const Upsert = ({ open, setOpen, customerId }: UpsertProps) => {
         <DialogContent className="overflow-y-scroll h-full w-screen m-2 md:w-6/12">
           <DialogHeader>
             <DialogTitle>
-              {customerId === 0 ? "Müşteri oluştur" : "Müşteri düzenle"}
+              {customerId === 0 ? "Create customer" : "Edit customer"}
             </DialogTitle>
             {customerState.loading ? (
               <Loader />
@@ -194,11 +196,11 @@ const Upsert = ({ open, setOpen, customerId }: UpsertProps) => {
                   {customerId !== 0 && (
                     <div className="grid grid-cols-12 gap-2">
                       <div className="col-span-10">
-                        <h2 className="mb-1">Fotoğraf</h2>
+                        <h2 className="mb-1">{t("customer.photo")}</h2>
                         <div className="grid grid-cols-12 gap-2">
                           <Input
                             type="file"
-                            placeholder="Fotoğraf seç"
+                            placeholder="Select photo"
                             accept="image/png, image/jpeg"
                             className="col-span-10"
                             onChange={(e) => {
@@ -216,7 +218,7 @@ const Upsert = ({ open, setOpen, customerId }: UpsertProps) => {
                               handleRemoveImage();
                             }}
                           >
-                            Sil
+                            {t("common.delete")}
                           </Button>
                         </div>
                       </div>
@@ -237,47 +239,47 @@ const Upsert = ({ open, setOpen, customerId }: UpsertProps) => {
                   )}
                   <InputString
                     control={form.control}
-                    placeholder="İsim*"
+                    placeholder={`${t("customer.name")} *`}
                     fieldName="name"
                   />
                   <InputBoolean
                     control={form.control}
-                    placeholder="Şirket"
+                    placeholder={`${t("customer.company")} *`}
                     fieldName="isCompany"
                   />
                   <InputBoolean
                     control={form.control}
-                    placeholder="Potansiyel müşteri"
+                    placeholder={`${t("customer.potential")} *`}
                     fieldName="isPotantial"
                   />
                   <InputString
                     control={form.control}
-                    placeholder="Adres"
+                    placeholder={`${t("customer.address")}`}
                     fieldName="address"
                   />
                   <InputString
                     control={form.control}
-                    placeholder="Şehir"
+                    placeholder={`${t("customer.city")}`}
                     fieldName="city"
                   />
                   <InputString
                     control={form.control}
-                    placeholder="İlçe"
+                    placeholder={`${t("customer.district")}`}
                     fieldName="district"
                   />
                   <InputString
                     control={form.control}
-                    placeholder="Posta kodu"
+                    placeholder={`${t("customer.postCode")}`}
                     fieldName="postCode"
                   />
                   <InputString
                     control={form.control}
-                    placeholder="Ülke"
+                    placeholder={`${t("customer.country")}`}
                     fieldName="country"
                   />
                   <InputString
                     control={form.control}
-                    placeholder="Telefon numarası"
+                    placeholder={`${t("customer.phoneNumber")}`}
                     fieldName="phoneNumber"
                   />
                   <InputString
@@ -287,12 +289,12 @@ const Upsert = ({ open, setOpen, customerId }: UpsertProps) => {
                   />
                   <InputString
                     control={form.control}
-                    placeholder="TCKNO / Vergi No"
+                    placeholder={`${t("customer.governmentId")}`}
                     fieldName="governmentId"
                   />
                   <InputSelect
                     control={form.control}
-                    placeholder="Döviz"
+                    placeholder={`${t("customer.currency")}`}
                     fieldName="currencyCode"
                     selectList={currencyState.currencies.map((item) => ({
                       value: item.code,
@@ -308,7 +310,7 @@ const Upsert = ({ open, setOpen, customerId }: UpsertProps) => {
                       {customerState.loading && (
                         <LoaderIcon className="mr-2 h-4 w-4 animate-spin" />
                       )}
-                      Gönder
+                      
                     </Button>
                   ) : (
                     <div className="grid grid-cols-12 gap-2">
@@ -320,7 +322,7 @@ const Upsert = ({ open, setOpen, customerId }: UpsertProps) => {
                         {customerState.loading && (
                           <LoaderIcon className="mr-2 h-4 w-4 animate-spin" />
                         )}
-                        Gönder
+                        {`${t("common.save")}`}
                       </Button>
                       <Button
                         disabled={customerState.loading}

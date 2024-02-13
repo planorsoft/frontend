@@ -64,7 +64,7 @@ export function Menu({ toggleSidebar }: MenuProps) {
         <MenubarMenu>
           <MenubarTrigger className="items-center gap-2">
             {currentUserState.user.email === "" ? (
-              "Hesap"
+              "Account"
             ) : (
               <>
                 <Avatar className="h-7 w-7 max-[320px]:hidden">
@@ -90,7 +90,7 @@ export function Menu({ toggleSidebar }: MenuProps) {
                   navigate("/settings/users/me");
                 }}
               >
-                Hesabı düzenle
+                Edit account
               </MenubarItem>
             )}
             <MenubarItem
@@ -100,7 +100,7 @@ export function Menu({ toggleSidebar }: MenuProps) {
                 navigate("/logout");
               }}
             >
-              Çıkış yap
+              Log Out
             </MenubarItem>
           </MenubarContent>
         </MenubarMenu>

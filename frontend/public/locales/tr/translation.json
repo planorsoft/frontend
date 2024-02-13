@@ -7,8 +7,72 @@
         "update-succeeded": "Başarıyla güncellendi.",
         "create-succeeded": "Başarıyla oluşturuldu.",
         "next-page": "Sonraki",
-        "previous-page": "Önceki"
+        "previous-page": "Önceki",
+        "submit": "Gönder",
+        "delete": "Sil"
     },
+    "sidebar": {
+        "home": "Anasayfa",
+        "calendar": "Takvim",
+        "customer": "Müşteri",
+        "potentialCustomer": "Potansiyel Müşteri",
+        "project": "Proje",
+        "task": "Görev",
+        "finance": "Finans",
+        "settings": "Ayarlar"
+    },
+    "calendar": {
+        "description": "Açıklama",
+        "location-link": "Konum - Link",
+        "location": "Konum",
+        "attendees": "Katılımcılar",
+        "attendee": "Katılımcı",
+        "title": "Konu",
+        "today": "Bugün",
+        "month": "Ay",
+        "week": "Hafta",
+        "day": "Gün",
+        "addEvent": "Etkinlik Ekle",
+        "event": "Etkinlik",
+        "start-date": "Başlangıç Tarihi",
+        "end-date": "Bitiş Tarihi",
+        "orange": "Turuncu",
+        "green": "Yeşil",
+        "blue": "Mavi",
+        "red": "Kırmızı",
+        "yellow": "Sarı",
+        "purple": "Mor",
+        "start-date-required": "Başlangıç tarihi zorunludur.",
+        "end_date_must_be_after_start_date": "Bitiş tarihi başlangıç tarihinden sonra olmalıdır."
+        
+    },
+    "customer": {
+        "title": "Müşteri",
+        "create": "Müşteri oluştur",
+        "edit": "Müşteri düzenle",
+        "photo": "Fotoğraf",
+        "name" : "İsim",
+        "company" : "Şirket",
+        "city" : "Şehir",
+        "potential" : "Potansiyel mi?",
+        "district" : "İlçe",
+        "postCode" : "Posta Kodu",
+        "country" : "Ülke",
+        "phoneNumber" : "Telefon Numarası",
+        "governmentId" : "Vergi Numarası",
+        "currency" : "Kur",
+        "contact" : "İletişim",
+        "email" : "E-Posta",
+        "invite" : "Davet Et",
+        "action" : "Aksiyon",
+        "previous" : "Önceki",
+        "next" : "Sonraki",
+        "contact-not-found": "İletişim bilgisi bulunamadı.",
+        "contact-not-found-description": "Yukarıdaki butondan ilk iletişim bilgini oluşturabilirsin.",
+        "not-found": "Müşteri bulunamadı.",
+        "not-found-description": "Yukarıdaki butondan ilk müşterini oluşturabilirsin."
+    },
+
     "finance": {
         "title": "Finans",
         "income": "Gelir",
@@ -40,10 +104,47 @@
             }
         }
     },
+    "task":{
+        "title": "Görevler",
+        "description": "Belirli bir projenin görevlerine gitmek için projeler ekranından görevler ikonuna tıklayınız.",
+        "create": "Görev Oluştur",
+        "edit": "Görev Düzenle",
+        "project": "Proje",
+        "size": "Büyüklük",
+        "not-found": "Görev bulunamadı!",
+        "not-found-description": "Yukarıdaki butondan ilk projeni oluşturabilirsin.",
+        "model":{
+            "category": "Kategori",
+            "task": "Görev"
+        }
+    },
+    "project": {
+        "title": "Proje",
+        "create": "Proje oluştur",
+        "edit": "Projeyi düzenle",
+        "update": "Projeyi Güncelle",
+        "not-found": "Proje bulunumadı!",
+        "not-found-description": "Yukarıdaki butondan ilk projeni oluşturabilirsin.",
+        "model": {
+            "title": "Başlık",
+            "description": "Açıklama",
+            "isItComp": "Tamamlandı mı?",
+            "customer": "Müşteri",
+            "price": "Fiyat"
+        },
+        "model2":{
+            "id": "Id",
+            "title": "Başlık",
+            "price": "Fiyat",
+            "completed": "Tamamlandı",
+            "action":"Aksiyon"
+        }
+       
+    },
     "settings": {
         "title": "Ayarlar",
         "language": {
-            "title": "Dil Ayarları",
+            "title": "Dil",
             "description": "Dil ayarlarınızı aşağıdan güncelleyebilirsiniz.",
             "model": {
                 "language": "Dil",
@@ -52,7 +153,7 @@
             }
         },
         "application": {
-            "title": "Uygulama Ayarları",
+            "title": "Uygulama",
             "description": "Uygulama ayarlarınızı aşağıdan güncelleyebilirsiniz.",
             "not-found": "Uygulama bulunamadı.",
             "model": {
@@ -61,7 +162,7 @@
             }
         },
         "currency": {
-            "title": "Dövizler",
+            "title": "Döviz",
             "description": "Para birimi ayarlarınızı aşağıdan güncelleyebilirsiniz.",
             "not-found": "Para birimi bulunamadı.",
             "name": "Döviz",

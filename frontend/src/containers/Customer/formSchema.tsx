@@ -5,65 +5,65 @@ const formSchema = z.object({
   name: z
     .string()
     .min(2, {
-      message: "Lütfen geçerli bir isim giriniz.",
+      message: "Please enter a valid name.",
     })
     .max(64, {
-      message: "Lütfen geçerli bir isim giriniz.",
+      message: "Please enter a valid name.",
     }),
   isCompany: z.boolean(),
   address: z
     .string()
     .max(128, {
-      message: "Lütfen geçerli bir adres giriniz.",
+      message: "Please enter a valid address.",
     })
     .optional(),
   city: z
     .string()
     .max(64, {
-      message: "Lütfen geçerli bir şehir giriniz.",
+      message: "Please enter a valid city.",
     })
     .optional(),
   district: z
     .string()
     .max(64, {
-      message: "Lütfen geçerli bir ilçe giriniz.",
+      message: "Please enter a valid district.",
     })
     .optional(),
   postCode: z
     .string()
     .max(16, {
-      message: "Lütfen geçerli bir posta kodu giriniz.",
+      message: "Please enter a valid postal code.",
     })
     .optional(),
   country: z
     .string()
     .max(64, {
-      message: "Lütfen geçerli bir ülke giriniz.",
+      message: "Please enter a valid country.",
     })
     .optional(),
   phoneNumber: z
     .string()
     .max(64, {
-      message: "Lütfen geçerli bir adres giriniz.",
+      message: "Please enter a valid address.",
     })
     .optional(),
   website: z
     .string()
     .max(64, {
-      message: "Lütfen geçerli bir website giriniz.",
+      message: "Please enter a valid website.",
     })
     .optional(),
   governmentId: z
     .string()
     .max(64, {
-      message: "Lütfen geçerli bir TCKNO / Vergi no giriniz.",
+      message: "Please enter a valid TR ID number / Tax number.",
     })
     .optional(),
   isPotantial: z.boolean(),
   currencyCode: z
     .string()
     .max(6, {
-      message: "Lütfen geçerli bir kur giriniz.",
+      message: "Please enter a valid currency.",
     })
     .optional(),
   contacts: z.array(
@@ -72,15 +72,15 @@ const formSchema = z.object({
       name: z
         .string()
         .min(2, {
-          message: "Lütfen geçerli bir isim giriniz.",
+          message: "Please enter a valid name.",
         })
         .max(64, {
-          message: "Lütfen geçerli bir isim giriniz.",
+          message: "Please enter a valid name.",
         }),
       email: z
         .string()
         .max(64, {
-          message: "Lütfen geçerli bir email giriniz.",
+          message: "Please enter a valid email.",
         })
         .optional(),
     })
