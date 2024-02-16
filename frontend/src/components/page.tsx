@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import {
   KanbanSquare,
   LayoutDashboard,
+  FileLineChart,
   CalendarDays,
   Users,
   UserPlus,
@@ -84,6 +85,11 @@ const defaultSidebar = [
         to: "/finance/categories",
       },
     ],
+  },
+  {
+    name: `${t("sidebar.reports")}`,
+    icon: FileLineChart,
+    to: "/reports",
   },
   {
     name: `${t("sidebar.settings")}`,
