@@ -98,7 +98,7 @@ const Detail = ({ open, setOpen, setUpsertOpen, eventId }: DetailProps) => {
                 <Users className="w-6 h-6 mt-px" />
                 <div className="space-y-2">
                   <p className="text-sm font-medium leading-none">
-                    Davetli kişiler:
+                  {t("calendar.attendees")}
                   </p>
                   <div className="text-sm text-muted-foreground">
                     {event?.attendee.map((attendee, index) => {

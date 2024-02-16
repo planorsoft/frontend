@@ -140,6 +140,7 @@
         "project": "Project",
         "task": "Tasks",
         "finance": "Finance",
+        "reports": "Reports",
         "settings": "Settings"
     },
     "settings": {
