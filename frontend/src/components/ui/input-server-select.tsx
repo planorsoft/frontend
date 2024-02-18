@@ -1,23 +1,11 @@
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Control } from "react-hook-form";
-import {
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "./form";
 import { AxiosError } from "axios";
 import axios from "@/lib/axios";
 import { useEffect, useState } from "react";
 import { toast } from "./use-toast";
 import Loader from "./loader";
+import { InputSelect } from "./input-select";
+import { Control } from "react-hook-form";
+import { getTenant } from "@/lib/tenant";
 
 interface SelectList {
   value: string;
@@ -29,7 +17,8 @@ interface InputServerSelectProps extends React.HTMLAttributes<HTMLDivElement> {
   control: Control<any>;
   placeholder: string;
   fieldName: string;
-  entity: "project" | "customer";
+  entity: "project" | "customer" | "user";
+  disabled?: boolean;
 }
 
 export function InputServerSelect({
@@ -37,6 +26,7 @@ export function InputServerSelect({
   placeholder,
   fieldName,
   entity,
+  disabled = false
 }: InputServerSelectProps) {
   const [selectList, setSelectList] = useState<SelectList[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
@@ -85,6 +75,32 @@ export function InputServerSelect({
     }
   };
 
+  const getUsers = async () => {
+    try {
+      setLoading(true);
+      const response = await axios.get("/odata/users?$select=Id,Email,Name", {
+        headers: {
+          "Planor-Tenant": getTenant(),
+        },
+      });
+      const list = response.data.value.map((item) => ({
+        value: item.email,
+        label: item.name,
+      }));
+      setSelectList(list);
+      setLoading(false);
+    } catch (error) {
+      if (!(error instanceof AxiosError)) {
+        throw error;
+      }
+      toast({
+        title: "Hata oluştu",
+        description: error.message,
+        variant: "destructive",
+      });
+    }
+  };
+
   useEffect(() => {
     switch (entity) {
       case "project":
@@ -92,6 +108,9 @@ export function InputServerSelect({
         break;
       case "customer":
         getCustomers();
+        break;
+      case "user":
+        getUsers();
         break;
       default:
         break;
@@ -103,35 +122,12 @@ export function InputServerSelect({
       {loading ? (
         <Loader />
       ) : (
-        <FormField
+        <InputSelect
           control={control}
-          name={fieldName}
-          render={({ field }) => {
-            let id = field.value?.toString();
-            if (id == 0) {
-              id = "";
-            }
-            return (
-              <FormItem>
-                <FormLabel>{placeholder}</FormLabel>
-                <Select onValueChange={field.onChange} value={id}>
-                  <FormControl>
-                    <SelectTrigger>
-                      <SelectValue placeholder={placeholder} />
-                    </SelectTrigger>
-                  </FormControl>
-                  <SelectContent className="overflow-y-auto max-h-[10rem]">
-                    {selectList.map((item, index) => (
-                      <SelectItem key={index} value={item.value}>
-                        {item.label}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-                <FormMessage />
-              </FormItem>
-            );
-          }}
+          placeholder={placeholder}
+          fieldName={fieldName}
+          selectList={selectList}
+          disabled={disabled}
         />
       )}
     </>

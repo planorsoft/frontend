@@ -5,10 +5,10 @@ import axios from "@/lib/axios";
 import { useEffect, useState } from "react";
 import { toast } from "./use-toast";
 import Loader from "./loader";
-import { Attendee } from "@/containers/Calendar/types";
 import { MultiSelect } from "./mutliselect";
 import jwtDecoder from "@/lib/jwtDecoder";
 import { getTenant } from "@/lib/tenant";
+import { User } from "@/containers/Settings/Team/types";
 
 interface SelectList {
   value: string;
@@ -21,7 +21,7 @@ interface InputServerMultiSelectProps
   control: Control<any>;
   placeholder: string;
   fieldName: string;
-  entity: "attendee";
+  entity: "user";
 }
 
 export function InputServerMultiSelect({
@@ -34,21 +34,26 @@ export function InputServerMultiSelect({
   const [loading, setLoading] = useState<boolean>(false);
   const decodedToken = jwtDecoder();
 
-  const getAttendee = async () => {
+  const getUsers = async () => {
+    setLoading(true);
     try {
-      setLoading(true);
       const response = await axios.get(
-        `/odata/users?tenant=${getTenant()}?$select=Name,Email&$expand=Customer($select=Name)`
+        `/odata/users?$select=Name,Email&$expand=Customer($select=Name)`,
+        {
+          headers: {
+            "Planor-Tenant": getTenant(),
+          },
+        }
       );
       const orderByCustomerName = response.data.value.sort(
-        (a: Attendee, b: Attendee) => {
+        (a: User, b: User) => {
           if (a.customer && b.customer) {
             return a.customer.name.localeCompare(b.customer.name);
           }
           return 0;
         }
       );
-      let list = orderByCustomerName.map((item: Attendee) => ({
+      let list = orderByCustomerName.map((item: User) => ({
         value: item.email,
         label: item.customer
           ? `(${item.customer.name}) ${item.name}`
@@ -69,7 +74,6 @@ export function InputServerMultiSelect({
         );
       }
       setSelectList(list);
-      setLoading(false);
     } catch (error) {
       if (!(error instanceof AxiosError)) {
         throw error;
@@ -79,13 +83,15 @@ export function InputServerMultiSelect({
         description: error.message,
         variant: "destructive",
       });
+    } finally {
+      setLoading(false);
     }
   };
 
   useEffect(() => {
     switch (entity) {
-      case "attendee":
-        getAttendee();
+      case "user":
+        getUsers();
         break;
       default:
         break;

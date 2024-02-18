@@ -8,9 +8,10 @@ interface InputBooleanProps extends React.HTMLAttributes<HTMLDivElement> {
   control: Control<any>;
   placeholder: string;
   fieldName: string;
+  disabled?: boolean;
 }
 
-const InputBoolean = ({ control, placeholder, fieldName }: InputBooleanProps) => {
+const InputBoolean = ({ control, placeholder, fieldName, disabled = false }: InputBooleanProps) => {
   return (
     <FormField
       control={control}
@@ -19,7 +20,7 @@ const InputBoolean = ({ control, placeholder, fieldName }: InputBooleanProps) =>
         <FormItem className="flex flex-row items-center justify-between rounded-lg border px-2 py-1">
           <FormLabel>{ placeholder }</FormLabel>
           <FormControl>
-            <Switch checked={field.value} onCheckedChange={field.onChange} />
+            <Switch disabled={disabled} checked={field.value} onCheckedChange={field.onChange} />
           </FormControl>
           <FormMessage />
         </FormItem>

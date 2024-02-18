@@ -39,9 +39,10 @@ interface UpsertProps extends React.HTMLAttributes<HTMLDivElement> {
   open: boolean;
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
   customerId: number;
+  isPotential: boolean;
 }
 
-const Upsert = ({ open, setOpen, customerId }: UpsertProps) => {
+const Upsert = ({ open, setOpen, customerId, isPotential }: UpsertProps) => {
   const { t } = useTranslation();
   const dispatch = useAppDispatch();
   const [remove, setRemove] = useState<boolean>();
@@ -69,7 +70,7 @@ const Upsert = ({ open, setOpen, customerId }: UpsertProps) => {
       phoneNumber: "",
       website: "",
       governmentId: "",
-      isPotantial: false,
+      isPotantial: isPotential,
       currencyCode: "",
       contacts: [],
     },
@@ -244,12 +245,13 @@ const Upsert = ({ open, setOpen, customerId }: UpsertProps) => {
                   />
                   <InputBoolean
                     control={form.control}
-                    placeholder={`${t("customer.company")} *`}
+                    placeholder={`${t("customer.company")}`}
                     fieldName="isCompany"
                   />
                   <InputBoolean
                     control={form.control}
-                    placeholder={`${t("customer.potential")} *`}
+                    disabled={customerId === 0}
+                    placeholder={`${t("customer.potential")}`}
                     fieldName="isPotantial"
                   />
                   <InputString
@@ -310,7 +312,7 @@ const Upsert = ({ open, setOpen, customerId }: UpsertProps) => {
                       {customerState.loading && (
                         <LoaderIcon className="mr-2 h-4 w-4 animate-spin" />
                       )}
-                      
+                      {t("common.save")}
                     </Button>
                   ) : (
                     <div className="grid grid-cols-12 gap-2">
@@ -322,7 +324,7 @@ const Upsert = ({ open, setOpen, customerId }: UpsertProps) => {
                         {customerState.loading && (
                           <LoaderIcon className="mr-2 h-4 w-4 animate-spin" />
                         )}
-                        {`${t("common.save")}`}
+                        {t("common.save")}
                       </Button>
                       <Button
                         disabled={customerState.loading}

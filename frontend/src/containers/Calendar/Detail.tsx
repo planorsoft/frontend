@@ -57,7 +57,9 @@ const Detail = ({ open, setOpen, setUpsertOpen, eventId }: DetailProps) => {
               <div className="my-3 flex items-start space-x-4 rounded-md transition-all">
                 <Info className="w-6 h-6 mt-px" />
                 <div className="space-y-2">
-                  <p className="text-sm font-medium leading-none">{t("calendar.description")}:</p>
+                  <p className="text-sm font-medium leading-none">
+                    {t("calendar.description")}:
+                  </p>
                   <p className="text-sm text-muted-foreground">
                     {event?.description}
                   </p>
@@ -74,7 +76,7 @@ const Detail = ({ open, setOpen, setUpsertOpen, eventId }: DetailProps) => {
                 )}
                 <div className="space-y-2">
                   <p className="text-sm font-medium leading-none">
-                  {t("calendar.location-link")}:
+                    {t("calendar.location-link")}:
                   </p>
                   <div className="text-sm text-muted-foreground">
                     {isUrl(event.location) ? (
@@ -86,7 +88,9 @@ const Detail = ({ open, setOpen, setUpsertOpen, eventId }: DetailProps) => {
                         <span>{event?.location}</span>
                       </a>
                     ) : (
-                      <p>{t("calendar.location")}: {event?.location}</p>
+                      <p>
+                        {t("calendar.location")}: {event?.location}
+                      </p>
                     )}
                   </div>
                 </div>
@@ -102,17 +106,30 @@ const Detail = ({ open, setOpen, setUpsertOpen, eventId }: DetailProps) => {
                   </p>
                   <div className="text-sm text-muted-foreground">
                     {event?.attendee.map((attendee, index) => {
-                      console.log(attendee);
+                      if (attendee.email) {
+                        return (
+                          <div key={index}>
+                            <p className="text-sm text-muted-foreground">
+                              <a
+                                href={`mailto:${attendee.email}`}
+                                className="hover:underline"
+                              >
+                                {attendee.email}
+                              </a>
+                              {attendee.name && `, ${attendee.name}`}
+                            </p>
+                          </div>
+                        );
+                      }
                       return (
                         <div key={index}>
                           <p className="text-sm text-muted-foreground">
                             <a
-                              href={`mailto:${attendee.email}`}
+                              href={`mailto:${attendee}`}
                               className="hover:underline"
                             >
-                              {attendee.email}
+                              {attendee}
                             </a>
-                            {attendee.name && `, ${attendee.name}`}
                           </p>
                         </div>
                       );

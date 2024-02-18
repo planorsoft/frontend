@@ -14,7 +14,7 @@ import { LoaderIcon, Trash2 } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { Attendee, CalendarState } from "./types";
+import { CalendarState } from "./types";
 import { useAppDispatch, useAppSelector } from "@/store";
 import { selectEventById } from "./selector";
 import { createEvent, getEvent, updateEvent } from "./actions";
@@ -24,6 +24,7 @@ import Remove from "@/components/remove";
 import { DateTime } from "luxon";
 import { InputServerMultiSelect } from "@/components/ui/input-server-multiselect";
 import { useTranslation } from "react-i18next";
+import { User } from "../Settings/Team/types";
 
 const formSchema = z.object({
   id: z.number().optional(),
@@ -101,7 +102,7 @@ const Upsert = ({ open, setOpen, eventId, date }: UpsertProps) => {
       form.setValue("color", event.color || "blue");
       form.setValue(
         "attendee",
-        event.attendee?.map((attendee: Attendee) => attendee.email) || []
+        event.attendee?.map((attendee: User) => attendee.email || attendee) || []
       );
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -194,7 +195,7 @@ const Upsert = ({ open, setOpen, eventId, date }: UpsertProps) => {
                   control={form.control}
                   placeholder= {t("calendar.attendee")}
                   fieldName="attendee"
-                  entity="attendee"
+                  entity="user"
                 />
                 <InputSelect
                   control={form.control}

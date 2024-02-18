@@ -1,3 +1,5 @@
+import { Customer } from "@/containers/Customer/types";
+
 export const userTypes = {
   GET_TEAM_REQUEST: "GET_TEAM_REQUEST",
   GET_TEAM_SUCCESS: "GET_TEAM_SUCCESS",
@@ -30,6 +32,7 @@ export interface User {
   avatarUri?: string;
   roleName?: string;
   password?: string;
+  customer: Customer;
 }
 
 export interface UserState {

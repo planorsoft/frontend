@@ -38,6 +38,7 @@ const MultiSelect = forwardRef<HTMLInputElement, InputProps>(
 
     console.log({ options, selected });
 
+
     return (
       <Popover open={open} onOpenChange={setOpen} {...props}>
         <PopoverTrigger asChild>
@@ -58,7 +59,9 @@ const MultiSelect = forwardRef<HTMLInputElement, InputProps>(
                       className="mr-1 mb-1"
                       onClick={() => handleUnselect(item)}
                     >
-                      {options.find((option) => item === option.value)?.label}
+                      {console.log({options, item})}
+                      {options.find((option) => item == option.value)?.label || 
+                      "Bulunamadı"}
                       <a
                         className="ml-1 ring-offset-background rounded-full outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
                         onKeyDown={(e) => {
