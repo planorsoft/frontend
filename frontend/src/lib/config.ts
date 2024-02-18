@@ -2,7 +2,7 @@ export const isDevelopment = () => {
     return location.hostname.includes("localhost");
 };
 
-export const baseURL = "https://planor-be.azurewebsites.net/api";
+export const baseURL = isDevelopment() ? "http://localhost:5050/api" : "https://planor-be.azurewebsites.net/api";
 
 export const setVersion = (version: string) => {
     localStorage.setItem("version", version);

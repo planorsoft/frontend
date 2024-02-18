@@ -28,6 +28,7 @@ import {
 } from "./actions";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import InputPhone from "@/components/ui/input-phone";
+import { useTranslation } from "react-i18next";
 
 const formSchema = z.object({
   name: z
@@ -59,6 +60,7 @@ interface UpsertContactsProps extends React.HTMLAttributes<HTMLDivElement> {
 }
 
 const UpsertContacts = ({ open, setOpen, customerId }: UpsertContactsProps) => {
+  const { t } = useTranslation();
   const dispatch = useAppDispatch();
   const [create, setCreate] = useState(false);
   const [contacts, setContacts] = useState<Contact[]>();

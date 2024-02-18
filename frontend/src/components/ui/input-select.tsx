@@ -25,6 +25,7 @@ interface InputSelectProps extends React.HTMLAttributes<HTMLDivElement> {
   placeholder: string;
   fieldName: string;
   selectList: SelectList[];
+  disabled?: boolean;
 }
 
 export function InputSelect({
@@ -32,20 +33,21 @@ export function InputSelect({
   placeholder,
   fieldName,
   selectList,
+  disabled = false,
 }: InputSelectProps) {
   return (
     <FormField
       control={control}
       name={fieldName}
       render={({ field }) => {
-        let id = field.value?.toString();
-        if (id == 0) {
-          id = "";
+        let value = field.value?.toString();
+        if (value == 0) {
+          value = "";
         }
         return (
           <FormItem>
             <FormLabel>{placeholder}</FormLabel>
-            <Select onValueChange={field.onChange} value={id}>
+            <Select onValueChange={field.onChange} value={value} disabled={disabled}>
               <FormControl>
                 <SelectTrigger>
                   <SelectValue placeholder={placeholder} />

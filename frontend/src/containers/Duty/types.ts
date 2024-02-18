@@ -1,4 +1,5 @@
 import { Project } from "../Project/types";
+import { User } from "../Settings/Team/types";
 
 export const dutyTypes = {
     GET_ACTIVE_DUTIES_REQUEST: 'GET_ACTIVE_DUTIES_REQUEST',
@@ -81,6 +82,7 @@ export interface Duty {
     completed?: boolean;
     order?: number;
     assignedTo?: string;
+    helpers?: User[] | string[];
 }
 
 export interface DutyCategory {

@@ -15,7 +15,7 @@ import { useState } from "react";
 import { useAppDispatch, useAppSelector } from "@/store";
 import { updateDutyOrders } from "./actions";
 import { Button } from "@/components/ui/button";
-import { GripHorizontal, Loader, Pencil } from "lucide-react";
+import { GripHorizontal, Loader, Pencil, User } from "lucide-react";
 import { selectDutyByProjectId, selectDutySizeById } from "./selector";
 import { ApplicationState } from "../Settings/Application/types";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";

@@ -20,11 +20,12 @@ import { DutyCategoryState, DutySizeState, DutyState } from "./types";
 import { InputSelect } from "@/components/ui/input-select";
 import { InputServerSelect } from "@/components/ui/input-server-select";
 import Remove from "@/components/remove";
-import InputMarkdown from "@/components/ui/input-markdown";
 import { ApplicationState } from "../Settings/Application/types";
 import InputTextarea from "@/components/ui/input-textarea";
 import { selectDefaultDutyCategory } from "./selector";
 import { useTranslation } from "react-i18next";
+import { User } from "../Settings/Team/types";
+import { InputServerMultiSelect } from "@/components/ui/input-server-multiselect";
 
 const formSchema = z.object({
   id: z.number().optional(),
@@ -56,14 +57,15 @@ const formSchema = z.object({
     .nonempty({
       message: "Lütfen geçerli bir büyüklük giriniz.",
     }),
-  // priorityId: z.number().int().optional(),
+  assignedTo: z.string().optional(),
+  helpers: z.array(z.string()).optional(),
 });
 
 interface UpsertDutyProps extends React.HTMLAttributes<HTMLDivElement> {
   open: boolean;
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
   dutyId: number;
-  projectId: number;
+  projectId: number | null;
 }
 
 const UpsertDuty = ({ open, setOpen, dutyId, projectId }: UpsertDutyProps) => {
@@ -97,11 +99,14 @@ const UpsertDuty = ({ open, setOpen, dutyId, projectId }: UpsertDutyProps) => {
       projectId: projectId?.toString(),
       categoryId: "",
       sizeId: "",
+      assignedTo: "",
+      helpers: [],
     },
   });
 
   useEffect(() => {
     form.reset();
+    console.log({ projectId });
   }, [open]);
 
   useEffect(() => {
@@ -121,14 +126,18 @@ const UpsertDuty = ({ open, setOpen, dutyId, projectId }: UpsertDutyProps) => {
   }, [error]);
 
   useEffect(() => {
-    if (duty) {
-      console.log();
+    if (duty.id) {
       form.setValue("id", duty.id || 0);
       form.setValue("title", duty.title || "");
       form.setValue("description", duty.description || "");
       form.setValue("categoryId", duty.categoryId?.toString() || "");
       form.setValue("projectId", duty.projectId?.toString() || "");
       form.setValue("sizeId", duty.sizeId?.toString() || "");
+      form.setValue("assignedTo", duty.assignedTo || "");
+      form.setValue(
+        "helpers",
+        duty.helpers?.map((attendee: User) => attendee.email) || []
+      );
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [duty]);
@@ -148,6 +157,8 @@ const UpsertDuty = ({ open, setOpen, dutyId, projectId }: UpsertDutyProps) => {
       categoryId: parseInt(values.categoryId),
       projectId: parseInt(values.projectId),
       sizeId: parseInt(values.sizeId),
+      assignedTo: values.assignedTo,
+      helpers: values.helpers,
     };
 
     if (values.id) {
@@ -173,7 +184,8 @@ const UpsertDuty = ({ open, setOpen, dutyId, projectId }: UpsertDutyProps) => {
                 `${t("task.create")}`
               ) : applicationState.application?.code ? (
                 <p>
-                  {applicationState.application?.code}-{dutyId}, `${t("task.edit")}`
+                  {applicationState.application?.code}-{dutyId}, `$
+                  {t("task.edit")}`
                 </p>
               ) : (
                 `${t("task.edit")}`
@@ -190,7 +202,7 @@ const UpsertDuty = ({ open, setOpen, dutyId, projectId }: UpsertDutyProps) => {
               >
                 <InputString
                   control={form.control}
-                  placeholder= {t("project.title")}
+                  placeholder={t("project.title")}
                   fieldName="title"
                 />
                 <InputTextarea
@@ -203,7 +215,7 @@ const UpsertDuty = ({ open, setOpen, dutyId, projectId }: UpsertDutyProps) => {
                   placeholder={t("finance.model.category")}
                   fieldName="categoryId"
                   selectList={dutyCategories.map((x) => ({
-                    value: x.id.toString(),
+                    value: x.id?.toString(),
                     label: x.title,
                   }))}
                 />
@@ -218,11 +230,23 @@ const UpsertDuty = ({ open, setOpen, dutyId, projectId }: UpsertDutyProps) => {
                 />
                 <InputServerSelect
                   control={form.control}
+                  disabled={projectId !== 0 && projectId !== null}
                   placeholder={t("task.project")}
                   fieldName="projectId"
                   entity="project"
                 />
-
+                <InputServerSelect
+                  control={form.control}
+                  placeholder={t("task.assignedTo")}
+                  fieldName="assignedTo"
+                  entity="user"
+                />
+                <InputServerMultiSelect
+                  control={form.control}
+                  placeholder={t("task.helpers")}
+                  fieldName="helpers"
+                  entity="user"
+                />
                 {dutyId === 0 ? (
                   <Button disabled={loading} type="submit" className="w-full">
                     {loading && (

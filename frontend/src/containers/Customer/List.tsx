@@ -38,7 +38,7 @@ interface ListProps extends React.HTMLAttributes<HTMLDivElement> {
 const List = ({ type }: ListProps) => {
   useTitle("Customers");
   const { t } = useTranslation();
-  const isPotential = type === "real";
+  const isPotential = type !== "real";
   const [open, setOpen] = useState<boolean>(false);
   const [openContacts, setOpenContacts] = useState<boolean>(false);
   const [id, setId] = useState<number>(0);
@@ -192,7 +192,7 @@ const List = ({ type }: ListProps) => {
           </AlertDescription>
         </Alert>
       )}
-      {open && <Upsert open={open} setOpen={setOpen} customerId={id} />}
+      {open && <Upsert open={open} setOpen={setOpen} customerId={id} isPotential={isPotential} />}
       {openContacts && (
         <UpsertContacts
           open={openContacts}

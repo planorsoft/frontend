@@ -1,4 +1,4 @@
-import { Customer } from "../Customer/types";
+import { User } from "../Settings/Team/types";
 
 export const calendarTypes = {
     GET_CALENDAR_EVENTS_REQUEST: 'GET_CALENDAR_EVENTS_REQUEST',
@@ -30,14 +30,7 @@ export interface Event {
     end?: number;
     color?: string;
     location?: string;
-    attendee?: Attendee[];
-}
-
-export interface Attendee {
-    email: string;
-    name?: string;
-    avatarUri?: string;
-    customer?: Customer;
+    attendee?: User[];
 }
 
 export interface CalendarState {

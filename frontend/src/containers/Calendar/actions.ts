@@ -57,10 +57,10 @@ export const getEvent = (id: number) => async (dispatch: Dispatch) => {
 export const createEvent = (data: Event) => async (dispatch: Dispatch) => {
     dispatch({ type: calendarTypes.CREATE_CALENDAR_EVENT_REQUEST });
     try {
+
         const result = await axios.post('/events', data);
         const response = data;
         response.id = result.data;
-        response.attendee = response.attendee?.map((item) => ({ email: item }));
         dispatch({ type: calendarTypes.CREATE_CALENDAR_EVENT_SUCCESS, payload: response });
     } catch (error: unknown) {
         if (!(error instanceof AxiosError)) { throw error; }

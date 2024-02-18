@@ -97,7 +97,7 @@ const Remove = ({
         <AlertDialogHeader>
           <AlertDialogTitle>Emin misin?</AlertDialogTitle>
           <AlertDialogDescription>
-            Bu işlem geri alınamaz. Bu, veri kalıcı olarak silecektir.
+            Bu işlem geri alınamaz. İlgili varlık ve bağımlı olan tüm varlıklar kalıcı olarak silinecektir.
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
