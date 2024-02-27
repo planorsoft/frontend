@@ -3,9 +3,9 @@ import { CustomerState } from "@/containers/Customer/types";
 import {
   Check,
   CircleSlash,
+  Eye,
   Folder,
   Loader,
-  Pencil,
   Plus,
   UserCog,
   X,
@@ -30,6 +30,7 @@ import { profileImageGenerator } from "@/lib/profile-image";
 import { useNavigate } from "react-router-dom";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { useTranslation } from "react-i18next";
+import Detail from "./Detail";
 
 interface ListProps extends React.HTMLAttributes<HTMLDivElement> {
   type: "real" | "potential";
@@ -40,6 +41,7 @@ const List = ({ type }: ListProps) => {
   const { t } = useTranslation();
   const isPotential = type !== "real";
   const [open, setOpen] = useState<boolean>(false);
+  const [detail, setDetail] = useState<boolean>(false);
   const [openContacts, setOpenContacts] = useState<boolean>(false);
   const [id, setId] = useState<number>(0);
   const navigate = useNavigate();
@@ -55,12 +57,21 @@ const List = ({ type }: ListProps) => {
     }
   }, [type]);
 
-  const select = (id: number, type?: string) => {
+  const select = (id: number, type: "upsert" | "contact" | "detail") => {
     setId(id);
-    if (type === "contact") {
-      setOpenContacts(true);
-    } else {
-      setOpen(true);
+    switch (type) {
+      case "contact":
+        setOpenContacts(true);
+        break;
+      case "detail":
+        setDetail(true);
+        break;
+      case "upsert":
+        setOpen(true);
+        break;
+      default:
+        setOpen(true);
+        break;
     }
   };
 
@@ -74,7 +85,11 @@ const List = ({ type }: ListProps) => {
         <h2 className="text-xl md:text-2xl font-semibold">
           {type === "real" ? "Customers" : "Potential Customers"}
         </h2>
-        <Button onClick={() => { select(0) }}>
+        <Button
+          onClick={() => {
+            select(0, "upsert");
+          }}
+        >
           <Plus size={16} /> {t("customer.create")}
         </Button>
       </div>
@@ -89,7 +104,6 @@ const List = ({ type }: ListProps) => {
             </TableCaption>
             <TableHeader>
               <TableRow>
-                <TableHead>Id</TableHead>
                 <TableHead>{t("customer.photo")}</TableHead>
                 <TableHead>{t("customer.name")}</TableHead>
                 <TableHead>{t("customer.company")}</TableHead>
@@ -100,7 +114,6 @@ const List = ({ type }: ListProps) => {
             <TableBody>
               {customerState.customers.map((customer) => (
                 <TableRow key={customer.id}>
-                  <TableCell>{customer.id}</TableCell>
                   <TableCell>
                     <Avatar className="ml-2 h-7 w-7 max-[320px]:hidden">
                       <AvatarImage
@@ -132,9 +145,9 @@ const List = ({ type }: ListProps) => {
                       <Button
                         variant="outline"
                         size="icon"
-                        onClick={() => select(customer.id || 0)}
+                        onClick={() => select(customer.id || 0, "detail")}
                       >
-                        <Pencil className="w-4 h-4" />
+                        <Eye className="w-4 h-4" />
                       </Button>
                       <Button
                         variant="outline"
@@ -188,11 +201,26 @@ const List = ({ type }: ListProps) => {
           <CircleSlash className="h-4 w-4" />
           <AlertTitle>{t("customer.not-found")}</AlertTitle>
           <AlertDescription>
-          {t("customer.not-found-description")}
+            {t("customer.not-found-description")}
           </AlertDescription>
         </Alert>
       )}
-      {open && <Upsert open={open} setOpen={setOpen} customerId={id} isPotential={isPotential} />}
+      {open && (
+        <Upsert
+          open={open}
+          setOpen={setOpen}
+          customerId={id}
+          isPotential={isPotential}
+        />
+      )}
+      {detail && (
+        <Detail
+          open={detail}
+          setOpen={setDetail}
+          setUpsertOpen={setOpen}
+          customerId={id}
+        />
+      )}
       {openContacts && (
         <UpsertContacts
           open={openContacts}

@@ -105,13 +105,10 @@ const UpsertDuty = ({ open, setOpen, dutyId, projectId }: UpsertDutyProps) => {
   });
 
   useEffect(() => {
-    form.reset();
-    console.log({ projectId });
-  }, [open]);
-
-  useEffect(() => {
     if (dutyId != 0 && open) {
       dispatch(getDuty(dutyId));
+    } else {
+      form.reset();
     }
   }, [open]);
 
@@ -126,7 +123,7 @@ const UpsertDuty = ({ open, setOpen, dutyId, projectId }: UpsertDutyProps) => {
   }, [error]);
 
   useEffect(() => {
-    if (duty.id) {
+    if (duty.id && dutyId != 0) {
       form.setValue("id", duty.id || 0);
       form.setValue("title", duty.title || "");
       form.setValue("description", duty.description || "");
@@ -181,14 +178,14 @@ const UpsertDuty = ({ open, setOpen, dutyId, projectId }: UpsertDutyProps) => {
           <DialogTitle>
             <div className="flex justify-start">
               {dutyId === 0 ? (
-                `${t("task.create")}`
+                t("task.create")
               ) : applicationState.application?.code ? (
                 <p>
-                  {applicationState.application?.code}-{dutyId}, `$
-                  {t("task.edit")}`
+                  {applicationState.application?.code}-{dutyId}, {" "}
+                  {t("task.edit")}
                 </p>
               ) : (
-                `${t("task.edit")}`
+                t("task.edit")
               )}
             </div>
           </DialogTitle>

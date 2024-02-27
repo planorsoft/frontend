@@ -4,7 +4,7 @@ import {
   CircleSlash,
   KanbanSquare,
   Loader,
-  Pencil,
+  Eye,
   Plus,
   X,
 } from "lucide-react";
@@ -28,13 +28,15 @@ import { CustomerState } from "../Customer/types";
 import { getCustomer } from "../Customer/actions";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { useTranslation } from "react-i18next";
+import Detail from "./Detail";
 
 const List = () => {
   useTitle("Projects");
   const { t } = useTranslation();
   const customerId = Number(useParams().customerId) || undefined;
   const [open, setOpen] = useState<boolean>(false);
-  const [id, setId] = useState<number | undefined>(0);
+  const [detail, setDetail] = useState<boolean>(false);
+  const [id, setId] = useState<number>(0);
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const projectState = useAppSelector<ProjectState>(
@@ -63,14 +65,19 @@ const List = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [customerId]);
 
-  const select = (id?: number) => {
-    setId(id || 0);
-    setOpen(true);
-  };
-
-  const openUpsert = () => {
-    setId(0);
-    setOpen(true);
+  const select = (id: number, type: "upsert" | "detail") => {
+    setId(id);
+    switch (type) {
+      case "detail":
+        setDetail(true);
+        break;
+      case "upsert":
+        setOpen(true);
+        break;
+      default:
+        setOpen(true);
+        break;
+    }
   };
 
   const fetchPage = (page: number) => {
@@ -81,7 +88,11 @@ const List = () => {
     <div className="px-2 py-4 md:px-20 mx-auto">
       <div className="flex justify-between my-2">
         <h2 className="text-2xl font-semibold">{t("project.title")}</h2>
-        <Button onClick={openUpsert}>
+        <Button
+          onClick={() => {
+            select(0, "upsert");
+          }}
+        >
           <Plus size={16} /> {t("project.create")}
         </Button>
       </div>
@@ -124,9 +135,9 @@ const List = () => {
                       <Button
                         variant="outline"
                         size="icon"
-                        onClick={() => select(project.id)}
+                        onClick={() => select(project.id || 0, "detail")}
                       >
-                        <Pencil className="w-4 h-4" />
+                        <Eye className="w-4 h-4" />
                       </Button>
                       <Button
                         variant="outline"
@@ -171,11 +182,19 @@ const List = () => {
           <CircleSlash className="h-4 w-4" />
           <AlertTitle>{t("project.cnot-found")}</AlertTitle>
           <AlertDescription>
-          {t("project.not-found-description")}
+            {t("project.not-found-description")}
           </AlertDescription>
         </Alert>
       )}
       {open && <Upsert open={open} setOpen={setOpen} projectId={id} />}
+      {detail && (
+        <Detail
+          open={detail}
+          setOpen={setDetail}
+          setUpsertOpen={setOpen}
+          projectId={id}
+        />
+      )}
     </div>
   );
 };
