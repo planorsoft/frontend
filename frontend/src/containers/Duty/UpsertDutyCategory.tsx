@@ -68,6 +68,9 @@ const UpsertDutyCategory = ({
   useEffect(() => {
     if (dutyCategoryId != 0) {
       dispatch(getDutyCategory(dutyCategoryId));
+    } else {
+      form.setValue("id", 0);
+      form.setValue("title", "");
     }
   }, [dutyCategoryId]);
 
@@ -82,7 +85,7 @@ const UpsertDutyCategory = ({
   }, [error]);
 
   useEffect(() => {
-    if (dutyCategory) {
+    if (dutyCategory && dutyCategoryId != 0) {
       form.setValue("id", dutyCategory.id || 0);
       form.setValue("title", dutyCategory.title || "");
     }

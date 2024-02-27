@@ -14,6 +14,7 @@ import useTitle from "@/hooks/use-title";
 import { ProjectState } from "../Project/types";
 import { getProject } from "../Project/actions";
 import { useTranslation } from "react-i18next";
+import Detail from "./Detail";
 
 const Container = () => {
   const { t } = useTranslation();
@@ -23,15 +24,20 @@ const Container = () => {
   const dutyCategoryState = useAppSelector<DutyCategoryState>(
     (state) => state.dutyCategoryState
   );
-  const dutySizeState = useAppSelector<DutySizeState>(state => state.dutySizeState);
-  const projectState = useAppSelector<ProjectState>((state) => state.projectState);
+  const dutySizeState = useAppSelector<DutySizeState>(
+    (state) => state.dutySizeState
+  );
+  const projectState = useAppSelector<ProjectState>(
+    (state) => state.projectState
+  );
   const [isOpenUpsertDuty, setIsOpenUpsertDuty] = useState<boolean>(false);
+  const [isOpenDutyDetail, setIsOpenDutyDetail] = useState<boolean>(false);
   const [dutyId, setDutyId] = useState<number>(0);
-  const [isOpenUpsertDutyCategory, setIsOpenUpsertDutyCategory] = useState<boolean>(false);
+  const [isOpenUpsertDutyCategory, setIsOpenUpsertDutyCategory] =
+    useState<boolean>(false);
   const [dutyCategoryId, setDutyCategoryId] = useState<number>(0);
   const projectId = Number(useParams().projectId) || null;
   const project = projectState.project;
-
 
   useEffect(() => {
     if (dutyCategoryState.dutyCategories.length === 0) {
@@ -55,7 +61,11 @@ const Container = () => {
 
   const openUpsertDuty = (id: number = 0) => {
     setDutyId(id);
-    setIsOpenUpsertDuty(true);
+    if (id == 0) {
+      setIsOpenUpsertDuty(true);
+    } else {
+      setIsOpenDutyDetail(true);
+    }
   };
 
   const openUpsertDutyCategory = (id: number = 0) => {
@@ -104,7 +114,7 @@ const Container = () => {
             <CircleSlash className="h-4 w-4" />
             <AlertTitle>{t("task.not-found")}</AlertTitle>
             <AlertDescription>
-            {t("task.not-found-description")}
+              {t("task.not-found-description")}
             </AlertDescription>
           </Alert>
         );
@@ -120,7 +130,7 @@ const Container = () => {
             {project ? `${project.title} için Görevler` : `${t("task.title")}`}
           </h2>
           <p className="leading-7 my-2 dark:text-gray-500 text-gray-600">
-          {t("task.description")}
+            {t("task.description")}
           </p>
         </div>
         <div className="flex justify-end gap-2">
@@ -155,6 +165,14 @@ const Container = () => {
           open={isOpenUpsertDutyCategory}
           setOpen={setIsOpenUpsertDutyCategory}
           dutyCategoryId={dutyCategoryId}
+        />
+      )}
+      {isOpenDutyDetail && (
+        <Detail
+          open={isOpenDutyDetail}
+          setOpen={setIsOpenDutyDetail}
+          setUpsertOpen={setIsOpenUpsertDuty}
+          dutyId={dutyId}
         />
       )}
     </div>

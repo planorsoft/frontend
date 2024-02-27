@@ -22,6 +22,20 @@ export const selectDutySizeById = createSelector(
     }
 )
 
+export const selectDutyCategoryById = createSelector(
+    [
+        ( state : DutyCategoryState) => state.dutyCategories,
+        ( _ : DutyCategoryState, id : number) => id
+    ],
+    (dutyCategories, id) => {
+        return (dutyCategories as DutyCategory[]).find((duty : DutyCategory) => duty.id === id)
+    }
+)
+
 export const selectDefaultDutyCategory = (dutyCategoryState: DutyCategoryState) => {
     return dutyCategoryState.dutyCategories.sort((a : DutyCategory, b : DutyCategory) => a?.id - b?.id)[0]
+}
+
+export const selectDutyById = (dutyState: DutyState, id: number) => {
+    return dutyState.duties.find(duty => duty.id === id);
 }

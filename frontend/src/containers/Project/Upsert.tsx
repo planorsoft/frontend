@@ -67,17 +67,16 @@ const Upsert = ({ open, setOpen, projectId }: UpsertProps) => {
   });
 
   useEffect(() => {
-    if (!projectId) return;
-    if (!project) {
-      dispatch(getProject(projectId));
-    } else if (project.id !== projectId) {
-      dispatch(getProject(projectId));
+    if (projectId === 0) {
+      form.reset();
+      return;
     }
+    dispatch(getProject(projectId));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [projectId]);
 
   useEffect(() => {
-    if (project) {
+    if (project && projectId !== 0) {
       form.setValue("id", project.id || 0);
       form.setValue("title", project.title || "");
       form.setValue("description", project.description || "");
@@ -144,7 +143,9 @@ const Upsert = ({ open, setOpen, projectId }: UpsertProps) => {
         <DialogContent className="w-screen m-2 md:w-6/12">
           <DialogHeader>
             <DialogTitle>
-              {projectId === 0 ? `${t("project.create")}` : `${t("project.update")}`}
+              {projectId === 0
+                ? `${t("project.create")}`
+                : `${t("project.update")}`}
             </DialogTitle>
             {loading ? (
               <Loader />
