@@ -28,6 +28,9 @@ import Calendar from "@/containers/Calendar";
 import Finance from "@/containers/Finance/List";
 import FinanceCategory from "@/containers/Finance/CategoryList";
 
+import { useTranslation } from "react-i18next";
+
+
 
 function UseMiddleware() {
   useUnauthorizedResponseHandler();
@@ -37,6 +40,10 @@ function UseMiddleware() {
 }
 
 function App() {
+
+  //const { i18n } = useTranslation();
+  //i18n.changeLanguage('tr');
+
   return (
     <BrowserRouter>
       <UseMiddleware />

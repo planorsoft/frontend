@@ -52,7 +52,7 @@
     "@reduxjs/toolkit": "^1.9.6",
     "@tanstack/react-table": "^8.10.6",
     "axios": "^1.5.1",
-    "chart.js": "^4.4.1",
+    "chart.js": "^4.4.3",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.0.0",
     "cmdk": "^0.2.0",
@@ -87,6 +87,7 @@
     "zod": "^3.22.2"
   },
   "devDependencies": {
+    "@faker-js/faker": "^8.4.1",
     "@types/luxon": "^3.3.7",
     "@types/node": "^20.7.1",
     "@types/react": "^18.2.15",
@@ -103,6 +104,7 @@
     "eslint": "^8.45.0",
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-react-refresh": "^0.4.3",
+    "faker": "^6.6.6",
     "postcss": "^8.4.30",
     "tailwindcss": "^3.3.3",
     "typescript": "^5.0.2",

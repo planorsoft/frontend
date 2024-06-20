@@ -10,6 +10,7 @@ import { CalendarState } from "./types";
 import { toast } from "@/components/ui/use-toast";
 import Upsert from "./Upsert";
 import trLocale from "@fullcalendar/core/locales/tr";
+import enLocale from "@fullcalendar/core/locales/en-gb";
 import { getEventsByMonth } from "./actions";
 import { selectEventsByMonths } from "./selector";
 import { EventImpl } from "@fullcalendar/core/internal";
@@ -19,7 +20,7 @@ import { Loader } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
 const Calendar = () => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const dispatch = useAppDispatch();
   const applicationState = useAppSelector<ApplicationState>(
     (state) => state.applicationState
@@ -108,7 +109,7 @@ const Calendar = () => {
     },
     firstDay: 1,
     stickyFooterScrollbar: true,
-    locale: trLocale,
+    locale: i18n.language === "tr" ? trLocale : enLocale,
     height: "90vh",
     dateClick: dateClickHandler,
     eventClick: eventClickHandler,

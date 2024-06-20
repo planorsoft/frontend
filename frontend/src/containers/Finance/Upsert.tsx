@@ -35,9 +35,10 @@ interface UpsertProps extends React.HTMLAttributes<HTMLDivElement> {
   open: boolean;
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
   financeId: number;
+  type: "income" | "outcome";
 }
 
-const Upsert = ({ open, setOpen, financeId }: UpsertProps) => {
+const Upsert = ({ open, setOpen, financeId, type }: UpsertProps) => {
   const { t } = useTranslation();
 
   const formSchema = z.object({
@@ -102,7 +103,7 @@ const Upsert = ({ open, setOpen, financeId }: UpsertProps) => {
       console.log(finance);
       form.setValue("id", finance.id || 0);
       form.setValue("description", finance.description || "");
-      form.setValue("amount", finance.amount?.toString() || "");
+      type === "income" ? form.setValue("amount", finance.amount?.toString() || "") : form.setValue("amount", "-" + finance.amount?.toString() || "")
       form.setValue(
         "date",
         finance.date ? DateTime.fromSeconds(finance.date).toJSDate() : undefined
@@ -118,7 +119,7 @@ const Upsert = ({ open, setOpen, financeId }: UpsertProps) => {
     if (remove) return;
     const request = {
       ...values,
-      amount: parseFloat(values.amount),
+      amount: type === "income" ? parseFloat(values.amount) : -parseFloat(values.amount),
       categoryId: Number(values.categoryId),
       categoryName: financeCategories.find(
         (category) => category.id === Number(values.categoryId)

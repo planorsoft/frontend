@@ -18,19 +18,24 @@ import { profileImageGenerator } from "@/lib/profile-image";
 import jwtDecoder from "@/lib/jwtDecoder";
 import { CurrentUserState } from "@/containers/Settings/User/types";
 import { getCurrentUser } from "@/containers/Settings/User/actions";
+import { useTranslation } from "react-i18next";
 
 interface MenuProps extends React.HTMLAttributes<HTMLDivElement> {
   toggleSidebar: () => void;
 }
 
 export function Menu({ toggleSidebar }: MenuProps) {
+  const { t } = useTranslation();
+
   const navigate = useNavigate();
 
   const dispatch = useAppDispatch();
   const applicationState = useAppSelector<ApplicationState>(
     (state) => state.applicationState
   );
-  const currentUserState = useAppSelector<CurrentUserState>((state) => state.currentUserState);
+  const currentUserState = useAppSelector<CurrentUserState>(
+    (state) => state.currentUserState
+  );
   const decodedToken = jwtDecoder();
 
   useEffect(() => {
@@ -51,13 +56,9 @@ export function Menu({ toggleSidebar }: MenuProps) {
           </Button>
         </div>
         {Object.keys(applicationState.application).length > 0 ? (
-          <p>
-            {applicationState.application.name}
-          </p>
+          <p>{applicationState.application.name}</p>
         ) : (
-          <p>
-            {document.title}
-          </p>
+          <p>{document.title}</p>
         )}
       </div>
       <div className="flex">
@@ -90,7 +91,7 @@ export function Menu({ toggleSidebar }: MenuProps) {
                   navigate("/settings/users/me");
                 }}
               >
-                Edit account
+                {t("sidebar.editAccount")}
               </MenubarItem>
             )}
             <MenubarItem
@@ -100,7 +101,7 @@ export function Menu({ toggleSidebar }: MenuProps) {
                 navigate("/logout");
               }}
             >
-              Log Out
+              {t("sidebar.logout")}
             </MenubarItem>
           </MenubarContent>
         </MenubarMenu>

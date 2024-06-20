@@ -141,7 +141,7 @@ function Register() {
             )}
             <InputString
               control={form.control}
-              placeholder="planorsoft@gmail.com"
+              placeholder="Email"
               fieldName="email"
             />
             <InputPassword

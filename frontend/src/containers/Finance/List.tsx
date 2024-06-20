@@ -133,7 +133,7 @@ const List = ({ type }: ListProps) => {
           </AlertDescription>
         </Alert>
       )}
-      <Upsert open={open} setOpen={setOpen} financeId={id} />
+      <Upsert open={open} setOpen={setOpen} financeId={id} type={type} />
     </div>
   );
 };

@@ -23,6 +23,7 @@ const Localization = () => {
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     console.log(values.language)
     i18n.changeLanguage(values.language);
+    window.location.reload();
   };
 
   return (

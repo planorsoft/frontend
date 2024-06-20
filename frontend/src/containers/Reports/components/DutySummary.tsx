@@ -1,21 +1,20 @@
 import { useEffect, useState } from "react";
-import { getProjectsSummary } from "../service";
-import { Folder, Loader } from "lucide-react";
+import { getDutiesSummary } from "../service";
+import { KanbanSquare, Loader } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
-const ProjectSummary = () => {
+const DutySummary = () => {
   const { t } = useTranslation();
   const [loading, setLoading] = useState(true);
-  const [projectSummary, setProjectSummary] = useState({
-    activeCount: 0,
-    completedCount: 0,
+  const [dutySummary, setDutySummary] = useState({
     totalCount: 0,
+    detail: "",
   });
 
   useEffect(() => {
-    getProjectsSummary()
+    getDutiesSummary()
       .then((response) => {
-        setProjectSummary(response?.data);
+        setDutySummary(response?.data);
       })
       .catch((error) => {
         console.log(error);
@@ -28,18 +27,20 @@ const ProjectSummary = () => {
   return (
     <div className="rounded-xl border bg-card text-card-foreground shadow">
       <div className="p-6 flex flex-row items-center justify-between space-y-0 pb-2">
-        <h3 className="tracking-tight text-xl font-medium">{t("Yapılacaklar")}</h3>
-        <Folder className="h-4 w-4 text-muted-foreground" />
+        <h3 className="tracking-tight text-xl font-medium">
+          {t("reports.duties.title")}
+        </h3>
+        <KanbanSquare className="h-4 w-4 text-muted-foreground" />
       </div>
       <div className="p-6 pt-0">
         {loading ? (
           <Loader className="w-8 h-8 animate-spin mx-auto mt-10" />
         ) : (
           <>
-            <div className="text-2xl font-bold">Toplam {projectSummary.totalCount} proje</div>
-            <p className="text-muted-foreground mt-3">
-              {projectSummary.activeCount} aktif, {projectSummary.completedCount} tamamlanmış proje
-            </p>
+            <div className="text-2xl font-bold">
+              {dutySummary?.totalCount} {t("reports.duties.duty")}
+            </div>
+            <p className="text-muted-foreground mt-3">{dutySummary?.detail}</p>
           </>
         )}
       </div>
@@ -47,4 +48,4 @@ const ProjectSummary = () => {
   );
 };
 
-export default ProjectSummary;
+export default DutySummary;

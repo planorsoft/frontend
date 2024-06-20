@@ -9,7 +9,10 @@
         "next-page": "Sonraki",
         "previous-page": "Önceki",
         "submit": "Gönder",
-        "delete": "Sil"
+        "delete": "Sil",
+        "no": "Hayır",
+        "yes": "Evet",
+        "create": "Oluştur"
     },
     "sidebar": {
         "home": "Anasayfa",
@@ -20,7 +23,9 @@
         "task": "Görev",
         "finance": "Finans",
         "reports": "Raporlar",
-        "settings": "Ayarlar"
+        "settings": "Ayarlar",
+        "logout": "Çıkış yap",
+        "editAccount": "Hesabı Düzenle"
     },
     "calendar": {
         "description": "Açıklama",
@@ -45,35 +50,36 @@
         "purple": "Mor",
         "start-date-required": "Başlangıç tarihi zorunludur.",
         "end_date_must_be_after_start_date": "Bitiş tarihi başlangıç tarihinden sonra olmalıdır."
-        
     },
     "customer": {
         "title": "Müşteri",
         "create": "Müşteri oluştur",
         "edit": "Müşteri düzenle",
         "photo": "Fotoğraf",
-        "name" : "İsim",
-        "company" : "Şirket",
-        "city" : "Şehir",
-        "potential" : "Potansiyel mi?",
-        "district" : "İlçe",
-        "postCode" : "Posta Kodu",
-        "country" : "Ülke",
-        "phoneNumber" : "Telefon Numarası",
-        "governmentId" : "Vergi Numarası",
-        "currency" : "Kur",
-        "contact" : "İletişim",
-        "email" : "E-Posta",
-        "invite" : "Davet Et",
-        "action" : "Aksiyon",
-        "previous" : "Önceki",
-        "next" : "Sonraki",
+        "name": "İsim",
+        "company": "Şirket",
+        "address": "Adres",
+        "city": "Şehir",
+        "potential": "Potansiyel müşteri",
+        "district": "İlçe",
+        "postCode": "Posta Kodu",
+        "country": "Ülke",
+        "phoneNumber": "Telefon Numarası",
+        "governmentId": "Vergi Numarası",
+        "currency": "Kur",
+        "contact": "İletişim",
+        "email": "E-Posta",
+        "invite": "Davet Et",
+        "action": "Aksiyon",
+        "previous": "Önceki",
+        "next": "Sonraki",
         "contact-not-found": "İletişim bilgisi bulunamadı.",
         "contact-not-found-description": "Yukarıdaki butondan ilk iletişim bilgini oluşturabilirsin.",
         "not-found": "Müşteri bulunamadı.",
-        "not-found-description": "Yukarıdaki butondan ilk müşterini oluşturabilirsin."
+        "not-found-description": "Yukarıdaki butondan ilk müşterini oluşturabilirsin.",
+        "isCompany": "Şirket mi?",
+        "isPotantial": "Potansiyel müşteri mi?"
     },
-
     "finance": {
         "title": "Finans",
         "income": "Gelir",
@@ -105,16 +111,18 @@
             }
         }
     },
-    "task":{
+    "task": {
         "title": "Görevler",
         "description": "Belirli bir projenin görevlerine gitmek için projeler ekranından görevler ikonuna tıklayınız.",
         "create": "Görev Oluştur",
         "edit": "Görev Düzenle",
         "project": "Proje",
         "size": "Büyüklük",
+        "assignedTo": "Atanan",
+        "helpers": "Yardımcılar",
         "not-found": "Görev bulunamadı!",
         "not-found-description": "Yukarıdaki butondan ilk projeni oluşturabilirsin.",
-        "model":{
+        "model": {
             "category": "Kategori",
             "task": "Görev"
         }
@@ -126,6 +134,8 @@
         "update": "Projeyi Güncelle",
         "not-found": "Proje bulunumadı!",
         "not-found-description": "Yukarıdaki butondan ilk projeni oluşturabilirsin.",
+        "description": "Açıklama",
+        "price": "Fiyat",
         "model": {
             "title": "Başlık",
             "description": "Açıklama",
@@ -133,14 +143,38 @@
             "customer": "Müşteri",
             "price": "Fiyat"
         },
-        "model2":{
+        "model2": {
             "id": "Id",
             "title": "Başlık",
             "price": "Fiyat",
             "completed": "Tamamlandı",
-            "action":"Aksiyon"
+            "action": "Aksiyon"
         }
-       
+    },
+    "reports": {
+        "title": "Raporlar",
+        "projects": {
+            "title": "Projeler",
+            "project": "Proje",
+            "active": "Aktif",
+            "done": "Tamamlanan"
+        },
+        "customers": {
+            "title": "Müşteriler",
+            "customer": "Müşteri",
+            "potantial": "Potansiyel"
+        },
+        "finances": {
+            "title": "Finans",
+            "income": "Gelir",
+            "expense": "Gider",
+            "detail": "Son 6 ayın detayı",
+            "noData": "Veri bulunamadı. Lütfen finans ekranından işlem ekleyiniz."
+        },
+        "duties": {
+            "title": "Görevler",
+            "duty": "Görev"
+        }
     },
     "settings": {
         "title": "Ayarlar",

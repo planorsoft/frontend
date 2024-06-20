@@ -9,9 +9,11 @@
         "next-page": "Next",
         "previous-page": "Previous",
         "submit": "Submit",
-        "delete": "Delete"
+        "delete": "Delete",
+        "no": "No",
+        "yes": "Yes",
+        "create": "Create"
     },
-
     "calendar": {
         "description": "Description",
         "location-link:": "Location - Link",
@@ -35,45 +37,48 @@
         "attendee": "Attendee",
         "start-date-required": "Start date is required.",
         "end-date-must-be-after-start-date": "End date must be after start date."
-        
     },
-
     "customer": {
         "title": "Customer",
         "create": "Create Customer",
         "edit": "Edit Customer",
         "photo": "Photo",
-        "name" : "Name",
-        "company" : "Company",
-        "city" : "City",
-        "potential" : "Potential",
-        "district" : "District",
-        "postCode" : "Post Code",
-        "country" : "Country",
-        "phoneNumber" : "Phone Number",
-        "governmentId" : "Government Id",
-        "currency" : "Currency",
-        "contact" : "Contact",
-        "email" : "Email",
-        "invite" : "Invite",
-        "action" : "Action",
-        "previous" : "Previous",
-        "next" : "Next",
+        "name": "Name",
+        "company": "Company",
+        "address": "Address",
+        "city": "City",
+        "potential": "Potential",
+        "district": "District",
+        "postCode": "Post Code",
+        "country": "Country",
+        "phoneNumber": "Phone Number",
+        "governmentId": "Government Id",
+        "currency": "Currency",
+        "contact": "Contact",
+        "email": "Email",
+        "invite": "Invite",
+        "action": "Action",
+        "previous": "Previous",
+        "next": "Next",
         "contact-not-found": "Customer Contact not found.",
         "contact-not-found-description": "You can create your first contact from the button above.",
         "not-found": "Customer not found.",
-        "not-found-description": "You can create your first customer from the button above."
+        "not-found-description": "You can create your first customer from the button above.",
+        "isCompany": "Is it a company?",
+        "isPotantial": "Is it a potential customer?"
     },
-    "task":{
+    "task": {
         "title": "Tasks",
         "description": "To go to the tasks of a specific project, click on the tasks icon from the projects screen.",
         "create": "Create Task",
         "edit": "Edit Task",
         "project": "Project",
         "size": "Size",
+        "assignedTo": "Assigned To",
+        "helpers": "Helpers",
         "not-found": "Task not found!",
         "not-found-description": "You can create your first task from the button above.",
-        "model":{
+        "model": {
             "category": "Category",
             "task": "Task"
         }
@@ -116,7 +121,8 @@
         "update": "Update Project",
         "not-found": "Project not found.",
         "not-found-description": "You can create your first project from the button above.",
-        
+        "description": "Description",
+        "price": "Price",
         "model": {
             "title": "Title",
             "description": "Description",
@@ -124,12 +130,37 @@
             "customer": "Customer",
             "price": "Price"
         },
-        "model2":{
+        "model2": {
             "id": "Id",
             "title": "Title",
             "price": "Price",
             "completed": "Completed",
-            "action":"Action"
+            "action": "Action"
+        }
+    },
+    "reports": {
+        "title": "Reports",
+        "projects": {
+            "title": "Projects",
+            "project": "Project",
+            "active": "Active",
+            "done": "Done"
+        },
+        "customers": {
+            "title": "Customers",
+            "customer": "Customer",
+            "potantial": "Potential"
+        },
+        "finances": {
+            "title": "Finances",
+            "income": "Income",
+            "expense": "Expense",
+            "detail": "Last 6 month detail",
+            "noData": "No data available. Please create a record first in finance screens."
+        },
+        "duties": {
+            "title": "Duties",
+            "duty": "Task"
         }
     },
     "sidebar": {
@@ -141,7 +172,9 @@
         "task": "Tasks",
         "finance": "Finance",
         "reports": "Reports",
-        "settings": "Settings"
+        "settings": "Settings",
+        "logout": "Logout",
+        "editAccount": "Edit Account"
     },
     "settings": {
         "title": "Settings",
@@ -154,13 +187,13 @@
                 "tr": "Turkish"
             }
         },
-        "model":{
-            "mail":"Email",
-            "name":"Name",
-            "role":"Role",
-            "password":"Password",
-            "old-password":"Old Password",
-            "new-password":"New Password"
+        "model": {
+            "mail": "Email",
+            "name": "Name",
+            "role": "Role",
+            "password": "Password",
+            "old-password": "Old Password",
+            "new-password": "New Password"
         },
         "application": {
             "title": "Application",

@@ -127,7 +127,7 @@ const Container = () => {
       <div className="flex justify-between my-2">
         <div>
           <h2 className="text-2xl font-semibold">
-            {project ? `${project.title} için Görevler` : `${t("task.title")}`}
+            {project ? `${t("task.title")} for ${project.title}` : `${t("task.title")}`}
           </h2>
           <p className="leading-7 my-2 dark:text-gray-500 text-gray-600">
             {t("task.description")}

@@ -83,7 +83,7 @@ const List = ({ type }: ListProps) => {
     <div className="px-2 py-4 md:px-20 mx-auto">
       <div className="flex justify-between my-2">
         <h2 className="text-xl md:text-2xl font-semibold">
-          {type === "real" ? "Customers" : "Potential Customers"}
+          {type === "real" ? t("customer.title") : t("customer.potential")}
         </h2>
         <Button
           onClick={() => {
@@ -99,8 +99,8 @@ const List = ({ type }: ListProps) => {
         <>
           <Table>
             <TableCaption>
-              {type == "real" && "Real Customers"}
-              {type == "potential" && "Potential Customers"}
+              {type == "real" && t("customer.title")}
+              {type == "potential" && t("customer.potential")}
             </TableCaption>
             <TableHeader>
               <TableRow>
